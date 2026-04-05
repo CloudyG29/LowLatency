@@ -35,3 +35,8 @@ jobs:
       - run: npm run build --if-present
 
       - run: npm test -- --coverage
+
+      - name: Test Database Connection
+        run: node tests/test-db-connection.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
