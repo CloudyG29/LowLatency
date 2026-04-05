@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider View</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>  
+
+    <header>
+        <h1> Provider View</h1>
+        <p>Post an opportunity for applicants to view after admin approval.</p>
+    </header>
+
+    <main class="page-container">
+
+        <section class="feature-card">
+            <h2>Post Opportunity</h2>
+            <p>Submit a new learnership or internship opportunity.</p>
+
+            <input type="text" id="opportunityTitle" placeholder="Opportunity Title">
+            <input type="text" id="location" placeholder="Location">
+            <input type="text" id="duration" placeholder="Duration">
+            <textarea id="description" placeholder="Opportunity Description"></textarea>
+
+            <button id="postBtn">Post Listing</button>
+            <p id="postMessage"></p>
+        </section>
+
+        <section class="feature-card">
+            <h2>Listing Status</h2>
+            <p><strong>Title:</strong> Software Internship</p>
+            <p><strong>Status:</strong> Pending Approval</p>
+        </section>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
