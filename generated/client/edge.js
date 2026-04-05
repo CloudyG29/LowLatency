@@ -19,7 +19,10 @@ const {
   skip,
   Decimal,
   Debug,
-  objectEnumValues,
+  DbNull,
+  JsonNull,
+  AnyNull,
+  NullTypes,
   makeStrictEnum,
   Extensions,
   warnOnce,
@@ -27,7 +30,7 @@ const {
   Public,
   getRuntime,
   createParam,
-} = require('./runtime/edge.js')
+} = require('./runtime/wasm-compiler-edge.js')
 
 
 const Prisma = {}
@@ -36,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.19.3
- * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 Prisma.prismaVersion = {
-  client: "6.19.3",
-  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -69,15 +72,11 @@ Prisma.defineExtension = Extensions.defineExtension
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = objectEnumValues.instances.DbNull
-Prisma.JsonNull = objectEnumValues.instances.JsonNull
-Prisma.AnyNull = objectEnumValues.instances.AnyNull
+Prisma.DbNull = DbNull
+Prisma.JsonNull = JsonNull
+Prisma.AnyNull = AnyNull
 
-Prisma.NullTypes = {
-  DbNull: objectEnumValues.classes.DbNull,
-  JsonNull: objectEnumValues.classes.JsonNull,
-  AnyNull: objectEnumValues.classes.AnyNull
-}
+Prisma.NullTypes = NullTypes
 
 
 
@@ -95,9 +94,34 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name'
+  user_id: 'user_id',
+  name: 'name',
+  surname: 'surname',
+  role: 'role',
+  qualification: 'qualification'
+};
+
+exports.Prisma.ProviderScalarFieldEnum = {
+  provider_id: 'provider_id',
+  provider_name: 'provider_name',
+  profile: 'profile'
+};
+
+exports.Prisma.ListingScalarFieldEnum = {
+  listings_id: 'listings_id',
+  user_id: 'user_id',
+  listname: 'listname',
+  list_type: 'list_type',
+  nqf_level: 'nqf_level',
+  description: 'description'
+};
+
+exports.Prisma.ApplicationScalarFieldEnum = {
+  application_id: 'application_id',
+  user_id: 'user_id',
+  provider_id: 'provider_id',
+  cv: 'cv',
+  status: 'status'
 };
 
 exports.Prisma.SortOrder = {
@@ -112,78 +136,41 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Provider: 'Provider',
+  Listing: 'Listing',
+  Application: 'Application'
 };
 /**
  * Create the Client
  */
 const config = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client-js"
-    },
-    "output": {
-      "value": "C:\\Users\\User\\OneDrive - University of Witwatersrand\\SD_projects\\SD_practices\\lowl\\LowLatency\\generated\\client",
-      "fromEnvVar": null
-    },
-    "config": {
-      "engineType": "library"
-    },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "windows",
-        "native": true
-      }
-    ],
-    "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\User\\OneDrive - University of Witwatersrand\\SD_projects\\SD_practices\\lowl\\LowLatency\\prisma\\schema.prisma",
-    "isCustomOutput": true
-  },
-  "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
-  },
-  "relativePath": "../../prisma",
-  "clientVersion": "6.19.3",
-  "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
-  "datasourceNames": [
-    "db"
-  ],
+  "previewFeatures": [],
+  "clientVersion": "7.6.0",
+  "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
   "activeProvider": "sqlserver",
-  "postinstall": false,
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": "DATABASE_URL",
-        "value": null
-      }
-    }
-  },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/client\"\n}\n\ndatasource db {\n  provider = \"sqlserver\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n}\n",
-  "inlineSchemaHash": "b53374910f03b3bd086f06b3ecd2d9029c7da9957f6142215927f748fd9bea7e",
-  "copyEngine": true
+  "inlineSchema": "//you can add and modify tables in this file (trojan was here:)\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../generated/client\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"sqlserver\"\n}\n\nmodel User {\n  user_id       Int     @id @default(autoincrement())\n  name          String\n  surname       String\n  role          String\n  qualification String?\n\n  listings     Listing[]\n  applications Application[]\n}\n\nmodel Provider {\n  provider_id   Int     @id @default(autoincrement())\n  provider_name String\n  profile       String?\n\n  applications Application[]\n}\n\nmodel Listing {\n  listings_id Int     @id @default(autoincrement())\n  user_id     Int\n  listname    String\n  list_type   String\n  nqf_level   Int?\n  description String?\n\n  user User @relation(fields: [user_id], references: [user_id])\n}\n\nmodel Application {\n  application_id Int    @id @default(autoincrement())\n  user_id        Int\n  provider_id    Int\n  cv             String\n  status         String\n\n  user     User     @relation(fields: [user_id], references: [user_id])\n  provider Provider @relation(fields: [provider_id], references: [provider_id])\n}\n"
 }
-config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"dbName\":null,\"schema\":null,\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":false,\"isId\":true,\"isReadOnly\":false,\"hasDefaultValue\":true,\"type\":\"Int\",\"nativeType\":null,\"default\":{\"name\":\"autoincrement\",\"args\":[]},\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"email\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":true,\"isUnique\":true,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false},{\"name\":\"name\",\"kind\":\"scalar\",\"isList\":false,\"isRequired\":false,\"isUnique\":false,\"isId\":false,\"isReadOnly\":false,\"hasDefaultValue\":false,\"type\":\"String\",\"nativeType\":null,\"isGenerated\":false,\"isUpdatedAt\":false}],\"primaryKey\":null,\"uniqueFields\":[],\"uniqueIndexes\":[],\"isGenerated\":false}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"surname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"qualification\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"listings\",\"kind\":\"object\",\"type\":\"Listing\",\"relationName\":\"ListingToUser\"},{\"name\":\"applications\",\"kind\":\"object\",\"type\":\"Application\",\"relationName\":\"ApplicationToUser\"}],\"dbName\":null},\"Provider\":{\"fields\":[{\"name\":\"provider_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"provider_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profile\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"applications\",\"kind\":\"object\",\"type\":\"Application\",\"relationName\":\"ApplicationToProvider\"}],\"dbName\":null},\"Listing\":{\"fields\":[{\"name\":\"listings_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"listname\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"list_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nqf_level\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ListingToUser\"}],\"dbName\":null},\"Application\":{\"fields\":[{\"name\":\"application_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"provider_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cv\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ApplicationToUser\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"Provider\",\"relationName\":\"ApplicationToProvider\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.engineWasm = undefined
-config.compilerWasm = undefined
-
-config.injectableEdgeEnv = () => ({
-  parsed: {
-    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
-  }
-})
-
-if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
-  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+config.parameterizationSchema = {
+  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"user\",\"listings\",\"applications\",\"_count\",\"provider\",\"User.findUnique\",\"User.findUniqueOrThrow\",\"User.findFirst\",\"User.findFirstOrThrow\",\"User.findMany\",\"data\",\"User.createOne\",\"User.createMany\",\"User.updateOne\",\"User.updateMany\",\"create\",\"update\",\"User.upsertOne\",\"User.deleteOne\",\"User.deleteMany\",\"having\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"User.groupBy\",\"User.aggregate\",\"Provider.findUnique\",\"Provider.findUniqueOrThrow\",\"Provider.findFirst\",\"Provider.findFirstOrThrow\",\"Provider.findMany\",\"Provider.createOne\",\"Provider.createMany\",\"Provider.updateOne\",\"Provider.updateMany\",\"Provider.upsertOne\",\"Provider.deleteOne\",\"Provider.deleteMany\",\"Provider.groupBy\",\"Provider.aggregate\",\"Listing.findUnique\",\"Listing.findUniqueOrThrow\",\"Listing.findFirst\",\"Listing.findFirstOrThrow\",\"Listing.findMany\",\"Listing.createOne\",\"Listing.createMany\",\"Listing.updateOne\",\"Listing.updateMany\",\"Listing.upsertOne\",\"Listing.deleteOne\",\"Listing.deleteMany\",\"Listing.groupBy\",\"Listing.aggregate\",\"Application.findUnique\",\"Application.findUniqueOrThrow\",\"Application.findFirst\",\"Application.findFirstOrThrow\",\"Application.findMany\",\"Application.createOne\",\"Application.createMany\",\"Application.updateOne\",\"Application.updateMany\",\"Application.upsertOne\",\"Application.deleteOne\",\"Application.deleteMany\",\"Application.groupBy\",\"Application.aggregate\",\"AND\",\"OR\",\"NOT\",\"application_id\",\"user_id\",\"provider_id\",\"cv\",\"status\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"not\",\"listings_id\",\"listname\",\"list_type\",\"nqf_level\",\"description\",\"provider_name\",\"profile\",\"every\",\"some\",\"none\",\"name\",\"surname\",\"role\",\"qualification\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "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-AjA_AjFBAjJDBzNFAjRHBzVIAjZJAjdKBzhNFjlOHDpPAztQAzxRAz1SAz5TAz9VA0BXB0FZA0JbB0NcA0RdA0VeB0ZhHUdiIw"
+}
+config.compilerWasm = {
+  getRuntime: async () => require('./query_compiler_fast_bg.js'),
+  getQueryCompilerWasmModule: async () => {
+    const loader = (await import('#wasm-compiler-loader')).default
+    const compiler = (await loader).default
+    return compiler
+  },
+  importName: './query_compiler_fast_bg.js',
+}
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined)
 }
 
 const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
-
