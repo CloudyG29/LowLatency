@@ -125,7 +125,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Administrator\\OneDrive\\Desktop\\sd\\LowLatency\\generated\\client",
+      "value": "C:\\Users\\User\\OneDrive - University of Witwatersrand\\SD_projects\\SD_practices\\lowl\\LowLatency\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -139,11 +139,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Administrator\\OneDrive\\Desktop\\sd\\LowLatency\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\User\\OneDrive - University of Witwatersrand\\SD_projects\\SD_practices\\lowl\\LowLatency\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
