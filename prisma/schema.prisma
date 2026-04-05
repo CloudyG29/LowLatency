@@ -1,8 +1,9 @@
 //you can add and modify tables in this file (trojan was here:)
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/client" 
+  provider      = "prisma-client-js"
+  output        = "../generated/client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {

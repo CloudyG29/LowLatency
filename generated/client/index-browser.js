@@ -7,7 +7,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
   Decimal,
-  objectEnumValues,
+  DbNull,
+  JsonNull,
+  AnyNull,
+  NullTypes,
   makeStrictEnum,
   Public,
   getRuntime,
@@ -21,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.19.3
- * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 Prisma.prismaVersion = {
-  client: "6.19.3",
-  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -98,15 +101,11 @@ In case this error is unexpected for you, please report it in https://pris.ly/pr
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = objectEnumValues.instances.DbNull
-Prisma.JsonNull = objectEnumValues.instances.JsonNull
-Prisma.AnyNull = objectEnumValues.instances.AnyNull
+Prisma.DbNull = DbNull
+Prisma.JsonNull = JsonNull
+Prisma.AnyNull = AnyNull
 
-Prisma.NullTypes = {
-  DbNull: objectEnumValues.classes.DbNull,
-  JsonNull: objectEnumValues.classes.JsonNull,
-  AnyNull: objectEnumValues.classes.AnyNull
-}
+Prisma.NullTypes = NullTypes
 
 
 
@@ -123,9 +122,34 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name'
+  user_id: 'user_id',
+  name: 'name',
+  surname: 'surname',
+  role: 'role',
+  qualification: 'qualification'
+};
+
+exports.Prisma.ProviderScalarFieldEnum = {
+  provider_id: 'provider_id',
+  provider_name: 'provider_name',
+  profile: 'profile'
+};
+
+exports.Prisma.ListingScalarFieldEnum = {
+  listings_id: 'listings_id',
+  user_id: 'user_id',
+  listname: 'listname',
+  list_type: 'list_type',
+  nqf_level: 'nqf_level',
+  description: 'description'
+};
+
+exports.Prisma.ApplicationScalarFieldEnum = {
+  application_id: 'application_id',
+  user_id: 'user_id',
+  provider_id: 'provider_id',
+  cv: 'cv',
+  status: 'status'
 };
 
 exports.Prisma.SortOrder = {
@@ -140,7 +164,10 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Provider: 'Provider',
+  Listing: 'Listing',
+  Application: 'Application'
 };
 
 /**
