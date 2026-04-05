@@ -10,7 +10,7 @@ Now to connect to the database:
 Create a '.env' file in the root of the project(under the lowlatency file directly)//NEVER push your .env file to git hub :)
 
 Add the following line
-DATABASE_URL="sqlserver://lowlatency.database.windows.net:1433;database=SkillBridge;user=CloudSA22f63f5f;password=LowLatency5;encrypt=true;trustServerCertificate=false"
+DATABASE_URL="sqlserver://lowlatency.database.windows.net:1433;database=SkillBridge;user=CloudSA22f63f5f;password=OUR_PASSWORD;encrypt=true;trustServerCertificate=false"
 
 when that is done , please run the test.js file (it only test for connection)
 also make sure that your IP address is whitelisted in the azure portal
