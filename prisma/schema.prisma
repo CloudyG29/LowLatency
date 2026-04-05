@@ -7,13 +7,45 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  url      = env("DATABASE_URL")
-
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  user_id      Int           @id @default(autoincrement())
+  name         String
+  surname      String
+  role         String
+  qualification String?
+
+  listings     Listing[]
+  applications Application[]
 }
 
+model Provider {
+  provider_id   Int           @id @default(autoincrement())
+  provider_name String
+  profile       String?
+
+  applications  Application[]
+}
+
+model Listing {
+  listings_id Int    @id @default(autoincrement())
+  user_id     Int
+  listname    String
+  list_type   String
+  nqf_level   Int?
+  description String?
+
+  user User @relation(fields: [user_id], references: [user_id])
+}
+
+model Application {
+  application_id Int    @id @default(autoincrement())
+  user_id        Int
+  provider_id    Int
+  cv             String
+  status         String
+
+  user     User     @relation(fields: [user_id], references: [user_id])
+  provider Provider @relation(fields: [provider_id], references: [provider_id])
+}
