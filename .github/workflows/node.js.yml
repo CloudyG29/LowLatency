@@ -36,6 +36,9 @@ jobs:
 
       - run: npm test -- --coverage
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
       - name: Test Database Connection
         run: node tests/test-db-connection.js
         env:
