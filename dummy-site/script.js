@@ -31,6 +31,13 @@ if (postBtn) {
 if (approveBtn) {
     approveBtn.addEventListener("click", function () {
         const adminMessage = document.getElementById("adminMessage");
+        const statusText = document.getElementById("statusText");
+
+        if (statusText) {
+            statusText.textContent = "Approved";
+            statusText.className = "success";
+        }
+
         adminMessage.textContent = "Listing approved successfully!";
         adminMessage.className = "success";
     });
@@ -39,6 +46,13 @@ if (approveBtn) {
 if (rejectBtn) {
     rejectBtn.addEventListener("click", function () {
         const adminMessage = document.getElementById("adminMessage");
+        const statusText = document.getElementById("statusText");
+
+        if (statusText) {
+            statusText.textContent = "Rejected";
+            statusText.className = "error";
+        }
+
         adminMessage.textContent = "Listing rejected.";
         adminMessage.className = "error";
     });
