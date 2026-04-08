@@ -14,7 +14,7 @@ DATABASE_URL="sqlserver://lowlatency.database.windows.net:1433;database=SkillBri
 
 when that is done , please run the test.js file (it only test for connection)
 also make sure that your IP address is whitelisted in the azure portal
-steps are as follows:1. Go to website
+steps are as follows:1. Go to website.
 :2. navigate to the server (lowlatency)
 :3. On the left search bar , search "networking"
 :4. Scroll down and click "Add your client IPV4 adress" the save.
