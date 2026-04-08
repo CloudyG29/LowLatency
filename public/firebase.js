@@ -11,6 +11,27 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
+async function redirectUser(email) {
+  try {
+    const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+    const data = await response.json();
+    const userRole = data.role;
+    
+    if (userRole === "Applicant") {
+      window.location.href = "/applicant.html";
+    } else if (userRole === "Provider") {
+      window.location.href = "/provider.html";
+    } else if (userRole === "Admin") {
+      window.location.href = "/admin.html";
+    } else {
+      window.location.href = "/applicant.html";
+    }
+  } catch (error) {
+    console.error('Error fetching role:', error);
+    window.location.href = "/applicant.html";
+  }
+}
+
 const signupForm = document.querySelector('#signup-form');
 if (signupForm) {
   signupForm.addEventListener('submit', async (e) => {
@@ -21,14 +42,7 @@ if (signupForm) {
       const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
       console.log('User signed in:', user);
-      const userRole = "Applicant";
-      if (userRole === "Applicant") {
-        window.location.href = "/applicant.html";
-      } else if (userRole === "Provider") {
-        window.location.href = "/provider.html";
-      } else if (userRole === "Admin") {
-        window.location.href = "/admin.html";
-      }
+      await redirectUser(email);
     } catch (error) {
       console.error('Error signing in:', error.code, error.message);
     }
@@ -48,14 +62,7 @@ if (loginForm) {
       console.log('User logged in\n');
       console.log('User ID Token:', idToken);
       console.log('User Profile:', user);
-      const userRole = "Applicant";
-      if (userRole === "Applicant") {
-        window.location.href = "/applicant.html";
-      } else if (userRole === "Provider") {
-        window.location.href = "/provider.html";
-      } else if (userRole === "Admin") {
-        window.location.href = "/admin.html";
-      }
+      await redirectUser(email);
     } catch (error) {
       console.error('Error logging in:', error.code, error.message);
     }
@@ -73,14 +80,7 @@ if (googleLoginButton) {
       console.log('User logged in with Google\n');
       console.log('Google ID Token:', idToken);
       console.log('Google User Profile:', result.additionalUserInfo.profile);
-      const userRole = "Applicant";
-      if (userRole === "Applicant") {
-        window.location.href = "/applicant.html";
-      } else if (userRole === "Provider") {
-        window.location.href = "/provider.html";
-      } else if (userRole === "Admin") {
-        window.location.href = "/admin.html";
-      }
+      await redirectUser(user.email);
     } catch (error) {
       console.error('Error logging in with Google:', error.code, error.message);
     }
@@ -98,14 +98,7 @@ if (appleLoginButton) {
       console.log('User logged in with Apple\n');
       console.log('Apple ID Token:', idToken);
       console.log('Apple User Profile:', result.additionalUserInfo.profile);
-      const userRole = "Applicant";
-      if (userRole === "Applicant") {
-        window.location.href = "/applicant.html";
-      } else if (userRole === "Provider") {
-        window.location.href = "/provider.html";
-      } else if (userRole === "Admin") {
-        window.location.href = "/admin.html";
-      }
+      await redirectUser(user.email);
     } catch (error) {
       console.error('Error logging in with Apple:', error.code, error.message);
     }

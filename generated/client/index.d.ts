@@ -1201,6 +1201,7 @@ export namespace Prisma {
     user_id: number | null
     name: string | null
     surname: string | null
+    email: string | null
     role: string | null
     qualification: string | null
   }
@@ -1209,6 +1210,7 @@ export namespace Prisma {
     user_id: number | null
     name: string | null
     surname: string | null
+    email: string | null
     role: string | null
     qualification: string | null
   }
@@ -1217,6 +1219,7 @@ export namespace Prisma {
     user_id: number
     name: number
     surname: number
+    email: number
     role: number
     qualification: number
     _all: number
@@ -1235,6 +1238,7 @@ export namespace Prisma {
     user_id?: true
     name?: true
     surname?: true
+    email?: true
     role?: true
     qualification?: true
   }
@@ -1243,6 +1247,7 @@ export namespace Prisma {
     user_id?: true
     name?: true
     surname?: true
+    email?: true
     role?: true
     qualification?: true
   }
@@ -1251,6 +1256,7 @@ export namespace Prisma {
     user_id?: true
     name?: true
     surname?: true
+    email?: true
     role?: true
     qualification?: true
     _all?: true
@@ -1346,6 +1352,7 @@ export namespace Prisma {
     user_id: number
     name: string
     surname: string
+    email: string
     role: string
     qualification: string | null
     _count: UserCountAggregateOutputType | null
@@ -1373,6 +1380,7 @@ export namespace Prisma {
     user_id?: boolean
     name?: boolean
     surname?: boolean
+    email?: boolean
     role?: boolean
     qualification?: boolean
     listings?: boolean | User$listingsArgs<ExtArgs>
@@ -1386,11 +1394,12 @@ export namespace Prisma {
     user_id?: boolean
     name?: boolean
     surname?: boolean
+    email?: boolean
     role?: boolean
     qualification?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "name" | "surname" | "role" | "qualification", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "name" | "surname" | "email" | "role" | "qualification", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     listings?: boolean | User$listingsArgs<ExtArgs>
     applications?: boolean | User$applicationsArgs<ExtArgs>
@@ -1407,6 +1416,7 @@ export namespace Prisma {
       user_id: number
       name: string
       surname: string
+      email: string
       role: string
       qualification: string | null
     }, ExtArgs["result"]["user"]>
@@ -1783,6 +1793,7 @@ export namespace Prisma {
     readonly user_id: FieldRef<"User", 'Int'>
     readonly name: FieldRef<"User", 'String'>
     readonly surname: FieldRef<"User", 'String'>
+    readonly email: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
     readonly qualification: FieldRef<"User", 'String'>
   }
@@ -5153,6 +5164,7 @@ export namespace Prisma {
     user_id: 'user_id',
     name: 'name',
     surname: 'surname',
+    email: 'email',
     role: 'role',
     qualification: 'qualification'
   };
@@ -5244,6 +5256,7 @@ export namespace Prisma {
     user_id?: IntFilter<"User"> | number
     name?: StringFilter<"User"> | string
     surname?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     qualification?: StringNullableFilter<"User"> | string | null
     listings?: ListingListRelationFilter
@@ -5254,6 +5267,7 @@ export namespace Prisma {
     user_id?: SortOrder
     name?: SortOrder
     surname?: SortOrder
+    email?: SortOrder
     role?: SortOrder
     qualification?: SortOrderInput | SortOrder
     listings?: ListingOrderByRelationAggregateInput
@@ -5267,6 +5281,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringFilter<"User"> | string
     surname?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     qualification?: StringNullableFilter<"User"> | string | null
     listings?: ListingListRelationFilter
@@ -5277,6 +5292,7 @@ export namespace Prisma {
     user_id?: SortOrder
     name?: SortOrder
     surname?: SortOrder
+    email?: SortOrder
     role?: SortOrder
     qualification?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -5293,6 +5309,7 @@ export namespace Prisma {
     user_id?: IntWithAggregatesFilter<"User"> | number
     name?: StringWithAggregatesFilter<"User"> | string
     surname?: StringWithAggregatesFilter<"User"> | string
+    email?: StringWithAggregatesFilter<"User"> | string
     role?: StringWithAggregatesFilter<"User"> | string
     qualification?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
@@ -5469,6 +5486,7 @@ export namespace Prisma {
   export type UserCreateInput = {
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     listings?: ListingCreateNestedManyWithoutUserInput
@@ -5479,6 +5497,7 @@ export namespace Prisma {
     user_id?: number
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
@@ -5488,6 +5507,7 @@ export namespace Prisma {
   export type UserUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     listings?: ListingUpdateManyWithoutUserNestedInput
@@ -5498,6 +5518,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
@@ -5507,6 +5528,7 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
   }
@@ -5514,6 +5536,7 @@ export namespace Prisma {
   export type UserUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -5522,6 +5545,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -5744,6 +5768,7 @@ export namespace Prisma {
     user_id?: SortOrder
     name?: SortOrder
     surname?: SortOrder
+    email?: SortOrder
     role?: SortOrder
     qualification?: SortOrder
   }
@@ -5756,6 +5781,7 @@ export namespace Prisma {
     user_id?: SortOrder
     name?: SortOrder
     surname?: SortOrder
+    email?: SortOrder
     role?: SortOrder
     qualification?: SortOrder
   }
@@ -5764,6 +5790,7 @@ export namespace Prisma {
     user_id?: SortOrder
     name?: SortOrder
     surname?: SortOrder
+    email?: SortOrder
     role?: SortOrder
     qualification?: SortOrder
   }
@@ -6432,6 +6459,7 @@ export namespace Prisma {
   export type UserCreateWithoutListingsInput = {
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     applications?: ApplicationCreateNestedManyWithoutUserInput
@@ -6441,6 +6469,7 @@ export namespace Prisma {
     user_id?: number
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -6465,6 +6494,7 @@ export namespace Prisma {
   export type UserUpdateWithoutListingsInput = {
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationUpdateManyWithoutUserNestedInput
@@ -6474,6 +6504,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -6482,6 +6513,7 @@ export namespace Prisma {
   export type UserCreateWithoutApplicationsInput = {
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     listings?: ListingCreateNestedManyWithoutUserInput
@@ -6491,6 +6523,7 @@ export namespace Prisma {
     user_id?: number
     name: string
     surname: string
+    email: string
     role: string
     qualification?: string | null
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
@@ -6531,6 +6564,7 @@ export namespace Prisma {
   export type UserUpdateWithoutApplicationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     listings?: ListingUpdateManyWithoutUserNestedInput
@@ -6540,6 +6574,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     qualification?: NullableStringFieldUpdateOperationsInput | string | null
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
