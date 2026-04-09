@@ -11,6 +11,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
+async function registerUser(name, surname, email) {
+  await fetch('/api/user/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, surname, email })
+  });
+}
+
 async function redirectUser(email) {
   try {
     const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
@@ -41,7 +49,7 @@ if (signupForm) {
     try {
       const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
-      console.log('User signed in:', user);
+      await registerUser('', '', email);
       await redirectUser(email);
     } catch (error) {
       console.error('Error signing in:', error.code, error.message);
@@ -59,9 +67,6 @@ if (loginForm) {
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
       const idToken = await user.getIdToken();
-      console.log('User logged in\n');
-      console.log('User ID Token:', idToken);
-      console.log('User Profile:', user);
       await redirectUser(email);
     } catch (error) {
       console.error('Error logging in:', error.code, error.message);
@@ -76,10 +81,11 @@ if (googleLoginButton) {
     try {
       const result = await firebase.auth().signInWithPopup(provider);
       const user = result.user;
-      const idToken = result.credential.idToken;
-      console.log('User logged in with Google\n');
-      console.log('Google ID Token:', idToken);
-      console.log('Google User Profile:', result.additionalUserInfo.profile);
+      await registerUser(
+        user.displayName?.split(' ')[0] || '',
+        user.displayName?.split(' ')[1] || '',
+        user.email
+      );
       await redirectUser(user.email);
     } catch (error) {
       console.error('Error logging in with Google:', error.code, error.message);
@@ -87,20 +93,3 @@ if (googleLoginButton) {
   });
 }
 
-const appleLoginButton = document.querySelector('#apple-login');
-if (appleLoginButton) {
-  appleLoginButton.addEventListener('click', async () => {
-    const provider = new firebase.auth.OAuthProvider('apple.com');
-    try {
-      const result = await firebase.auth().signInWithPopup(provider);
-      const user = result.user;
-      const idToken = result.credential.idToken;
-      console.log('User logged in with Apple\n');
-      console.log('Apple ID Token:', idToken);
-      console.log('Apple User Profile:', result.additionalUserInfo.profile);
-      await redirectUser(user.email);
-    } catch (error) {
-      console.error('Error logging in with Apple:', error.code, error.message);
-    }
-  });
-}
