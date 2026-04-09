@@ -3,9 +3,9 @@ const path = require("path");
 const sql = require('mssql');
 
 const app = express();
+app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-// Database connection config
 const dbConfig = {
   server: 'lowlatency.database.windows.net',
   database: 'SkillBridge',
@@ -33,14 +33,11 @@ app.get("/", (req, res) => {
 
 app.get('/api/user/role', async (req, res) => {
   const email = req.query.email;
-  
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
   }
-  
   try {
     const result = await sql.query`SELECT role FROM [User] WHERE email = ${email}`;
-    
     if (result.recordset.length > 0) {
       res.json({ role: result.recordset[0].role });
     } else {
@@ -49,6 +46,22 @@ app.get('/api/user/role', async (req, res) => {
   } catch (error) {
     console.error('Database error:', error);
     res.status(500).json({ error: 'Database query failed' });
+  }
+});
+
+app.post('/api/user/register', async (req, res) => {
+  const { name, surname, email } = req.body;
+  try {
+    const existing = await sql.query`SELECT user_id FROM [User] WHERE email = ${email}`;
+    if (existing.recordset.length > 0) {
+      return res.json({ message: 'User already exists' });
+    }
+    await sql.query`INSERT INTO [User] (name, surname, email, role) 
+                    VALUES (${name}, ${surname}, ${email}, 'Applicant')`;
+    res.json({ message: 'User registered' });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Registration failed' });
   }
 });
 
