@@ -25,7 +25,8 @@ sql.connect(dbConfig).then(() => {
 
 app.use(express.static(path.join(__dirname, "views")));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "dummy-site")));
+app.use("/dummy-site", express.static(path.join(__dirname, "dummy-site")));
+
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
