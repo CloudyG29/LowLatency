@@ -26,14 +26,12 @@ async function redirectUser(email) {
     const userRole = data.role;
     
     if (userRole === "Applicant") {
-      window.location.href = "/applicant.html";
-    } else if (userRole === "Provider") {
-      window.location.href = "/provider.html";
-    } else if (userRole === "Admin") {
-      window.location.href = "/admin.html";
-    } else {
-      window.location.href = "/applicant.html";
-    }
+  window.location.href = "/dummy-site/applicant.html";
+} else if (userRole === "Provider") {
+  window.location.href = "/dummy-site/provider.html";
+} else if (userRole === "Admin") {
+  window.location.href = "/dummy-site/admin.html";
+}
   } catch (error) {
     console.error('Error fetching role:', error);
     window.location.href = "/applicant.html";
