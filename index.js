@@ -10,7 +10,7 @@ const dbConfig = {
   server: 'lowlatency.database.windows.net',
   database: 'SkillBridge',
   user: 'CloudSA22f63f5f',
-  password: 'LowLatency5',
+  
   options: {
     encrypt: true,
     trustServerCertificate: false
