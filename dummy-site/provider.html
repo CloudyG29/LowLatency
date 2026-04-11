@@ -3,41 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provider View</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Provider Dashboard - SkillBridge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .container { max-width: 850px; margin: 0 auto; }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p { color: #a0aec0; }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            color: #68d391;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+            font-family: Arial, sans-serif;
+        }
+
+        input::placeholder, textarea::placeholder { color: #718096; }
+        input:focus, textarea:focus { border-color: #38ef7d; }
+
+        .post-btn {
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 5px;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+
+        .post-btn:hover { opacity: 0.85; }
+
+        #postMessage { margin-top: 10px; font-size: 0.9rem; text-align: center; }
+
+        .opportunity-item {
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 20px 0;
+        }
+
+        .opportunity-item:last-child { border-bottom: none; }
+
+        .opp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .opp-header strong { color: #e2e8f0; font-size: 1.05rem; }
+
+        .status-pending { color: #f6c90e; font-weight: bold; font-size: 0.85rem; }
+        .status-approved { color: #68d391; font-weight: bold; font-size: 0.85rem; }
+
+        .opp-meta { color: #718096; font-size: 0.85rem; margin-bottom: 10px; }
+
+        .delete-btn {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .delete-btn:hover { opacity: 0.85; }
+
+        .empty-state { color: #718096; font-size: 0.9rem; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+    </style>
 </head>
-<body>  
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Provider Dashboard</h1>
+            <p>Welcome back, <span id="userName">Provider</span>! Post and manage your opportunities.</p>
+        </div>
 
-    <header>
-        <h1> Provider View</h1>
-        <p>Post an opportunity for applicants to view after admin approval.</p>
-    </header>
-
-    <main class="page-container">
-
-        <section class="feature-card">
-            <h2>Post Opportunity</h2>
-            <p>Submit a new learnership or internship opportunity.</p>
-
-            <input type="text" id="opportunityTitle" placeholder="Opportunity Title">
-            <input type="text" id="location" placeholder="Location">
-            <input type="text" id="duration" placeholder="Duration">
-            <textarea id="description" placeholder="Opportunity Description"></textarea>
-
-            <button id="postBtn">Post Listing</button>
+        <div class="card">
+            <h2>Post New Opportunity</h2>
+            <input type="text" id="title" placeholder="Opportunity Title" required>
+            <input type="text" id="company" placeholder="Company Name" required>
+            <input type="text" id="location" placeholder="Location" required>
+            <input type="text" id="duration" placeholder="Duration (e.g., 12 months)" required>
+            <input type="text" id="stipend" placeholder="Stipend (e.g., R5000/month)" required>
+            <textarea id="description" placeholder="Opportunity Description" rows="3" required></textarea>
+            <button class="post-btn" id="postBtn">Post Opportunity</button>
             <p id="postMessage"></p>
-        </section>
+        </div>
 
-        <section class="feature-card">
-            <h2>Listing Status</h2>
-            <p><strong>Title:</strong> Software Internship</p>
-            <p><strong>Status:</strong> Pending Approval</p>
-        </section>
+        <div class="card">
+            <h2>My Posted Opportunities</h2>
+            <div id="myOpportunities"></div>
+        </div>
 
-        <a href="index.html" class="back-link">← Back to Home</a>
+        <a href="/login.html" class="back-link">← Logout</a>
+    </div>
 
-    </main>
+    <script>
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+            const user = JSON.parse(userData);
+            document.getElementById('userName').innerHTML = user.companyName || user.firstName || 'Provider';
+        }
 
-    <script src="script.js"></script>
+        let providerOpportunities = JSON.parse(localStorage.getItem('providerOpportunities') || '[]');
+
+        function displayMyOpportunities() {
+            const container = document.getElementById('myOpportunities');
+            if (providerOpportunities.length === 0) {
+                container.innerHTML = '<p class="empty-state">No opportunities posted yet.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            providerOpportunities.forEach((opp, index) => {
+                const div = document.createElement('div');
+                div.className = 'opportunity-item';
+                div.innerHTML = `
+                    <div class="opp-header">
+                        <strong>${opp.title}</strong>
+                        <span class="${opp.status === 'pending' ? 'status-pending' : 'status-approved'}">● ${opp.status || 'pending'}</span>
+                    </div>
+                    <div class="opp-meta">${opp.company} · ${opp.location} · ${opp.duration} · ${opp.stipend}</div>
+                    <div class="opp-meta">${opp.description}</div>
+                    <button class="delete-btn" data-index="${index}">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    providerOpportunities.splice(btn.getAttribute('data-index'), 1);
+                    localStorage.setItem('providerOpportunities', JSON.stringify(providerOpportunities));
+                    displayMyOpportunities();
+                });
+            });
+        }
+
+        document.getElementById('postBtn').addEventListener('click', () => {
+            const newOpp = {
+                title: document.getElementById('title').value,
+                company: document.getElementById('company').value,
+                location: document.getElementById('location').value,
+                duration: document.getElementById('duration').value,
+                stipend: document.getElementById('stipend').value,
+                description: document.getElementById('description').value,
+                status: 'pending'
+            };
+
+            if (!newOpp.title || !newOpp.company) {
+                document.getElementById('postMessage').innerHTML = '⚠️ Please fill at least title and company.';
+                document.getElementById('postMessage').style.color = '#fc8181';
+                return;
+            }
+
+            providerOpportunities.push(newOpp);
+            localStorage.setItem('providerOpportunities', JSON.stringify(providerOpportunities));
+
+            ['title','company','location','duration','stipend','description'].forEach(id => document.getElementById(id).value = '');
+
+            document.getElementById('postMessage').innerHTML = '✅ Opportunity posted! Waiting for admin approval.';
+            document.getElementById('postMessage').style.color = '#68d391';
+
+            displayMyOpportunities();
+            setTimeout(() => document.getElementById('postMessage').innerHTML = '', 3000);
+        });
+
+        displayMyOpportunities();
+    </script>
 </body>
 </html>

@@ -3,58 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applicant View</title>
+    <title>Applicant Dashboard - SkillBridge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-   
-    <link rel="stylesheet" href="style.css">
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p { color: #a0aec0; }
+
+        h2 {
+            font-size: 1rem;
+            color: #63b3ed;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .opportunities-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .opportunity-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .opportunity-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,114,255,0.2);
+        }
+
+        .opportunity-card h3 {
+            color: #00c6ff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .opportunity-card p {
+            color: #a0aec0;
+            margin: 6px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .opportunity-card p strong { color: #e2e8f0; }
+
+        .apply-btn {
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .apply-btn:hover { opacity: 0.85; }
+        .apply-btn:disabled { background: rgba(255,255,255,0.1); cursor: not-allowed; opacity: 0.5; }
+
+        .already-applied {
+            display: block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(104,211,145,0.1);
+            border: 1px solid rgba(104,211,145,0.3);
+            color: #68d391;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .message {
+            margin-top: 10px;
+            color: #68d391;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Applicant Dashboard</h1>
+            <p>Welcome!</p>
+        </div>
 
-    
-    <header>
-        <h1>Applicant View</h1>
-        <p>Create an account to access opportunities and apply.</p>
-    </header>
+        <h2>Available Opportunities</h2>
+        <div id="opportunitiesList" class="opportunities-grid"></div>
 
-   
-    <main class="page-container">
+        <a href="/login.html" class="back-link">← Logout</a>
+    </div>
 
-      
-        <section class="feature-card">
-            <h2>Create Account</h2>
-            <p>Enter your details to register as an applicant.</p>
+    <script>
+        const opportunities = [
+            { id: 1, title: "Software Internship", company: "Amazon", location: "Johannesburg, Sandton", duration: "12 months", stipend: "R5000/month", description: "A beginner-friendly internship for aspiring software developers. Learn coding, testing, and deployment." },
+            { id: 2, title: "Data Science Learnership", company: "Microsoft", location: "Cape Town", duration: "18 months", stipend: "R6000/month", description: "Learn data analysis, machine learning, and AI fundamentals." },
+            { id: 3, title: "Finance Internship", company: "Standard Bank", location: "Johannesburg", duration: "12 months", stipend: "R5500/month", description: "Gain experience in banking, accounting, and financial analysis." },
+            { id: 4, title: "Marketing Learnership", company: "Nike", location: "Cape Town", duration: "6 months", stipend: "R4000/month", description: "Learn digital marketing, social media management, and brand strategy." }
+        ];
 
-           
-            <input type="text" id="firstName" placeholder="First Name">
-            <input type="text" id="surname" placeholder="Surname">
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <input type="password" id="confirmPassword" placeholder="Confirm Password">
-            <button id="registerBtn">Create Account</button>
-            <p id="registerMessage"></p>
-        </section>
+        function getApplications() {
+            return JSON.parse(localStorage.getItem('applications') || '[]');
+        }
 
-       
-        <section class="feature-card">
-            <h2>Available Opportunity</h2>
+        function hasApplied(id) {
+            return getApplications().some(a => a.opportunityId == id);
+        }
 
-            
-            <p><strong>Title:</strong> Software Internship</p>
-            <p><strong>Company:</strong> Amazon</p>
-            <p><strong>Location:</strong> Johannesburg, Sandton</p>
-            <p><strong>Duration:</strong> 12 months</p>
-            <p><strong>Description:</strong> A beginner-friendly internship for aspiring software developers.</p>
-           
-            <button id="applyBtn">Apply Now</button>
-            <p id="applyMessage"></p>
-        </section>
+        function renderOpportunities() {
+            const container = document.getElementById('opportunitiesList');
+            container.innerHTML = '';
 
-       >
-        <a href="index.html" class="back-link">← Back to Home</a>
+            const providerOpps = JSON.parse(localStorage.getItem('providerOpportunities') || '[]')
+                .filter(o => o.status === 'approved')
+                .map((o, i) => ({ ...o, id: 'p' + i }));
 
-    </main>
+            const allOpps = [...opportunities, ...providerOpps];
 
-    
-    <script src="script.js"></script>
+            allOpps.forEach(opp => {
+                const card = document.createElement('div');
+                card.className = 'opportunity-card';
+                const applied = hasApplied(opp.id);
+                card.innerHTML = `
+                    <h3>${opp.title}</h3>
+                    <p><strong>Company:</strong> ${opp.company}</p>
+                    <p><strong>Location:</strong> ${opp.location}</p>
+                    <p><strong>Duration:</strong> ${opp.duration}</p>
+                    <p><strong>Stipend:</strong> ${opp.stipend}</p>
+                    <p><strong>Description:</strong> ${opp.description}</p>
+                    ${applied
+                        ? `<div class="already-applied">✅ Already Applied</div>`
+                        : `<button class="apply-btn" data-id="${opp.id}">Apply Now</button>`
+                    }
+                    <div id="msg-${opp.id}" class="message"></div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    let applications = getApplications();
+                    applications.push({
+                        opportunityId: id,
+                        appliedDate: new Date().toLocaleDateString(),
+                        status: 'Pending'
+                    });
+                    localStorage.setItem('applications', JSON.stringify(applications));
+                    document.getElementById(`msg-${id}`).innerHTML = '✅ Application submitted!';
+                    setTimeout(() => renderOpportunities(), 1000);
+                });
+            });
+        }
+
+        renderOpportunities();
+    </script>
 </body>
 </html>

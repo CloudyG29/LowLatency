@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SkillBridge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            width: 380px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input::placeholder { color: #718096; }
+        input:focus { border-color: #0072ff; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .login-btn {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .google-btn {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-top: 12px;
+            margin-bottom: 5px;
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .forgot-link:hover { text-decoration: underline; }
+
+        .error {
+            color: #fc8181;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login to SkillBridge</h2>
+        <form id="loginForm" autocomplete="off">
+            <input type="email" id="email" placeholder="Email" required autocomplete="off">
+            <input type="password" id="password" placeholder="Password" required autocomplete="new-password">
+            <a href="/forgot-password.html" class="forgot-link">Forgot Password?</a>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <button class="google-btn" id="googleLogin">Login with Google</button>
+        <div id="errorMsg" class="error"></div>
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgirf1peij-kkhv9ir_5ea-L245W921w8",
+            authDomain: "skillbridge-5dcec.firebaseapp.com",
+            projectId: "skillbridge-5dcec",
+            storageBucket: "skillbridge-5dcec.firebasestorage.app",
+            messagingSenderId: "188202128236",
+            appId: "1:188202128236:web:aee457ff824cba8c965949",
+            measurementId: "G-NBYFQX660Y"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        function clearForm() {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function redirectBasedOnRole() {
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'Applicant') window.location.href = '/dummy-site/applicant.html';
+            else if (userRole === 'Provider') window.location.href = '/dummy-site/provider.html';
+            else if (userRole === 'Admin') window.location.href = '/dummy-site/admin.html';
+            else window.location.href = '/dummy-site/applicant.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await firebase.auth().signInWithEmailAndPassword(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                );
+                clearForm();
+                redirectBasedOnRole();
+            } catch (error) {
+                document.getElementById('errorMsg').innerText = 'Login failed: ' + error.message;
+            }
+        });
+
+        document.getElementById('googleLogin').addEventListener('click', async () => {
+            try {
+                await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+                clearForm();
+                redirectBasedOnRole();
+            } catch (error) {
+                document.getElementById('errorMsg').innerText = 'Google login failed: ' + error.message;
+            }
+        });
+
+        window.addEventListener('load', () => clearForm());
+    </script>
+</body>
+</html>

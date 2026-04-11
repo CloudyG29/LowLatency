@@ -3,34 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin View</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin Dashboard - SkillBridge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p { color: #a0aec0; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p { color: #a0aec0; font-size: 0.9rem; }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            color: #a0aec0;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .section {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            font-size: 1rem;
+            color: #f093fb;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        th { color: #e2e8f0; font-weight: bold; }
+
+        .status-pending {
+            background: rgba(246,201,14,0.15);
+            color: #f6c90e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-approved {
+            background: rgba(104,211,145,0.15);
+            color: #68d391;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-approve {
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reject {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-delete {
+            background: rgba(255,255,255,0.1);
+            color: #fc8181;
+            border: 1px solid rgba(252,129,129,0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-approve:hover, .btn-reject:hover, .btn-delete:hover { opacity: 0.8; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        p { color: #718096; font-size: 0.9rem; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Admin Dashboard</h1>
+            <p>Welcome, Admin! Manage opportunities and users below.</p>
+        </div>
 
-    <header>
-        <h1> Admin View</h1>
-        <p>Review submitted listings and decide whether they should be visible to applicants.</p>
-    </header>
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3 id="totalOpportunities">0</h3>
+                <p>Total Opportunities</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="pendingOpportunities">0</h3>
+                <p>Pending Approval</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalApplicants">0</h3>
+                <p>Total Applicants</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalProviders">0</h3>
+                <p>Total Providers</p>
+            </div>
+        </div>
 
-    <main class="page-container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('opportunities')">Opportunities</button>
+            <button class="tab" onclick="showTab('users')">Users</button>
+        </div>
 
-        <section class="feature-card">
-            <h2>Pending Listing Review</h2>
-            <p><strong>Title:</strong> Software Internship</p>
-            <p><strong>Provider:</strong> Cloud Skills Academy</p>
-            <p><strong>Status:</strong> <span id="statusText">Pending</span></p>
-            <p><strong>Description:</strong> Beginner-friendly internship for aspiring software developers.</p>
+        <div id="opportunitiesTab" class="tab-content active">
+            <div class="section">
+                <h2>Pending Opportunities</h2>
+                <div id="pendingTable"></div>
+            </div>
+            <div class="section">
+                <h2>All Opportunities</h2>
+                <div id="allTable"></div>
+            </div>
+        </div>
 
-            <button id="approveBtn">Approve</button>
-            <button id="rejectBtn">Reject</button>
-            <p id="adminMessage"></p>
-        </section>
+        <div id="usersTab" class="tab-content">
+            <div class="section">
+                <h2>Applicants</h2>
+                <div id="applicantsTable"></div>
+            </div>
+            <div class="section">
+                <h2>Providers</h2>
+                <div id="providersTable"></div>
+            </div>
+        </div>
 
-        <a href="index.html" class="back-link">← Back to Home</a>
+        <a href="/login.html" class="back-link">← Logout</a>
+    </div>
 
-    </main>
+    <script>
+        function getOpportunities() { return JSON.parse(localStorage.getItem('providerOpportunities') || '[]'); }
+        function saveOpportunities(o) { localStorage.setItem('providerOpportunities', JSON.stringify(o)); }
 
-    <script src="script.js"></script>
+        function updateStats() {
+            const opportunities = getOpportunities();
+            document.getElementById('totalOpportunities').innerText = opportunities.length;
+            document.getElementById('pendingOpportunities').innerText = opportunities.filter(o => o.status === 'pending').length;
+            const userData = localStorage.getItem('userData');
+            let applicants = 0, providers = 0;
+            if (userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'Applicant') applicants++;
+                if (user.role === 'Provider') providers++;
+            }
+            document.getElementById('totalApplicants').innerText = applicants;
+            document.getElementById('totalProviders').innerText = providers;
+        }
+
+        function displayPending() {
+            const opportunities = getOpportunities();
+            const pending = opportunities.filter(o => o.status === 'pending');
+            const container = document.getElementById('pendingTable');
+            if (pending.length === 0) { container.innerHTML = '<p>No pending opportunities.</p>'; return; }
+            let html = '<table><tr><th>Title</th><th>Company</th><th>Location</th><th>Duration</th><th>Stipend</th><th>Actions</th></tr>';
+            pending.forEach(opp => {
+                const idx = opportunities.findIndex(o => o.title === opp.title && o.company === opp.company);
+                html += `<tr><td>${opp.title}</td><td>${opp.company}</td><td>${opp.location}</td><td>${opp.duration}</td><td>${opp.stipend}</td><td>
+                    <button class="btn-approve" data-index="${idx}">Approve</button>
+                    <button class="btn-reject" data-index="${idx}">Reject</button>
+                </td></tr>`;
+            });
+            html += '</table>';
+            container.innerHTML = html;
+
+            document.querySelectorAll('.btn-approve').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const o = getOpportunities();
+                    o[parseInt(btn.getAttribute('data-index'))].status = 'approved';
+                    saveOpportunities(o); displayPending(); displayAll(); updateStats();
+                });
+            });
+
+            document.querySelectorAll('.btn-reject').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const o = getOpportunities();
+                    o.splice(parseInt(btn.getAttribute('data-index')), 1);
+                    saveOpportunities(o); displayPending(); displayAll(); updateStats();
+                });
+            });
+        }
+
+        function displayAll() {
+            const opportunities = getOpportunities();
+            const container = document.getElementById('allTable');
+            if (opportunities.length === 0) { container.innerHTML = '<p>No opportunities.</p>'; return; }
+            let html = '<table><tr><th>Title</th><th>Company</th><th>Location</th><th>Status</th><th>Action</th></tr>';
+            opportunities.forEach((opp, index) => {
+                html += `<tr><td>${opp.title}</td><td>${opp.company}</td><td>${opp.location}</td>
+                    <td><span class="${opp.status === 'approved' ? 'status-approved' : 'status-pending'}">${opp.status}</span></td>
+                    <td><button class="btn-delete" data-index="${index}">Delete</button></td></tr>`;
+            });
+            html += '</table>';
+            container.innerHTML = html;
+
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const o = getOpportunities();
+                    o.splice(parseInt(btn.getAttribute('data-index')), 1);
+                    saveOpportunities(o); displayPending(); displayAll(); updateStats();
+                });
+            });
+        }
+
+        function displayUsers() {
+            const applicants = [], providers = [];
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                const user = JSON.parse(userData);
+                if (user.role === 'Applicant') applicants.push(user);
+                if (user.role === 'Provider') providers.push(user);
+            }
+
+            let aHtml = applicants.length === 0 ? '<p>No applicants registered yet.</p>' :
+                '<table><tr><th>Name</th><th>Email</th><th>Role</th></tr>' +
+                applicants.map(u => `<tr><td>${u.firstName} ${u.lastName || ''}</td><td>${u.email}</td><td>Applicant</td></tr>`).join('') + '</table>';
+            document.getElementById('applicantsTable').innerHTML = aHtml;
+
+            let pHtml = providers.length === 0 ? '<p>No providers registered yet.</p>' :
+                '<table><tr><th>Name</th><th>Email</th><th>Role</th></tr>' +
+                providers.map(u => `<tr><td>${u.firstName}</td><td>${u.email}</td><td>Provider</td></tr>`).join('') + '</table>';
+            document.getElementById('providersTable').innerHTML = pHtml;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (tabName === 'opportunities') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('opportunitiesTab').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('usersTab').classList.add('active');
+                displayUsers();
+            }
+        }
+
+        displayPending();
+        displayAll();
+        updateStats();
+    </script>
 </body>
 </html>
