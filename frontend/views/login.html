@@ -140,7 +140,7 @@
           required
           autocomplete="new-password"
         />
-        <a href="/forgot-password.html" class="forgot-link">Forgot Password?</a>
+        <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
         <button type="submit" class="login-btn">Login</button>
       </form>
       <button class="google-btn" id="googleLogin">Login with Google</button>
@@ -170,12 +170,12 @@
       function redirectBasedOnRole() {
         const userRole = localStorage.getItem("userRole");
         if (userRole === "Applicant")
-          window.location.href = "/frontend/roles_htmls/applicant_view.html";
+          window.location.href = "/applicant";
         else if (userRole === "Provider")
-          window.location.href = "/frontend/roles_htmls/provider_view.html";
+          window.location.href = "/provider";
         else if (userRole === "Admin")
-          window.location.href = "/frontend/roles_htmls/admin_view.html";
-        else window.location.href = "/frontend/roles_htmls/applicant_view.html";
+          window.location.href = "/admin";
+        else window.location.href = "/applicant";
       }
 
       document

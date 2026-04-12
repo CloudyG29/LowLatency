@@ -148,7 +148,7 @@
 
         <div id="errorMsg" class="error"></div>
         <a href="/" class="back-link">← Back to Home</a>
-        <div class="login-link">Already have an account? <a href="/login.html">Login here</a></div>
+        <div class="login-link">Already have an account? <a href="/login">Login here</a></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -181,7 +181,7 @@
                     uid: userCredential.user.uid
                 }));
                 alert('Admin signup successful! Please login.');
-                window.location.href = '/login.html';
+                window.location.href = '/login';
             } catch (error) {
                 document.getElementById('errorMsg').innerText = error.message;
             }
@@ -200,7 +200,7 @@
                     uid: result.user.uid
                 }));
                 alert('Admin signup successful! Please login.');
-                window.location.href = '/login.html';
+                window.location.href = '/login';
             } catch (error) {
                 document.getElementById('errorMsg').innerText = error.message;
             }
