@@ -29,15 +29,15 @@ async function redirectUser(email) {
     const userRole = data.role;
 
     if (userRole === "Applicant") {
-      window.location.href = "/dummy-site/applicant.html";
+      window.location.href = "/frontend/roles_htmls/applicant_view.html";
     } else if (userRole === "Provider") {
-      window.location.href = "/dummy-site/provider.html";
+      window.location.href = "/frontend/roles_htmls/provider_view.html";
     } else if (userRole === "Admin") {
-      window.location.href = "/dummy-site/admin.html";
+      window.location.href = "/frontend/roles_htmls/admin_view.html";
     }
   } catch (error) {
     console.error("Error fetching role:", error);
-    window.location.href = "/applicant.html";
+    window.location.href = "/frontend/roles_htmls/applicant_view.html";
   }
 }
 
