@@ -22,6 +22,10 @@ app.get("/signup-provider", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "signup-provider.html"));
 });
 
+app.get("/signup-admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/views", "signup-admin.html"));
+});
+
 app.get("/applicant", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "applicant_view.html"));
 });
