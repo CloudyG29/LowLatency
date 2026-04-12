@@ -6,7 +6,7 @@ Welcome to the SkillBridge repository! This document outlines our project archit
 * **Nduvho Mulaudzi(2801257)** - CloudyG29
 * **Kgaogelo Mohlala(2836959)** - Kgaogelo96
 * **Moteku Tetelo(2679354)** - MotekuMagolo
-* **Lethabo Sekgobela(2684887) - Lethabo809
+* **Lethabo Sekgobela(2684887)** - Lethabo809
 
   ## Project Structure
   We are using the Monorepo structure to keep our web frontend and Node.js/Prisma backend cleanly separated.
