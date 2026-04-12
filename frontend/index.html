@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge - SA Learnership & Skills Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+
+        .hero .motivation {
+            font-size: 1.1rem;
+            color: #63b3ed;
+            font-style: italic;
+            margin-bottom: 50px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            margin: 0 auto 50px;
+            border-radius: 2px;
+        }
+
+        .role-label {
+            text-align: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 0 40px 60px;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 280px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 114, 255, 0.2);
+        }
+
+        .role-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .role-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .role-card p {
+            font-size: 0.95rem;
+            color: #a0aec0;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .card-button {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: opacity 0.2s ease;
+        }
+
+        .card-button:hover {
+            opacity: 0.85;
+        }
+
+        .btn-applicant {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .btn-provider {
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            color: white;
+        }
+
+        .btn-admin {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #4a5568;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>Welcome to SkillBridge</h1>
+        <p class="tagline">Connecting talent with opportunity across South Africa 🇿🇦</p>
+        <p class="motivation">"Your skills are your bridge to a better future!"</p>
+        <div class="divider"></div>
+        <p class="role-label">Choose your role to get started</p>
+    </div>
+
+    <main class="card-container">
+
+        <section class="role-card">
+            <div class="icon">🎓</div>
+            <h2>Applicant</h2>
+            <p>Create an account, view opportunities, and apply for learnerships and internships.</p>
+            <a href="/signup-applicant.html" class="card-button btn-applicant" onclick="selectRole('Applicant')">Get Started</a>
+        </section>
+
+        <section class="role-card">
+            <div class="icon">🏢</div>
+            <h2>Provider</h2>
+            <p>Post learnership or internship opportunities and connect with skilled applicants.</p>
+            <a href="/signup-provider.html" class="card-button btn-provider" onclick="selectRole('Provider')">Post Opportunities</a>
+        </section>
+
+        <section class="role-card">
+            <div class="icon">🛡️</div>
+            <h2>Admin</h2>
+            <p>Review submitted listings and manage the platform with full administrative access.</p>
+            <a href="/login.html" class="card-button btn-admin" onclick="selectRole('Admin')">Admin Login</a>
+        </section>
+
+    </main>
+
+    <div class="footer">
+        &copy; 2026 SkillBridge &mdash; Empowering South Africa's workforce
+    </div>
+
+    <script>
+        function selectRole(role) {
+            localStorage.setItem('userRole', role);
+        }
+    </script>
+
+</body>
+</html>
