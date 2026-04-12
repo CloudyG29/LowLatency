@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Dashboard - SkillBridge</title>
+    <link rel="stylesheet" href="../roles_css/applicant_view.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 Applicant Dashboard</h1>
+        <p>Welcome!</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('opportunities')">
+          Browse Opportunities
+        </button>
+        <button class="tab" onclick="showTab('applications')">
+          My Applications
+        </button>
+      </div>
+
+      <div id="opportunitiesTab" class="tab-content active">
+        <h2>Available Opportunities</h2>
+        <div id="opportunitiesList" class="opportunities-grid"></div>
+      </div>
+
+      <div id="applicationsTab" class="tab-content">
+        <h2>My Applications</h2>
+        <div id="applicationsList"></div>
+      </div>
+
+      <a href="/login.html" class="back-link">← Logout</a>
+    </div>
+
+    <script src="../roles_js/applicant_view.js"></script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Provider Dashboard - SkillBridge</title>
+    <link rel="stylesheet" href="../roles_css/provider_view.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🏢 Provider Dashboard</h1>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('post')">Post</button>
+        <button class="tab" onclick="showTab('manage')">
+          My Opportunities
+        </button>
+        <button class="tab" onclick="showTab('applications')">
+          Applications
+        </button>
+      </div>
+
+      <!-- POST -->
+      <div id="postTab" class="tab-content active">
+        <div class="card">
+          <input id="title" placeholder="Title" />
+          <input id="company" placeholder="Company" />
+          <input id="location" placeholder="Location" />
+          <input id="duration" placeholder="Duration" />
+          <input id="stipend" placeholder="Stipend" />
+          <textarea id="description" placeholder="Description"></textarea>
+          <button class="post-btn" onclick="postOpportunity()">Post</button>
+          <p id="msg"></p>
+        </div>
+      </div>
+
+      <!-- MANAGE -->
+      <div id="manageTab" class="tab-content">
+        <h2>My Opportunities</h2>
+        <div id="myOpportunities"></div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div id="applicationsTab" class="tab-content">
+        <h2>Applications</h2>
+        <div id="applicationsList"></div>
+      </div>
+
+      <a href="/login.html" class="back-link">← Logout</a>
+    </div>
+
+    <script src="../roles_js/provider_view.js"></script>
+  </body>
+</html>
