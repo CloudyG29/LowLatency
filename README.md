@@ -78,7 +78,7 @@ We are using Prisma ORM with a relational database. To run the backend locally, 
 The repository is configured for automated deployment to MS Azure
 * **Trigger:** The CI/CD pipeline is triggered automatically via GitHub Actions whenever a Pull Request is successfully merged into the main branch
 * **Testing:** The pipeline will first run our Jest automated tests. If the test fail, the **deployment will block**.
-* **Deployment:** If thr tests pass, the updated code is automatically packaged and pushed to our live Azure App Service environment.
+* **Deployment:** If the tests pass, the updated code is automatically packaged and pushed to our live Azure App Service environment.
 
 # Testing
 To meet our TDD requirements, we use Jest fpr User Acceptance Tests (UATs) and Code Coverage.
