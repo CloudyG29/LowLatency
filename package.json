@@ -2,10 +2,10 @@
   "name": "lowlatency",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "backend/index.js",
   "scripts": {
     "test": "jest",
-    "start": "node index.js"
+    "start": "node backend/index.js"
   },
   "repository": {
     "type": "git",
