@@ -1,0 +1,132 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: white;
+    padding: 30px 20px;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+.header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header h1 {
+    font-size: 2rem;
+    background: linear-gradient(90deg, #38ef7d, #11998e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab {
+    padding: 10px 25px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    color: #a0aec0;
+}
+
+.tab.active {
+    background: linear-gradient(90deg, #38ef7d, #11998e);
+    color: white;
+    border-color: transparent;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+h2 {
+    font-size: 1rem;
+    color: #68d391;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 16px;
+}
+
+.opportunity-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+.opportunity-card h3 {
+    color: #38ef7d;
+    margin-bottom: 10px;
+}
+
+.opportunity-card p {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+.status-badge {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-pending { background: rgba(246,201,14,0.15); color: #f6c90e; }
+.status-approved { background: rgba(104,211,145,0.15); color: #68d391; }
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: white;
+}
+
+.post-btn {
+    background: linear-gradient(90deg, #38ef7d, #11998e);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.delete-btn {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.05);
+    color: #fc8181;
+    border: 1px solid rgba(252,129,129,0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-hire { background: #38ef7d; border: none; padding: 5px 10px; margin-right: 5px; }
+.btn-reject { background: #f5576c; border: none; padding: 5px 10px; }
+
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    color: #63b3ed;
+    text-decoration: none;
+}
