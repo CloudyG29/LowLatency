@@ -80,11 +80,11 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.6.0
+ * Prisma Client JS version: 7.7.0
  * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.6.0",
+  client: "7.7.0",
   engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
@@ -713,10 +713,11 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   user_id: 'user_id',
+  firebase_uid: 'firebase_uid',
+  email: 'email',
   name: 'name',
   surname: 'surname',
-  role: 'role',
-  qualification: 'qualification'
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -725,7 +726,8 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const ProviderScalarFieldEnum = {
   provider_id: 'provider_id',
   provider_name: 'provider_name',
-  profile: 'profile'
+  profile: 'profile',
+  user_id: 'user_id'
 } as const
 
 export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
@@ -733,11 +735,12 @@ export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typ
 
 export const ListingScalarFieldEnum = {
   listings_id: 'listings_id',
-  user_id: 'user_id',
+  provider_id: 'provider_id',
   listname: 'listname',
   list_type: 'list_type',
   nqf_level: 'nqf_level',
-  description: 'description'
+  description: 'description',
+  status: 'status'
 } as const
 
 export type ListingScalarFieldEnum = (typeof ListingScalarFieldEnum)[keyof typeof ListingScalarFieldEnum]
@@ -746,6 +749,7 @@ export type ListingScalarFieldEnum = (typeof ListingScalarFieldEnum)[keyof typeo
 export const ApplicationScalarFieldEnum = {
   application_id: 'application_id',
   user_id: 'user_id',
+  listing_id: 'listing_id',
   provider_id: 'provider_id',
   cv: 'cv',
   status: 'status'

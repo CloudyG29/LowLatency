@@ -28,82 +28,88 @@ export type AggregateListing = {
 
 export type ListingAvgAggregateOutputType = {
   listings_id: number | null
-  user_id: number | null
+  provider_id: number | null
   nqf_level: number | null
 }
 
 export type ListingSumAggregateOutputType = {
   listings_id: number | null
-  user_id: number | null
+  provider_id: number | null
   nqf_level: number | null
 }
 
 export type ListingMinAggregateOutputType = {
   listings_id: number | null
-  user_id: number | null
+  provider_id: number | null
   listname: string | null
   list_type: string | null
   nqf_level: number | null
   description: string | null
+  status: string | null
 }
 
 export type ListingMaxAggregateOutputType = {
   listings_id: number | null
-  user_id: number | null
+  provider_id: number | null
   listname: string | null
   list_type: string | null
   nqf_level: number | null
   description: string | null
+  status: string | null
 }
 
 export type ListingCountAggregateOutputType = {
   listings_id: number
-  user_id: number
+  provider_id: number
   listname: number
   list_type: number
   nqf_level: number
   description: number
+  status: number
   _all: number
 }
 
 
 export type ListingAvgAggregateInputType = {
   listings_id?: true
-  user_id?: true
+  provider_id?: true
   nqf_level?: true
 }
 
 export type ListingSumAggregateInputType = {
   listings_id?: true
-  user_id?: true
+  provider_id?: true
   nqf_level?: true
 }
 
 export type ListingMinAggregateInputType = {
   listings_id?: true
-  user_id?: true
+  provider_id?: true
   listname?: true
   list_type?: true
   nqf_level?: true
   description?: true
+  status?: true
 }
 
 export type ListingMaxAggregateInputType = {
   listings_id?: true
-  user_id?: true
+  provider_id?: true
   listname?: true
   list_type?: true
   nqf_level?: true
   description?: true
+  status?: true
 }
 
 export type ListingCountAggregateInputType = {
   listings_id?: true
-  user_id?: true
+  provider_id?: true
   listname?: true
   list_type?: true
   nqf_level?: true
   description?: true
+  status?: true
   _all?: true
 }
 
@@ -195,11 +201,12 @@ export type ListingGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type ListingGroupByOutputType = {
   listings_id: number
-  user_id: number
+  provider_id: number
   listname: string
   list_type: string
   nqf_level: number | null
   description: string | null
+  status: string
   _count: ListingCountAggregateOutputType | null
   _avg: ListingAvgAggregateOutputType | null
   _sum: ListingSumAggregateOutputType | null
@@ -227,22 +234,26 @@ export type ListingWhereInput = {
   OR?: Prisma.ListingWhereInput[]
   NOT?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
   listings_id?: Prisma.IntFilter<"Listing"> | number
-  user_id?: Prisma.IntFilter<"Listing"> | number
+  provider_id?: Prisma.IntFilter<"Listing"> | number
   listname?: Prisma.StringFilter<"Listing"> | string
   list_type?: Prisma.StringFilter<"Listing"> | string
   nqf_level?: Prisma.IntNullableFilter<"Listing"> | number | null
   description?: Prisma.StringNullableFilter<"Listing"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  status?: Prisma.StringFilter<"Listing"> | string
+  provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
+  applications?: Prisma.ApplicationListRelationFilter
 }
 
 export type ListingOrderByWithRelationInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   listname?: Prisma.SortOrder
   list_type?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  status?: Prisma.SortOrder
+  provider?: Prisma.ProviderOrderByWithRelationInput
+  applications?: Prisma.ApplicationOrderByRelationAggregateInput
 }
 
 export type ListingWhereUniqueInput = Prisma.AtLeast<{
@@ -250,21 +261,24 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
   OR?: Prisma.ListingWhereInput[]
   NOT?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
-  user_id?: Prisma.IntFilter<"Listing"> | number
+  provider_id?: Prisma.IntFilter<"Listing"> | number
   listname?: Prisma.StringFilter<"Listing"> | string
   list_type?: Prisma.StringFilter<"Listing"> | string
   nqf_level?: Prisma.IntNullableFilter<"Listing"> | number | null
   description?: Prisma.StringNullableFilter<"Listing"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  status?: Prisma.StringFilter<"Listing"> | string
+  provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
+  applications?: Prisma.ApplicationListRelationFilter
 }, "listings_id">
 
 export type ListingOrderByWithAggregationInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   listname?: Prisma.SortOrder
   list_type?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.ListingCountOrderByAggregateInput
   _avg?: Prisma.ListingAvgOrderByAggregateInput
   _max?: Prisma.ListingMaxOrderByAggregateInput
@@ -277,11 +291,12 @@ export type ListingScalarWhereWithAggregatesInput = {
   OR?: Prisma.ListingScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ListingScalarWhereWithAggregatesInput | Prisma.ListingScalarWhereWithAggregatesInput[]
   listings_id?: Prisma.IntWithAggregatesFilter<"Listing"> | number
-  user_id?: Prisma.IntWithAggregatesFilter<"Listing"> | number
+  provider_id?: Prisma.IntWithAggregatesFilter<"Listing"> | number
   listname?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   list_type?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   nqf_level?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
+  status?: Prisma.StringWithAggregatesFilter<"Listing"> | string
 }
 
 export type ListingCreateInput = {
@@ -289,16 +304,20 @@ export type ListingCreateInput = {
   list_type: string
   nqf_level?: number | null
   description?: string | null
-  user: Prisma.UserCreateNestedOneWithoutListingsInput
+  status?: string
+  provider: Prisma.ProviderCreateNestedOneWithoutListingsInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutListingInput
 }
 
 export type ListingUncheckedCreateInput = {
   listings_id?: number
-  user_id: number
+  provider_id: number
   listname: string
   list_type: string
   nqf_level?: number | null
   description?: string | null
+  status?: string
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutListingInput
 }
 
 export type ListingUpdateInput = {
@@ -306,24 +325,29 @@ export type ListingUpdateInput = {
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutListingsNestedInput
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutListingsNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateInput = {
   listings_id?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   listname?: Prisma.StringFieldUpdateOperationsInput | string
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateManyInput = {
-  user_id: number
+  provider_id: number
   listname: string
   list_type: string
   nqf_level?: number | null
   description?: string | null
+  status?: string
 }
 
 export type ListingUpdateManyMutationInput = {
@@ -331,15 +355,17 @@ export type ListingUpdateManyMutationInput = {
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ListingUncheckedUpdateManyInput = {
   listings_id?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   listname?: Prisma.StringFieldUpdateOperationsInput | string
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ListingListRelationFilter = {
@@ -354,82 +380,90 @@ export type ListingOrderByRelationAggregateInput = {
 
 export type ListingCountOrderByAggregateInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   listname?: Prisma.SortOrder
   list_type?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type ListingAvgOrderByAggregateInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrder
 }
 
 export type ListingMaxOrderByAggregateInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   listname?: Prisma.SortOrder
   list_type?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type ListingMinOrderByAggregateInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   listname?: Prisma.SortOrder
   list_type?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type ListingSumOrderByAggregateInput = {
   listings_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
+  provider_id?: Prisma.SortOrder
   nqf_level?: Prisma.SortOrder
 }
 
-export type ListingCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput> | Prisma.ListingCreateWithoutUserInput[] | Prisma.ListingUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutUserInput | Prisma.ListingCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ListingCreateManyUserInputEnvelope
+export type ListingScalarRelationFilter = {
+  is?: Prisma.ListingWhereInput
+  isNot?: Prisma.ListingWhereInput
+}
+
+export type ListingCreateNestedManyWithoutProviderInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput> | Prisma.ListingCreateWithoutProviderInput[] | Prisma.ListingUncheckedCreateWithoutProviderInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutProviderInput | Prisma.ListingCreateOrConnectWithoutProviderInput[]
+  createMany?: Prisma.ListingCreateManyProviderInputEnvelope
   connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
 }
 
-export type ListingUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput> | Prisma.ListingCreateWithoutUserInput[] | Prisma.ListingUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutUserInput | Prisma.ListingCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ListingCreateManyUserInputEnvelope
+export type ListingUncheckedCreateNestedManyWithoutProviderInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput> | Prisma.ListingCreateWithoutProviderInput[] | Prisma.ListingUncheckedCreateWithoutProviderInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutProviderInput | Prisma.ListingCreateOrConnectWithoutProviderInput[]
+  createMany?: Prisma.ListingCreateManyProviderInputEnvelope
   connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
 }
 
-export type ListingUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput> | Prisma.ListingCreateWithoutUserInput[] | Prisma.ListingUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutUserInput | Prisma.ListingCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutUserInput | Prisma.ListingUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ListingCreateManyUserInputEnvelope
+export type ListingUpdateManyWithoutProviderNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput> | Prisma.ListingCreateWithoutProviderInput[] | Prisma.ListingUncheckedCreateWithoutProviderInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutProviderInput | Prisma.ListingCreateOrConnectWithoutProviderInput[]
+  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutProviderInput | Prisma.ListingUpsertWithWhereUniqueWithoutProviderInput[]
+  createMany?: Prisma.ListingCreateManyProviderInputEnvelope
   set?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   disconnect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   delete?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
-  update?: Prisma.ListingUpdateWithWhereUniqueWithoutUserInput | Prisma.ListingUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutUserInput | Prisma.ListingUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.ListingUpdateWithWhereUniqueWithoutProviderInput | Prisma.ListingUpdateWithWhereUniqueWithoutProviderInput[]
+  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutProviderInput | Prisma.ListingUpdateManyWithWhereWithoutProviderInput[]
   deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
-export type ListingUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput> | Prisma.ListingCreateWithoutUserInput[] | Prisma.ListingUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutUserInput | Prisma.ListingCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutUserInput | Prisma.ListingUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ListingCreateManyUserInputEnvelope
+export type ListingUncheckedUpdateManyWithoutProviderNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput> | Prisma.ListingCreateWithoutProviderInput[] | Prisma.ListingUncheckedCreateWithoutProviderInput[]
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutProviderInput | Prisma.ListingCreateOrConnectWithoutProviderInput[]
+  upsert?: Prisma.ListingUpsertWithWhereUniqueWithoutProviderInput | Prisma.ListingUpsertWithWhereUniqueWithoutProviderInput[]
+  createMany?: Prisma.ListingCreateManyProviderInputEnvelope
   set?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   disconnect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   delete?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
   connect?: Prisma.ListingWhereUniqueInput | Prisma.ListingWhereUniqueInput[]
-  update?: Prisma.ListingUpdateWithWhereUniqueWithoutUserInput | Prisma.ListingUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutUserInput | Prisma.ListingUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.ListingUpdateWithWhereUniqueWithoutProviderInput | Prisma.ListingUpdateWithWhereUniqueWithoutProviderInput[]
+  updateMany?: Prisma.ListingUpdateManyWithWhereWithoutProviderInput | Prisma.ListingUpdateManyWithWhereWithoutProviderInput[]
   deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
@@ -441,44 +475,62 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type ListingCreateWithoutUserInput = {
+export type ListingCreateNestedOneWithoutApplicationsInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutApplicationsInput, Prisma.ListingUncheckedCreateWithoutApplicationsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutApplicationsInput
+  connect?: Prisma.ListingWhereUniqueInput
+}
+
+export type ListingUpdateOneRequiredWithoutApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutApplicationsInput, Prisma.ListingUncheckedCreateWithoutApplicationsInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutApplicationsInput
+  upsert?: Prisma.ListingUpsertWithoutApplicationsInput
+  connect?: Prisma.ListingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingUpdateToOneWithWhereWithoutApplicationsInput, Prisma.ListingUpdateWithoutApplicationsInput>, Prisma.ListingUncheckedUpdateWithoutApplicationsInput>
+}
+
+export type ListingCreateWithoutProviderInput = {
   listname: string
   list_type: string
   nqf_level?: number | null
   description?: string | null
+  status?: string
+  applications?: Prisma.ApplicationCreateNestedManyWithoutListingInput
 }
 
-export type ListingUncheckedCreateWithoutUserInput = {
+export type ListingUncheckedCreateWithoutProviderInput = {
   listings_id?: number
   listname: string
   list_type: string
   nqf_level?: number | null
   description?: string | null
+  status?: string
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutListingInput
 }
 
-export type ListingCreateOrConnectWithoutUserInput = {
+export type ListingCreateOrConnectWithoutProviderInput = {
   where: Prisma.ListingWhereUniqueInput
-  create: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput>
 }
 
-export type ListingCreateManyUserInputEnvelope = {
-  data: Prisma.ListingCreateManyUserInput | Prisma.ListingCreateManyUserInput[]
+export type ListingCreateManyProviderInputEnvelope = {
+  data: Prisma.ListingCreateManyProviderInput | Prisma.ListingCreateManyProviderInput[]
 }
 
-export type ListingUpsertWithWhereUniqueWithoutUserInput = {
+export type ListingUpsertWithWhereUniqueWithoutProviderInput = {
   where: Prisma.ListingWhereUniqueInput
-  update: Prisma.XOR<Prisma.ListingUpdateWithoutUserInput, Prisma.ListingUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.ListingCreateWithoutUserInput, Prisma.ListingUncheckedCreateWithoutUserInput>
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutProviderInput, Prisma.ListingUncheckedUpdateWithoutProviderInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutProviderInput, Prisma.ListingUncheckedCreateWithoutProviderInput>
 }
 
-export type ListingUpdateWithWhereUniqueWithoutUserInput = {
+export type ListingUpdateWithWhereUniqueWithoutProviderInput = {
   where: Prisma.ListingWhereUniqueInput
-  data: Prisma.XOR<Prisma.ListingUpdateWithoutUserInput, Prisma.ListingUncheckedUpdateWithoutUserInput>
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutProviderInput, Prisma.ListingUncheckedUpdateWithoutProviderInput>
 }
 
-export type ListingUpdateManyWithWhereWithoutUserInput = {
+export type ListingUpdateManyWithWhereWithoutProviderInput = {
   where: Prisma.ListingScalarWhereInput
-  data: Prisma.XOR<Prisma.ListingUpdateManyMutationInput, Prisma.ListingUncheckedUpdateManyWithoutUserInput>
+  data: Prisma.XOR<Prisma.ListingUpdateManyMutationInput, Prisma.ListingUncheckedUpdateManyWithoutProviderInput>
 }
 
 export type ListingScalarWhereInput = {
@@ -486,83 +538,181 @@ export type ListingScalarWhereInput = {
   OR?: Prisma.ListingScalarWhereInput[]
   NOT?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
   listings_id?: Prisma.IntFilter<"Listing"> | number
-  user_id?: Prisma.IntFilter<"Listing"> | number
+  provider_id?: Prisma.IntFilter<"Listing"> | number
   listname?: Prisma.StringFilter<"Listing"> | string
   list_type?: Prisma.StringFilter<"Listing"> | string
   nqf_level?: Prisma.IntNullableFilter<"Listing"> | number | null
   description?: Prisma.StringNullableFilter<"Listing"> | string | null
+  status?: Prisma.StringFilter<"Listing"> | string
 }
 
-export type ListingCreateManyUserInput = {
+export type ListingCreateWithoutApplicationsInput = {
   listname: string
   list_type: string
   nqf_level?: number | null
   description?: string | null
+  status?: string
+  provider: Prisma.ProviderCreateNestedOneWithoutListingsInput
 }
 
-export type ListingUpdateWithoutUserInput = {
+export type ListingUncheckedCreateWithoutApplicationsInput = {
+  listings_id?: number
+  provider_id: number
+  listname: string
+  list_type: string
+  nqf_level?: number | null
+  description?: string | null
+  status?: string
+}
+
+export type ListingCreateOrConnectWithoutApplicationsInput = {
+  where: Prisma.ListingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingCreateWithoutApplicationsInput, Prisma.ListingUncheckedCreateWithoutApplicationsInput>
+}
+
+export type ListingUpsertWithoutApplicationsInput = {
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutApplicationsInput, Prisma.ListingUncheckedUpdateWithoutApplicationsInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutApplicationsInput, Prisma.ListingUncheckedCreateWithoutApplicationsInput>
+  where?: Prisma.ListingWhereInput
+}
+
+export type ListingUpdateToOneWithWhereWithoutApplicationsInput = {
+  where?: Prisma.ListingWhereInput
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutApplicationsInput, Prisma.ListingUncheckedUpdateWithoutApplicationsInput>
+}
+
+export type ListingUpdateWithoutApplicationsInput = {
   listname?: Prisma.StringFieldUpdateOperationsInput | string
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutListingsNestedInput
 }
 
-export type ListingUncheckedUpdateWithoutUserInput = {
+export type ListingUncheckedUpdateWithoutApplicationsInput = {
+  listings_id?: Prisma.IntFieldUpdateOperationsInput | number
+  provider_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listname?: Prisma.StringFieldUpdateOperationsInput | string
+  list_type?: Prisma.StringFieldUpdateOperationsInput | string
+  nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ListingCreateManyProviderInput = {
+  listname: string
+  list_type: string
+  nqf_level?: number | null
+  description?: string | null
+  status?: string
+}
+
+export type ListingUpdateWithoutProviderInput = {
+  listname?: Prisma.StringFieldUpdateOperationsInput | string
+  list_type?: Prisma.StringFieldUpdateOperationsInput | string
+  nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  applications?: Prisma.ApplicationUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateWithoutProviderInput = {
   listings_id?: Prisma.IntFieldUpdateOperationsInput | number
   listname?: Prisma.StringFieldUpdateOperationsInput | string
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutListingNestedInput
 }
 
-export type ListingUncheckedUpdateManyWithoutUserInput = {
+export type ListingUncheckedUpdateManyWithoutProviderInput = {
   listings_id?: Prisma.IntFieldUpdateOperationsInput | number
   listname?: Prisma.StringFieldUpdateOperationsInput | string
   list_type?: Prisma.StringFieldUpdateOperationsInput | string
   nqf_level?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+
+/**
+ * Count Type ListingCountOutputType
+ */
+
+export type ListingCountOutputType = {
+  applications: number
+}
+
+export type ListingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  applications?: boolean | ListingCountOutputTypeCountApplicationsArgs
+}
+
+/**
+ * ListingCountOutputType without action
+ */
+export type ListingCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ListingCountOutputType
+   */
+  select?: Prisma.ListingCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ListingCountOutputType without action
+ */
+export type ListingCountOutputTypeCountApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApplicationWhereInput
+}
 
 
 export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   listings_id?: boolean
-  user_id?: boolean
+  provider_id?: boolean
   listname?: boolean
   list_type?: boolean
   nqf_level?: boolean
   description?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  status?: boolean
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  applications?: boolean | Prisma.Listing$applicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listing"]>
 
 
 
 export type ListingSelectScalar = {
   listings_id?: boolean
-  user_id?: boolean
+  provider_id?: boolean
   listname?: boolean
   list_type?: boolean
   nqf_level?: boolean
   description?: boolean
+  status?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"listings_id" | "user_id" | "listname" | "list_type" | "nqf_level" | "description", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"listings_id" | "provider_id" | "listname" | "list_type" | "nqf_level" | "description" | "status", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
+  applications?: boolean | Prisma.Listing$applicationsArgs<ExtArgs>
+  _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Listing"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    provider: Prisma.$ProviderPayload<ExtArgs>
+    applications: Prisma.$ApplicationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     listings_id: number
-    user_id: number
+    provider_id: number
     listname: string
     list_type: string
     nqf_level: number | null
     description: string | null
+    status: string
   }, ExtArgs["result"]["listing"]>
   composites: {}
 }
@@ -903,7 +1053,8 @@ readonly fields: ListingFieldRefs;
  */
 export interface Prisma__ListingClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  provider<T extends Prisma.ProviderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProviderDefaultArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  applications<T extends Prisma.Listing$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -934,11 +1085,12 @@ export interface Prisma__ListingClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface ListingFieldRefs {
   readonly listings_id: Prisma.FieldRef<"Listing", 'Int'>
-  readonly user_id: Prisma.FieldRef<"Listing", 'Int'>
+  readonly provider_id: Prisma.FieldRef<"Listing", 'Int'>
   readonly listname: Prisma.FieldRef<"Listing", 'String'>
   readonly list_type: Prisma.FieldRef<"Listing", 'String'>
   readonly nqf_level: Prisma.FieldRef<"Listing", 'Int'>
   readonly description: Prisma.FieldRef<"Listing", 'String'>
+  readonly status: Prisma.FieldRef<"Listing", 'String'>
 }
     
 
@@ -1283,6 +1435,30 @@ export type ListingDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Listings to delete.
    */
   limit?: number
+}
+
+/**
+ * Listing.applications
+ */
+export type Listing$applicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Application
+   */
+  select?: Prisma.ApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Application
+   */
+  omit?: Prisma.ApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApplicationInclude<ExtArgs> | null
+  where?: Prisma.ApplicationWhereInput
+  orderBy?: Prisma.ApplicationOrderByWithRelationInput | Prisma.ApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.ApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApplicationScalarFieldEnum | Prisma.ApplicationScalarFieldEnum[]
 }
 
 /**

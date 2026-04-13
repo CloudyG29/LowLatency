@@ -4,8 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -13,42 +12,58 @@ datasource db {
 }
 
 model User {
-  user_id      Int           @id @default(autoincrement())
-  name         String
-  surname      String
-  role         String
-  qualification String?
-
-  listings     Listing[]
-  applications Application[]
+  user_id       Int           @id @default(autoincrement())
+  firebase_uid  String        @unique
+  email         String        @unique
+  name          String
+  surname       String
+  role          String        // "Admin", "Applicant", "Provider"
+  
+  // Relations
+  applications  Application[]
+  provider      Provider?     // A user might have a Provider profile
 }
 
 model Provider {
   provider_id   Int           @id @default(autoincrement())
   provider_name String
   profile       String?
-
+  user_id       Int           @unique
+  
+  // The user this provider profile belongs to
+  user          User          @relation(fields: [user_id], references: [user_id])
+  
+  // NEW: Listings now belong to the Provider profile
+  listings      Listing[]     
   applications  Application[]
 }
 
 model Listing {
-  listings_id Int    @id @default(autoincrement())
-  user_id     Int
-  listname    String
-  list_type   String
-  nqf_level   Int?
-  description String?
+  listings_id   Int           @id @default(autoincrement())
+  provider_id   Int
+  listname      String
+  list_type     String
+  nqf_level     Int?
+  description   String?
+  status        String        @default("pending")
 
-  user User @relation(fields: [user_id], references: [user_id])
+  provider      Provider      @relation(fields: [provider_id], references: [provider_id])
+  // Add this so the Application model can link back to here
+  applications  Application[] 
 }
 
 model Application {
-  application_id Int    @id @default(autoincrement())
+  application_id Int      @id @default(autoincrement())
   user_id        Int
+  listing_id     Int
   provider_id    Int
   cv             String
-  status         String
+  status         String @default("pending")
 
-  user     User     @relation(fields: [user_id], references: [user_id])
-  provider Provider @relation(fields: [provider_id], references: [provider_id])
+  // We keep Cascade on the User (the Applicant)
+  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  
+  // We set NoAction on these two to break the circular/multiple path error
+  listing  Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)
+  provider Provider @relation(fields: [provider_id], references: [provider_id], onDelete: NoAction, onUpdate: NoAction)
 }
