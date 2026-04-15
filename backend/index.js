@@ -1,9 +1,7 @@
 const express = require("express");
 const path = require("path");
-const { PrismaClient } = require('@prisma/client');
 
 const app = express();
-const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "../frontend")));
 
