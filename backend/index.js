@@ -4,6 +4,8 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.use(express.json());
 // app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.get("/", (req, res) => {
@@ -20,6 +22,10 @@ app.get("/signup-applicant", (req, res) => {
 
 app.get("/signup-provider", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "signup-provider.html"));
+});
+
+app.get("/signup-admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/views", "signup-admin.html"));
 });
 
 app.get("/applicant", (req, res) => {

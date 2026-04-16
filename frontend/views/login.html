@@ -148,71 +148,29 @@
       <a href="/" class="back-link">← Back to Home</a>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyDgirf1peij-kkhv9ir_5ea-L245W921w8",
-        authDomain: "skillbridge-5dcec.firebaseapp.com",
-        projectId: "skillbridge-5dcec",
-        storageBucket: "skillbridge-5dcec.firebasestorage.app",
-        messagingSenderId: "188202128236",
-        appId: "1:188202128236:web:aee457ff824cba8c965949",
-        measurementId: "G-NBYFQX660Y",
-      };
-      firebase.initializeApp(firebaseConfig);
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-      function clearForm() {
-        document.getElementById("email").value = "";
-        document.getElementById("password").value = "";
-      }
+<script src="../public/firebase.js"></script> 
 
-      function redirectBasedOnRole() {
-        const userRole = localStorage.getItem("userRole");
-        if (userRole === "Applicant")
-          window.location.href = "/applicant";
-        else if (userRole === "Provider")
-          window.location.href = "/provider";
-        else if (userRole === "Admin")
-          window.location.href = "/admin";
-        else window.location.href = "/applicant";
-      }
+<script>
+    const errorDiv = document.getElementById('errorMsg'); // Assuming you have an error div
 
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          try {
-            await firebase
-              .auth()
-              .signInWithEmailAndPassword(
-                document.getElementById("email").value,
-                document.getElementById("password").value,
-              );
-            clearForm();
-            redirectBasedOnRole();
-          } catch (error) {
-            document.getElementById("errorMsg").innerText =
-              "Login failed: " + error.message;
-          }
-        });
+    // Listen for the login form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Stop the page from refreshing
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-      document
-        .getElementById("googleLogin")
-        .addEventListener("click", async () => {
-          try {
-            await firebase
-              .auth()
-              .signInWithPopup(new firebase.auth.GoogleAuthProvider());
-            clearForm();
-            redirectBasedOnRole();
-          } catch (error) {
-            document.getElementById("errorMsg").innerText =
-              "Google login failed: " + error.message;
-          }
-        });
-
-      window.addEventListener("load", () => clearForm());
-    </script>
+        try {
+            // Call the function from firebase.js
+            await loginAndRedirect(email, password);
+        } catch (error) {
+            // Show error if password is wrong or user doesn't exist
+            errorDiv.innerText = error.message; 
+        }
+    });
+</script>
   </body>
 </html>

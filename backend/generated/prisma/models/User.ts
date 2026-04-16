@@ -36,26 +36,29 @@ export type UserSumAggregateOutputType = {
 
 export type UserMinAggregateOutputType = {
   user_id: number | null
+  firebase_uid: string | null
+  email: string | null
   name: string | null
   surname: string | null
   role: string | null
-  qualification: string | null
 }
 
 export type UserMaxAggregateOutputType = {
   user_id: number | null
+  firebase_uid: string | null
+  email: string | null
   name: string | null
   surname: string | null
   role: string | null
-  qualification: string | null
 }
 
 export type UserCountAggregateOutputType = {
   user_id: number
+  firebase_uid: number
+  email: number
   name: number
   surname: number
   role: number
-  qualification: number
   _all: number
 }
 
@@ -70,26 +73,29 @@ export type UserSumAggregateInputType = {
 
 export type UserMinAggregateInputType = {
   user_id?: true
+  firebase_uid?: true
+  email?: true
   name?: true
   surname?: true
   role?: true
-  qualification?: true
 }
 
 export type UserMaxAggregateInputType = {
   user_id?: true
+  firebase_uid?: true
+  email?: true
   name?: true
   surname?: true
   role?: true
-  qualification?: true
 }
 
 export type UserCountAggregateInputType = {
   user_id?: true
+  firebase_uid?: true
+  email?: true
   name?: true
   surname?: true
   role?: true
-  qualification?: true
   _all?: true
 }
 
@@ -181,10 +187,11 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   user_id: number
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -212,43 +219,47 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   user_id?: Prisma.IntFilter<"User"> | number
+  firebase_uid?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
   surname?: Prisma.StringFilter<"User"> | string
   role?: Prisma.StringFilter<"User"> | string
-  qualification?: Prisma.StringNullableFilter<"User"> | string | null
-  listings?: Prisma.ListingListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
+  provider?: Prisma.XOR<Prisma.ProviderNullableScalarRelationFilter, Prisma.ProviderWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
   user_id?: Prisma.SortOrder
+  firebase_uid?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   surname?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
-  listings?: Prisma.ListingOrderByRelationAggregateInput
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
+  provider?: Prisma.ProviderOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   user_id?: number
+  firebase_uid?: string
+  email?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   surname?: Prisma.StringFilter<"User"> | string
   role?: Prisma.StringFilter<"User"> | string
-  qualification?: Prisma.StringNullableFilter<"User"> | string | null
-  listings?: Prisma.ListingListRelationFilter
   applications?: Prisma.ApplicationListRelationFilter
-}, "user_id">
+  provider?: Prisma.XOR<Prisma.ProviderNullableScalarRelationFilter, Prisma.ProviderWhereInput> | null
+}, "user_id" | "firebase_uid" | "email">
 
 export type UserOrderByWithAggregationInput = {
   user_id?: Prisma.SortOrder
+  firebase_uid?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   surname?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  qualification?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -261,78 +272,87 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   user_id?: Prisma.IntWithAggregatesFilter<"User"> | number
+  firebase_uid?: Prisma.StringWithAggregatesFilter<"User"> | string
+  email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   surname?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
-  qualification?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
-  listings?: Prisma.ListingCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  provider?: Prisma.ProviderCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   user_id?: number
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
-  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutUserInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  provider?: Prisma.ProviderUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  listings?: Prisma.ListingUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  provider?: Prisma.ProviderUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  listings?: Prisma.ListingUncheckedUpdateManyWithoutUserNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  provider?: Prisma.ProviderUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
+  firebase_uid?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   surname?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  qualification?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -341,18 +361,20 @@ export type UserAvgOrderByAggregateInput = {
 
 export type UserMaxOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
+  firebase_uid?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   surname?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  qualification?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   user_id?: Prisma.SortOrder
+  firebase_uid?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   surname?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  qualification?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -368,10 +390,6 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -380,18 +398,18 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type UserCreateNestedOneWithoutListingsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutListingsInput, Prisma.UserUncheckedCreateWithoutListingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutListingsInput
+export type UserCreateNestedOneWithoutProviderInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderInput, Prisma.UserUncheckedCreateWithoutProviderInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutListingsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutListingsInput, Prisma.UserUncheckedCreateWithoutListingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutListingsInput
-  upsert?: Prisma.UserUpsertWithoutListingsInput
+export type UserUpdateOneRequiredWithoutProviderNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProviderInput, Prisma.UserUncheckedCreateWithoutProviderInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProviderInput
+  upsert?: Prisma.UserUpsertWithoutProviderInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutListingsInput, Prisma.UserUpdateWithoutListingsInput>, Prisma.UserUncheckedUpdateWithoutListingsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProviderInput, Prisma.UserUpdateWithoutProviderInput>, Prisma.UserUncheckedUpdateWithoutProviderInput>
 }
 
 export type UserCreateNestedOneWithoutApplicationsInput = {
@@ -408,71 +426,77 @@ export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApplicationsInput, Prisma.UserUpdateWithoutApplicationsInput>, Prisma.UserUncheckedUpdateWithoutApplicationsInput>
 }
 
-export type UserCreateWithoutListingsInput = {
+export type UserCreateWithoutProviderInput = {
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutListingsInput = {
+export type UserUncheckedCreateWithoutProviderInput = {
   user_id?: number
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutListingsInput = {
+export type UserCreateOrConnectWithoutProviderInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutListingsInput, Prisma.UserUncheckedCreateWithoutListingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderInput, Prisma.UserUncheckedCreateWithoutProviderInput>
 }
 
-export type UserUpsertWithoutListingsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutListingsInput, Prisma.UserUncheckedUpdateWithoutListingsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutListingsInput, Prisma.UserUncheckedCreateWithoutListingsInput>
+export type UserUpsertWithoutProviderInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProviderInput, Prisma.UserUncheckedUpdateWithoutProviderInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProviderInput, Prisma.UserUncheckedCreateWithoutProviderInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutListingsInput = {
+export type UserUpdateToOneWithWhereWithoutProviderInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutListingsInput, Prisma.UserUncheckedUpdateWithoutListingsInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProviderInput, Prisma.UserUncheckedUpdateWithoutProviderInput>
 }
 
-export type UserUpdateWithoutListingsInput = {
+export type UserUpdateWithoutProviderInput = {
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutListingsInput = {
+export type UserUncheckedUpdateWithoutProviderInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
-  listings?: Prisma.ListingCreateNestedManyWithoutUserInput
+  provider?: Prisma.ProviderCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
   user_id?: number
+  firebase_uid: string
+  email: string
   name: string
   surname: string
   role: string
-  qualification?: string | null
-  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutUserInput
+  provider?: Prisma.ProviderUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -492,20 +516,22 @@ export type UserUpdateToOneWithWhereWithoutApplicationsInput = {
 }
 
 export type UserUpdateWithoutApplicationsInput = {
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  listings?: Prisma.ListingUpdateManyWithoutUserNestedInput
+  provider?: Prisma.ProviderUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  firebase_uid?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   surname?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
-  qualification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  listings?: Prisma.ListingUncheckedUpdateManyWithoutUserNestedInput
+  provider?: Prisma.ProviderUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -514,12 +540,10 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
  */
 
 export type UserCountOutputType = {
-  listings: number
   applications: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  listings?: boolean | UserCountOutputTypeCountListingsArgs
   applications?: boolean | UserCountOutputTypeCountApplicationsArgs
 }
 
@@ -536,13 +560,6 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountListingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ListingWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ApplicationWhereInput
 }
@@ -550,12 +567,13 @@ export type UserCountOutputTypeCountApplicationsArgs<ExtArgs extends runtime.Typ
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   user_id?: boolean
+  firebase_uid?: boolean
+  email?: boolean
   name?: boolean
   surname?: boolean
   role?: boolean
-  qualification?: boolean
-  listings?: boolean | Prisma.User$listingsArgs<ExtArgs>
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
+  provider?: boolean | Prisma.User$providerArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -563,31 +581,33 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectScalar = {
   user_id?: boolean
+  firebase_uid?: boolean
+  email?: boolean
   name?: boolean
   surname?: boolean
   role?: boolean
-  qualification?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"user_id" | "name" | "surname" | "role" | "qualification", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"user_id" | "firebase_uid" | "email" | "name" | "surname" | "role", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  listings?: boolean | Prisma.User$listingsArgs<ExtArgs>
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
+  provider?: boolean | Prisma.User$providerArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    listings: Prisma.$ListingPayload<ExtArgs>[]
     applications: Prisma.$ApplicationPayload<ExtArgs>[]
+    provider: Prisma.$ProviderPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     user_id: number
+    firebase_uid: string
+    email: string
     name: string
     surname: string
     role: string
-    qualification: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -928,8 +948,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  listings<T extends Prisma.User$listingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$listingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   applications<T extends Prisma.User$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  provider<T extends Prisma.User$providerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$providerArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -960,10 +980,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly user_id: Prisma.FieldRef<"User", 'Int'>
+  readonly firebase_uid: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly surname: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>
-  readonly qualification: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -1311,30 +1332,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.listings
- */
-export type User$listingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Listing
-   */
-  select?: Prisma.ListingSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Listing
-   */
-  omit?: Prisma.ListingOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ListingInclude<ExtArgs> | null
-  where?: Prisma.ListingWhereInput
-  orderBy?: Prisma.ListingOrderByWithRelationInput | Prisma.ListingOrderByWithRelationInput[]
-  cursor?: Prisma.ListingWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ListingScalarFieldEnum | Prisma.ListingScalarFieldEnum[]
-}
-
-/**
  * User.applications
  */
 export type User$applicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1356,6 +1353,25 @@ export type User$applicationsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ApplicationScalarFieldEnum | Prisma.ApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.provider
+ */
+export type User$providerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Provider
+   */
+  select?: Prisma.ProviderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Provider
+   */
+  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProviderInclude<ExtArgs> | null
+  where?: Prisma.ProviderWhereInput
 }
 
 /**

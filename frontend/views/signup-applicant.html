@@ -153,62 +153,37 @@
         <div class="login-link">Already have an account? <a href="/login">Login here</a></div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgirf1peij-kkhv9ir_5ea-L245W921w8",
-            authDomain: "skillbridge-5dcec.firebaseapp.com",
-            projectId: "skillbridge-5dcec",
-            storageBucket: "skillbridge-5dcec.firebasestorage.app",
-            messagingSenderId: "188202128236",
-            appId: "1:188202128236:web:aee457ff824cba8c965949",
-            measurementId: "G-NBYFQX660Y"
-        };
-        firebase.initializeApp(firebaseConfig);
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                const userCredential = await firebase.auth().createUserWithEmailAndPassword(
-                    document.getElementById('email').value,
-                    document.getElementById('password').value
-                );
-                localStorage.setItem('userRole', 'Applicant');
-                localStorage.setItem('userData', JSON.stringify({
-                    role: 'Applicant',
-                    firstName: document.getElementById('firstName').value,
-                    lastName: document.getElementById('lastName').value,
-                    idNumber: document.getElementById('idNumber').value,
-                    nqf: document.getElementById('nqf').value,
-                    email: document.getElementById('email').value,
-                    uid: userCredential.user.uid
-                }));
-                alert('Signup successful! Please login.');
-                window.location.href = '/login';
-            } catch (error) {
-                document.getElementById('errorMsg').innerText = error.message;
-            }
-        });
+<script src="../public/firebase.js"></script> 
 
-        document.getElementById('googleSignup').addEventListener('click', async () => {
-            try {
-                const result = await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                const displayName = result.user.displayName || '';
-                localStorage.setItem('userRole', 'Applicant');
-                localStorage.setItem('userData', JSON.stringify({
-                    role: 'Applicant',
-                    firstName: displayName.split(' ')[0],
-                    lastName: displayName.split(' ')[1] || '',
-                    email: result.user.email,
-                    uid: result.user.uid
-                }));
-                alert('Signup successful! Please login.');
-                window.location.href = '/login';
-            } catch (error) {
-                document.getElementById('errorMsg').innerText = error.message;
-            }
-        });
-    </script>
+<script>
+    const errorDiv = document.getElementById('errorMsg');
+
+    // 1. Google Signup Click
+    document.getElementById('googleSignup').addEventListener('click', async () => {
+        try {
+            await signUpWithGoogle('Applicant');
+        } catch (error) {
+            errorDiv.innerText = error.message;
+        }
+    });
+
+    // 2. Email Form Submit
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const fName = document.getElementById('firstName').value;
+        const lName = document.getElementById('lastName').value;
+
+        try {
+            await signUpWithEmail(email, password, fName, lName, 'Applicant');
+        } catch (error) {
+            errorDiv.innerText = error.message;
+        }
+    });
+</script>
 </body>
 </html>

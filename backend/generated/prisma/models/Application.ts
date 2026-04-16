@@ -29,18 +29,21 @@ export type AggregateApplication = {
 export type ApplicationAvgAggregateOutputType = {
   application_id: number | null
   user_id: number | null
+  listing_id: number | null
   provider_id: number | null
 }
 
 export type ApplicationSumAggregateOutputType = {
   application_id: number | null
   user_id: number | null
+  listing_id: number | null
   provider_id: number | null
 }
 
 export type ApplicationMinAggregateOutputType = {
   application_id: number | null
   user_id: number | null
+  listing_id: number | null
   provider_id: number | null
   cv: string | null
   status: string | null
@@ -49,6 +52,7 @@ export type ApplicationMinAggregateOutputType = {
 export type ApplicationMaxAggregateOutputType = {
   application_id: number | null
   user_id: number | null
+  listing_id: number | null
   provider_id: number | null
   cv: string | null
   status: string | null
@@ -57,6 +61,7 @@ export type ApplicationMaxAggregateOutputType = {
 export type ApplicationCountAggregateOutputType = {
   application_id: number
   user_id: number
+  listing_id: number
   provider_id: number
   cv: number
   status: number
@@ -67,18 +72,21 @@ export type ApplicationCountAggregateOutputType = {
 export type ApplicationAvgAggregateInputType = {
   application_id?: true
   user_id?: true
+  listing_id?: true
   provider_id?: true
 }
 
 export type ApplicationSumAggregateInputType = {
   application_id?: true
   user_id?: true
+  listing_id?: true
   provider_id?: true
 }
 
 export type ApplicationMinAggregateInputType = {
   application_id?: true
   user_id?: true
+  listing_id?: true
   provider_id?: true
   cv?: true
   status?: true
@@ -87,6 +95,7 @@ export type ApplicationMinAggregateInputType = {
 export type ApplicationMaxAggregateInputType = {
   application_id?: true
   user_id?: true
+  listing_id?: true
   provider_id?: true
   cv?: true
   status?: true
@@ -95,6 +104,7 @@ export type ApplicationMaxAggregateInputType = {
 export type ApplicationCountAggregateInputType = {
   application_id?: true
   user_id?: true
+  listing_id?: true
   provider_id?: true
   cv?: true
   status?: true
@@ -190,6 +200,7 @@ export type ApplicationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type ApplicationGroupByOutputType = {
   application_id: number
   user_id: number
+  listing_id: number
   provider_id: number
   cv: string
   status: string
@@ -221,20 +232,24 @@ export type ApplicationWhereInput = {
   NOT?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
   application_id?: Prisma.IntFilter<"Application"> | number
   user_id?: Prisma.IntFilter<"Application"> | number
+  listing_id?: Prisma.IntFilter<"Application"> | number
   provider_id?: Prisma.IntFilter<"Application"> | number
   cv?: Prisma.StringFilter<"Application"> | string
   status?: Prisma.StringFilter<"Application"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
 }
 
 export type ApplicationOrderByWithRelationInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
   cv?: Prisma.SortOrder
   status?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  listing?: Prisma.ListingOrderByWithRelationInput
   provider?: Prisma.ProviderOrderByWithRelationInput
 }
 
@@ -244,16 +259,19 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ApplicationWhereInput[]
   NOT?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
   user_id?: Prisma.IntFilter<"Application"> | number
+  listing_id?: Prisma.IntFilter<"Application"> | number
   provider_id?: Prisma.IntFilter<"Application"> | number
   cv?: Prisma.StringFilter<"Application"> | string
   status?: Prisma.StringFilter<"Application"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
 }, "application_id">
 
 export type ApplicationOrderByWithAggregationInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
   cv?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -270,6 +288,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ApplicationScalarWhereWithAggregatesInput | Prisma.ApplicationScalarWhereWithAggregatesInput[]
   application_id?: Prisma.IntWithAggregatesFilter<"Application"> | number
   user_id?: Prisma.IntWithAggregatesFilter<"Application"> | number
+  listing_id?: Prisma.IntWithAggregatesFilter<"Application"> | number
   provider_id?: Prisma.IntWithAggregatesFilter<"Application"> | number
   cv?: Prisma.StringWithAggregatesFilter<"Application"> | string
   status?: Prisma.StringWithAggregatesFilter<"Application"> | string
@@ -277,29 +296,33 @@ export type ApplicationScalarWhereWithAggregatesInput = {
 
 export type ApplicationCreateInput = {
   cv: string
-  status: string
+  status?: string
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
+  listing: Prisma.ListingCreateNestedOneWithoutApplicationsInput
   provider: Prisma.ProviderCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateInput = {
   application_id?: number
   user_id: number
+  listing_id: number
   provider_id: number
   cv: string
-  status: string
+  status?: string
 }
 
 export type ApplicationUpdateInput = {
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
+  listing?: Prisma.ListingUpdateOneRequiredWithoutApplicationsNestedInput
   provider?: Prisma.ProviderUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
   provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -307,9 +330,10 @@ export type ApplicationUncheckedUpdateInput = {
 
 export type ApplicationCreateManyInput = {
   user_id: number
+  listing_id: number
   provider_id: number
   cv: string
-  status: string
+  status?: string
 }
 
 export type ApplicationUpdateManyMutationInput = {
@@ -320,6 +344,7 @@ export type ApplicationUpdateManyMutationInput = {
 export type ApplicationUncheckedUpdateManyInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
   provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -338,6 +363,7 @@ export type ApplicationOrderByRelationAggregateInput = {
 export type ApplicationCountOrderByAggregateInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
   cv?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -346,12 +372,14 @@ export type ApplicationCountOrderByAggregateInput = {
 export type ApplicationAvgOrderByAggregateInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
 }
 
 export type ApplicationMaxOrderByAggregateInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
   cv?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -360,6 +388,7 @@ export type ApplicationMaxOrderByAggregateInput = {
 export type ApplicationMinOrderByAggregateInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
   cv?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -368,6 +397,7 @@ export type ApplicationMinOrderByAggregateInput = {
 export type ApplicationSumOrderByAggregateInput = {
   application_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
+  listing_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrder
 }
 
@@ -455,17 +485,61 @@ export type ApplicationUncheckedUpdateManyWithoutProviderNestedInput = {
   deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
 }
 
+export type ApplicationCreateNestedManyWithoutListingInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput> | Prisma.ApplicationCreateWithoutListingInput[] | Prisma.ApplicationUncheckedCreateWithoutListingInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutListingInput | Prisma.ApplicationCreateOrConnectWithoutListingInput[]
+  createMany?: Prisma.ApplicationCreateManyListingInputEnvelope
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+}
+
+export type ApplicationUncheckedCreateNestedManyWithoutListingInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput> | Prisma.ApplicationCreateWithoutListingInput[] | Prisma.ApplicationUncheckedCreateWithoutListingInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutListingInput | Prisma.ApplicationCreateOrConnectWithoutListingInput[]
+  createMany?: Prisma.ApplicationCreateManyListingInputEnvelope
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+}
+
+export type ApplicationUpdateManyWithoutListingNestedInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput> | Prisma.ApplicationCreateWithoutListingInput[] | Prisma.ApplicationUncheckedCreateWithoutListingInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutListingInput | Prisma.ApplicationCreateOrConnectWithoutListingInput[]
+  upsert?: Prisma.ApplicationUpsertWithWhereUniqueWithoutListingInput | Prisma.ApplicationUpsertWithWhereUniqueWithoutListingInput[]
+  createMany?: Prisma.ApplicationCreateManyListingInputEnvelope
+  set?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  disconnect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  delete?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  update?: Prisma.ApplicationUpdateWithWhereUniqueWithoutListingInput | Prisma.ApplicationUpdateWithWhereUniqueWithoutListingInput[]
+  updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutListingInput | Prisma.ApplicationUpdateManyWithWhereWithoutListingInput[]
+  deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
+}
+
+export type ApplicationUncheckedUpdateManyWithoutListingNestedInput = {
+  create?: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput> | Prisma.ApplicationCreateWithoutListingInput[] | Prisma.ApplicationUncheckedCreateWithoutListingInput[]
+  connectOrCreate?: Prisma.ApplicationCreateOrConnectWithoutListingInput | Prisma.ApplicationCreateOrConnectWithoutListingInput[]
+  upsert?: Prisma.ApplicationUpsertWithWhereUniqueWithoutListingInput | Prisma.ApplicationUpsertWithWhereUniqueWithoutListingInput[]
+  createMany?: Prisma.ApplicationCreateManyListingInputEnvelope
+  set?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  disconnect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  delete?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  connect?: Prisma.ApplicationWhereUniqueInput | Prisma.ApplicationWhereUniqueInput[]
+  update?: Prisma.ApplicationUpdateWithWhereUniqueWithoutListingInput | Prisma.ApplicationUpdateWithWhereUniqueWithoutListingInput[]
+  updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutListingInput | Prisma.ApplicationUpdateManyWithWhereWithoutListingInput[]
+  deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
+}
+
 export type ApplicationCreateWithoutUserInput = {
   cv: string
-  status: string
+  status?: string
+  listing: Prisma.ListingCreateNestedOneWithoutApplicationsInput
   provider: Prisma.ProviderCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateWithoutUserInput = {
   application_id?: number
+  listing_id: number
   provider_id: number
   cv: string
-  status: string
+  status?: string
 }
 
 export type ApplicationCreateOrConnectWithoutUserInput = {
@@ -499,6 +573,7 @@ export type ApplicationScalarWhereInput = {
   NOT?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
   application_id?: Prisma.IntFilter<"Application"> | number
   user_id?: Prisma.IntFilter<"Application"> | number
+  listing_id?: Prisma.IntFilter<"Application"> | number
   provider_id?: Prisma.IntFilter<"Application"> | number
   cv?: Prisma.StringFilter<"Application"> | string
   status?: Prisma.StringFilter<"Application"> | string
@@ -506,15 +581,17 @@ export type ApplicationScalarWhereInput = {
 
 export type ApplicationCreateWithoutProviderInput = {
   cv: string
-  status: string
+  status?: string
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
+  listing: Prisma.ListingCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateWithoutProviderInput = {
   application_id?: number
   user_id: number
+  listing_id: number
   cv: string
-  status: string
+  status?: string
 }
 
 export type ApplicationCreateOrConnectWithoutProviderInput = {
@@ -542,20 +619,63 @@ export type ApplicationUpdateManyWithWhereWithoutProviderInput = {
   data: Prisma.XOR<Prisma.ApplicationUpdateManyMutationInput, Prisma.ApplicationUncheckedUpdateManyWithoutProviderInput>
 }
 
-export type ApplicationCreateManyUserInput = {
+export type ApplicationCreateWithoutListingInput = {
+  cv: string
+  status?: string
+  user: Prisma.UserCreateNestedOneWithoutApplicationsInput
+  provider: Prisma.ProviderCreateNestedOneWithoutApplicationsInput
+}
+
+export type ApplicationUncheckedCreateWithoutListingInput = {
+  application_id?: number
+  user_id: number
   provider_id: number
   cv: string
-  status: string
+  status?: string
+}
+
+export type ApplicationCreateOrConnectWithoutListingInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput>
+}
+
+export type ApplicationCreateManyListingInputEnvelope = {
+  data: Prisma.ApplicationCreateManyListingInput | Prisma.ApplicationCreateManyListingInput[]
+}
+
+export type ApplicationUpsertWithWhereUniqueWithoutListingInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  update: Prisma.XOR<Prisma.ApplicationUpdateWithoutListingInput, Prisma.ApplicationUncheckedUpdateWithoutListingInput>
+  create: Prisma.XOR<Prisma.ApplicationCreateWithoutListingInput, Prisma.ApplicationUncheckedCreateWithoutListingInput>
+}
+
+export type ApplicationUpdateWithWhereUniqueWithoutListingInput = {
+  where: Prisma.ApplicationWhereUniqueInput
+  data: Prisma.XOR<Prisma.ApplicationUpdateWithoutListingInput, Prisma.ApplicationUncheckedUpdateWithoutListingInput>
+}
+
+export type ApplicationUpdateManyWithWhereWithoutListingInput = {
+  where: Prisma.ApplicationScalarWhereInput
+  data: Prisma.XOR<Prisma.ApplicationUpdateManyMutationInput, Prisma.ApplicationUncheckedUpdateManyWithoutListingInput>
+}
+
+export type ApplicationCreateManyUserInput = {
+  listing_id: number
+  provider_id: number
+  cv: string
+  status?: string
 }
 
 export type ApplicationUpdateWithoutUserInput = {
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  listing?: Prisma.ListingUpdateOneRequiredWithoutApplicationsNestedInput
   provider?: Prisma.ProviderUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateWithoutUserInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
   provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -563,6 +683,7 @@ export type ApplicationUncheckedUpdateWithoutUserInput = {
 
 export type ApplicationUncheckedUpdateManyWithoutUserInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
   provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -570,19 +691,22 @@ export type ApplicationUncheckedUpdateManyWithoutUserInput = {
 
 export type ApplicationCreateManyProviderInput = {
   user_id: number
+  listing_id: number
   cv: string
-  status: string
+  status?: string
 }
 
 export type ApplicationUpdateWithoutProviderInput = {
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
+  listing?: Prisma.ListingUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateWithoutProviderInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -590,6 +714,37 @@ export type ApplicationUncheckedUpdateWithoutProviderInput = {
 export type ApplicationUncheckedUpdateManyWithoutProviderInput = {
   application_id?: Prisma.IntFieldUpdateOperationsInput | number
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  listing_id?: Prisma.IntFieldUpdateOperationsInput | number
+  cv?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ApplicationCreateManyListingInput = {
+  user_id: number
+  provider_id: number
+  cv: string
+  status?: string
+}
+
+export type ApplicationUpdateWithoutListingInput = {
+  cv?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
+  provider?: Prisma.ProviderUpdateOneRequiredWithoutApplicationsNestedInput
+}
+
+export type ApplicationUncheckedUpdateWithoutListingInput = {
+  application_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  provider_id?: Prisma.IntFieldUpdateOperationsInput | number
+  cv?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ApplicationUncheckedUpdateManyWithoutListingInput = {
+  application_id?: Prisma.IntFieldUpdateOperationsInput | number
+  user_id?: Prisma.IntFieldUpdateOperationsInput | number
+  provider_id?: Prisma.IntFieldUpdateOperationsInput | number
   cv?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -599,10 +754,12 @@ export type ApplicationUncheckedUpdateManyWithoutProviderInput = {
 export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   application_id?: boolean
   user_id?: boolean
+  listing_id?: boolean
   provider_id?: boolean
   cv?: boolean
   status?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
 
@@ -611,14 +768,16 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ApplicationSelectScalar = {
   application_id?: boolean
   user_id?: boolean
+  listing_id?: boolean
   provider_id?: boolean
   cv?: boolean
   status?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"application_id" | "user_id" | "provider_id" | "cv" | "status", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"application_id" | "user_id" | "listing_id" | "provider_id" | "cv" | "status", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
   provider?: boolean | Prisma.ProviderDefaultArgs<ExtArgs>
 }
 
@@ -626,11 +785,13 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Application"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    listing: Prisma.$ListingPayload<ExtArgs>
     provider: Prisma.$ProviderPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     application_id: number
     user_id: number
+    listing_id: number
     provider_id: number
     cv: string
     status: string
@@ -975,6 +1136,7 @@ readonly fields: ApplicationFieldRefs;
 export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  listing<T extends Prisma.ListingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ListingDefaultArgs<ExtArgs>>): Prisma.Prisma__ListingClient<runtime.Types.Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   provider<T extends Prisma.ProviderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProviderDefaultArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1007,6 +1169,7 @@ export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends runt
 export interface ApplicationFieldRefs {
   readonly application_id: Prisma.FieldRef<"Application", 'Int'>
   readonly user_id: Prisma.FieldRef<"Application", 'Int'>
+  readonly listing_id: Prisma.FieldRef<"Application", 'Int'>
   readonly provider_id: Prisma.FieldRef<"Application", 'Int'>
   readonly cv: Prisma.FieldRef<"Application", 'String'>
   readonly status: Prisma.FieldRef<"Application", 'String'>
