@@ -120,24 +120,34 @@ function reject(i) {
 }
 
 // TABS
-function showTab(tab) {
+function showTab(tabName) {
+    // 1. Hide all tabs and contents first
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-    if (tab === 'post') {
-        document.querySelector('.tab:nth-child(1)').classList.add('active');
-        postTab.classList.add('active');
-    }
-
-    if (tab === 'manage') {
-        document.querySelector('.tab:nth-child(2)').classList.add('active');
-        manageTab.classList.add('active');
+    // 2. Route to the correct tab based on the exact name passed
+    if (tabName === 'post') {
+        const tabBtn = document.getElementById('tab-post') || document.querySelectorAll('.tab')[0];
+        if (tabBtn) tabBtn.classList.add('active');
+        
+        document.getElementById('postTab').classList.add('active');
+        
+    } else if (tabName === 'manage') {
+        const tabBtn = document.getElementById('tab-manage') || document.querySelectorAll('.tab')[1];
+        if (tabBtn) tabBtn.classList.add('active');
+        
+        document.getElementById('manageTab').classList.add('active');
+        
+        // Trigger the data load
         displayOpportunities();
-    }
-
-    if (tab === 'applications') {
-        document.querySelector('.tab:nth-child(3)').classList.add('active');
-        applicationsTab.classList.add('active');
+        
+    } else if (tabName === 'applications') {
+        const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[2];
+        if (tabBtn) tabBtn.classList.add('active');
+        
+        document.getElementById('applicationsTab').classList.add('active');
+        
+        // Trigger the data load
         displayApplications();
     }
 }

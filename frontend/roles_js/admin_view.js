@@ -92,14 +92,31 @@ function displayUsers() {
 }
 
 function showTab(tabName) {
+    // 1. Hide all tabs and contents first
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    // 2. Route to the correct tab based on the exact name passed
     if (tabName === 'opportunities') {
-        document.querySelector('.tab:first-child').classList.add('active');
+        // Find the button (fallback to index 0 if no ID is set)
+        const tabBtn = document.getElementById('tab-opps') || document.querySelectorAll('.tab')[0];
+        if (tabBtn) tabBtn.classList.add('active');
+        
+        // Show content
         document.getElementById('opportunitiesTab').classList.add('active');
-    } else {
-        document.querySelector('.tab:last-child').classList.add('active');
+        
+        // (Optional) If you have a specific render function for this page, call it here:
+        // renderAdminOpportunities();
+        
+    } else if (tabName === 'users') {
+        // Find the button (fallback to index 1 if no ID is set)
+        const tabBtn = document.getElementById('tab-users') || document.querySelectorAll('.tab')[1];
+        if (tabBtn) tabBtn.classList.add('active');
+        
+        // Show content
         document.getElementById('usersTab').classList.add('active');
+        
+        // Trigger the data load
         displayUsers();
     }
 }
