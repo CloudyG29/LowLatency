@@ -25,9 +25,16 @@ async function registerUser(firstName, lastName, email, role, uid) {
                 firebase_uid: uid 
             })
         });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Registration failed");
+        }
+        
         return await response.json();
     } catch (err) {
         console.error("DB Sync Error:", err);
+        throw err; // Re-throw so signup functions can catch it
     }
 }
 
@@ -51,6 +58,7 @@ async function signUpWithGoogle(role) {
         await registerUser(fName, lName, result.user.email, role, result.user.uid);
         await finalizeSession(role);
     } catch (error) {
+        console.error("Google signup error:", error);
         throw error;
     }
 }
@@ -61,6 +69,7 @@ async function signUpWithEmail(email, password, fName, lName, role) {
         await registerUser(fName, lName, email, role, result.user.uid);
         await finalizeSession(role);
     } catch (error) {
+        console.error("Email signup error:", error);
         throw error;
     }
 }
@@ -71,6 +80,11 @@ async function loginAndRedirect(email, password) {
         
         // Ask your backend: "What is the role of this email in the Prisma DB?"
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+        
+        if (!response.ok) {
+            throw new Error("User not found in database");
+        }
+        
         const data = await response.json();
         
         // Redirect based on the DB response, not localStorage
@@ -80,6 +94,7 @@ async function loginAndRedirect(email, password) {
         
     } catch (error) {
         console.error("Login failed", error);
+        throw error;
     }
 }
 
@@ -101,11 +116,12 @@ async function loginWithGoogle() {
         const data = await response.json();
         
         // 3. Redirect
-        if (data.role === 'Admin') window.location.href = '/admin.html';
-        else if (data.role === 'Provider') window.location.href = '/provider.html';
-        else window.location.href = '/applicant.html';
+        if (data.role === 'Admin') window.location.href = '/admin';
+        else if (data.role === 'Provider') window.location.href = '/provider';
+        else window.location.href = '/applicant';
 
     } catch (error) {
+        console.error("Google login error:", error);
         throw error;
     }
 }

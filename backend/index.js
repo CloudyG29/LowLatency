@@ -1,12 +1,24 @@
+require('dotenv').config();
+
 const express = require("express");
 const path = require("path");
+const cors = require('cors');
+const userRoutes = require('./routes/user');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "../frontend")));
 
+app.use(cors());
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, "../frontend")));
+
+// Fix COOP header to allow Firebase popups
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+});
+
+app.use('/api/user', userRoutes);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "index.html"));
@@ -44,6 +56,10 @@ app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "forgot-password.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
