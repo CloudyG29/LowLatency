@@ -161,16 +161,18 @@
 
     // 1. Google Signup Click
     document.getElementById('googleSignup').addEventListener('click', async () => {
+        errorDiv.innerText = '';
         try {
             await signUpWithGoogle('Provider');
         } catch (error) {
-            errorDiv.innerText = error.message;
+            errorDiv.innerText = 'Google signup failed: ' + error.message;
         }
     });
 
     // 2. Email Form Submit
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        errorDiv.innerText = '';
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const fName = document.getElementById('firstName').value;
