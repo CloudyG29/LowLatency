@@ -3,163 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Applications</title>
+  <title>Provider Applications</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f6f8;
+      background: #f7f7fb;
       margin: 0;
       padding: 20px;
     }
 
     h1 {
-      text-align: center;
-      color: #222;
-      margin-bottom: 30px;
+      color: #333;
     }
 
-    #applications {
-      max-width: 900px;
-      margin: 0 auto;
+    #applications-container {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
     }
 
     .application-card {
-      background-color: white;
+      background: white;
+      padding: 16px;
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
-    .application-card p {
-      margin: 8px 0;
-      color: #333;
+    .application-card h3 {
+      margin-top: 0;
     }
 
     .status {
       font-weight: bold;
-      text-transform: capitalize;
+      margin-top: 10px;
     }
 
-    .button-group {
-      margin-top: 15px;
-      display: flex;
-      gap: 10px;
-    }
-
-    button {
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
+    .error {
+      color: red;
       font-weight: bold;
-    }
-
-    .accept-btn {
-      background-color: #28a745;
-      color: white;
-    }
-
-    .reject-btn {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .empty-message,
-    .error-message,
-    .loading-message {
-      text-align: center;
-      color: #555;
-      font-size: 16px;
-      margin-top: 30px;
     }
   </style>
 </head>
 <body>
   <h1>Applications</h1>
-
-  <div id="applications">
-    <p class="loading-message">Loading applications...</p>
-  </div>
+  <p id="message">Loading applications...</p>
+  <div id="applications-container"></div>
 
   <script>
-    const applicationsContainer = document.getElementById("applications");
+    const firebaseUid = localStorage.getItem("uid");
+    const message = document.getElementById("message");
+    const container = document.getElementById("applications-container");
 
-    async function loadApplications() {
-      try {
-        const response = await fetch("http://localhost:3000/applications/provider/test");
+    if (!firebaseUid) {
+      message.textContent = "No logged-in provider found.";
+    } else {
+      fetch(`/applications/provider/${firebaseUid}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            message.textContent = data.error;
+            message.classList.add("error");
+            return;
+          }
 
-        const data = await response.json();
-        applicationsContainer.innerHTML = "";
+          if (!data.length) {
+            message.textContent = "No applications found.";
+            return;
+          }
 
-        if (!response.ok) {
-          applicationsContainer.innerHTML = `
-            <p class="error-message">${data.error || "Could not load applications."}</p>
-          `;
-          return;
-        }
+          message.textContent = "";
+          data.forEach(application => {
+            const card = document.createElement("div");
+            card.className = "application-card";
 
-        if (!data.length) {
-          applicationsContainer.innerHTML = `
-            <p class="empty-message">No applications found for this provider.</p>
-          `;
-          return;
-        }
+            card.innerHTML = `
+              <h3>${application.user.name} ${application.user.surname}</h3>
+              <p><strong>Listing:</strong> ${application.listing.listname}</p>
+              <p><strong>Email:</strong> ${application.user.email}</p>
+              <p><strong>CV:</strong> ${application.user.cv ? application.user.cv : "No CV uploaded"}</p>
+              <p class="status"><strong>Status:</strong> ${application.status}</p>
+            `;
 
-        data.forEach(app => {
-          const card = document.createElement("div");
-          card.className = "application-card";
-
-          card.innerHTML = `
-            <p><strong>Applicant Name:</strong> ${app.user?.name || "N/A"} ${app.user?.surname || ""}</p>
-            <p><strong>Email:</strong> ${app.user?.email || "N/A"}</p>
-            <p><strong>Listing:</strong> ${app.listing?.listname || "N/A"}</p>
-            <p><strong>Type:</strong> ${app.listing?.list_type || "N/A"}</p>
-            <p><strong>CV:</strong> ${app.cv || "No CV uploaded"}</p>
-            <p><strong>Status:</strong> <span class="status">${app.status || "pending"}</span></p>
-
-            <div class="button-group">
-              <button class="accept-btn" onclick="updateStatus(${app.application_id}, 'accepted')">Accept</button>
-              <button class="reject-btn" onclick="updateStatus(${app.application_id}, 'rejected')">Reject</button>
-            </div>
-          `;
-
-          applicationsContainer.appendChild(card);
+            container.appendChild(card);
+          });
+        })
+        .catch(error => {
+          console.error("Error loading applications:", error);
+          message.textContent = "Failed to load applications.";
+          message.classList.add("error");
         });
-      } catch (error) {
-        console.error("Error loading applications:", error);
-        applicationsContainer.innerHTML = `
-          <p class="error-message">Could not load applications.</p>
-        `;
-      }
     }
-
-    async function updateStatus(id, status) {
-      try {
-        const response = await fetch(`http://localhost:3000/applications/${id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ status })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          alert(data.error || "Could not update application status.");
-          return;
-        }
-
-        loadApplications();
-      } catch (error) {
-        console.error("Error updating status:", error);
-        alert("Could not update application status.");
-      }
-    }
-
-    loadApplications();
   </script>
 </body>
 </html>

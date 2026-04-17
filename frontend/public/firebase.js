@@ -16,13 +16,12 @@ async function registerUser(firstName, lastName, email, role, uid) {
         const response = await fetch('/api/user/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // We send the UID so Prisma can link the records
-            body: JSON.stringify({ 
-                name: firstName, 
-                surname: lastName, 
-                email, 
-                role, 
-                firebase_uid: uid 
+            body: JSON.stringify({
+                name: firstName,
+                surname: lastName,
+                email,
+                role,
+                firebase_uid: uid
             })
         });
         return await response.json();
@@ -34,8 +33,6 @@ async function registerUser(firstName, lastName, email, role, uid) {
 // 3. Updated Redirect Logic
 async function finalizeSession(role) {
     alert(`${role} signup successful!`);
-    // Instead of setting local storage, we just move to login
-    // The login process will handle the role-based redirect via the DB
     window.location.href = '/login';
 }
 
@@ -68,22 +65,27 @@ async function signUpWithEmail(email, password, fName, lName, role) {
 async function loginAndRedirect(email, password) {
     try {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        
-        // Ask your backend: "What is the role of this email in the Prisma DB?"
+        const user = userCredential.user;
+
+        // Store session info for pages that need the logged-in user's UID
+        localStorage.setItem("uid", user.uid);
+        localStorage.setItem("email", user.email);
+
+        // Ask backend for role from Prisma DB
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
         const data = await response.json();
-        
-        // Redirect based on the DB response, not localStorage
+
+        // Redirect based on DB role
         if (data.role === 'Admin') window.location.href = '/admin';
         else if (data.role === 'Provider') window.location.href = '/provider';
         else window.location.href = '/applicant';
-        
+
     } catch (error) {
         console.error("Login failed", error);
     }
 }
 
-// Add this to your firebase.js
+// Google login
 async function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
@@ -91,19 +93,23 @@ async function loginWithGoogle() {
         const result = await firebase.auth().signInWithPopup(provider);
         const email = result.user.email;
 
+        // Store session info for pages that need the logged-in user's UID
+        localStorage.setItem("uid", result.user.uid);
+        localStorage.setItem("email", result.user.email);
+
         // 2. Fetch role from Prisma
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
-        
+
         if (!response.ok) {
             throw new Error("User not found in database. Please sign up first.");
         }
 
         const data = await response.json();
-        
+
         // 3. Redirect
-        if (data.role === 'Admin') window.location.href = '/admin.html';
-        else if (data.role === 'Provider') window.location.href = '/provider.html';
-        else window.location.href = '/applicant.html';
+        if (data.role === 'Admin') window.location.href = '/admin';
+        else if (data.role === 'Provider') window.location.href = '/provider';
+        else window.location.href = '/applicant';
 
     } catch (error) {
         throw error;

@@ -1,7 +1,13 @@
-// backend/routes/user.js (example)
-app.post('/api/user/register', async (req, res) => {
+const express = require("express");
+const router = express.Router();
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
+
+// Register user in Prisma DB
+router.post("/register", async (req, res) => {
     const { name, surname, email, role, firebase_uid } = req.body;
-    
+
     try {
         const user = await prisma.user.create({
             data: {
@@ -12,18 +18,26 @@ app.post('/api/user/register', async (req, res) => {
                 firebase_uid
             }
         });
+
+        // If the user is a provider, create a provider profile too
+        if (role === "Provider") {
+            await prisma.provider.create({
+                data: {
+                    provider_name: `${name} ${surname}`,
+                    user_id: user.user_id
+                }
+            });
+        }
+
         res.status(201).json(user);
     } catch (error) {
+        console.error("Register error:", error);
         res.status(400).json({ error: "User already exists or data is invalid" });
     }
 });
 
-// Assuming you have your Prisma client imported at the top of your file
-// e.g., const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
-
-app.get('/api/user/role', async (req, res) => {
-    // 1. Grab the email from the URL query string (e.g., ?email=test@test.com)
+// Get user role by email
+router.get("/role", async (req, res) => {
     const userEmail = req.query.email;
 
     if (!userEmail) {
@@ -31,27 +45,29 @@ app.get('/api/user/role', async (req, res) => {
     }
 
     try {
-        // 2. Ask Prisma to find the exact user
         const user = await prisma.user.findUnique({
-            where: { 
-                email: userEmail 
+            where: {
+                email: userEmail
             },
-            // Pro-tip: Only select the field you need to save database bandwidth
-            select: { 
-                role: true 
-            } 
+            select: {
+                role: true,
+                firebase_uid: true
+            }
         });
 
-        // 3. If the user isn't in your SQL database yet
         if (!user) {
             return res.status(404).json({ error: "User not found in database" });
         }
 
-        // 4. Send the role back to your frontend!
-        res.status(200).json({ role: user.role });
+        res.status(200).json({
+            role: user.role,
+            firebase_uid: user.firebase_uid
+        });
 
     } catch (error) {
         console.error("Database error fetching role:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+module.exports = router;
