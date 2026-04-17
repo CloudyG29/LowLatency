@@ -13,19 +13,35 @@ firebase.initializeApp(firebaseConfig);
 // 2. Database Sync (Now includes the Firebase UID)
 async function registerUser(firstName, lastName, email, role, uid) {
     try {
-        const response = await fetch('/api/user/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            // We send the UID so Prisma can link the records
-            body: JSON.stringify({ 
-                name: firstName, 
-                surname: lastName, 
-                email, 
-                role, 
-                firebase_uid: uid 
-            })
-        });
-        return await response.json();
+        //Commented out for testing
+        // const response = await fetch('/api/user/register', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     // We send the UID so Prisma can link the records
+        //     body: JSON.stringify({ 
+        //         name: firstName, 
+        //         surname: lastName, 
+        //         email, 
+        //         role, 
+        //         firebase_uid: uid 
+        //     })
+        // });
+        // return await response.json();
+        role = "Applicant"; // Mock role for testing
+        const data = {
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email,
+            role: role,
+            firebase_uid: uid,
+            cvName: "" // Default empty CV
+        };
+
+        // 💾 Save directly to local storage to mock the database
+        localStorage.setItem('userData', JSON.stringify(data));
+
+        // Return a mock success response
+        return { status: "success", user: userData };
     } catch (err) {
         console.error("DB Sync Error:", err);
     }
@@ -70,8 +86,11 @@ async function loginAndRedirect(email, password) {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         
         // Ask your backend: "What is the role of this email in the Prisma DB?"
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
-        const data = await response.json();
+        // const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+
+        // TODO - This is where you would normally check the actual response from your backend.
+        // const data = await response.json();
+        const data = JSON.parse(localStorage.getItem('userData')) || { role: "Applicant" }; // Mocked data for testing
         
         // Redirect based on the DB response, not localStorage
         if (data.role === 'Admin') window.location.href = '/admin';
@@ -83,29 +102,46 @@ async function loginAndRedirect(email, password) {
     }
 }
 
-// Add this to your firebase.js
 async function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
         // 1. Auth with Firebase
         const result = await firebase.auth().signInWithPopup(provider);
-        const email = result.user.email;
+        const user = result.user;
+        const email = user.email;
 
         // 2. Fetch role from Prisma
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+        // const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
         
-        if (!response.ok) {
-            throw new Error("User not found in database. Please sign up first.");
+        // Commented out for testing
+        // if (!response.ok) {
+        //     // FIX: If they aren't in Prisma, log them out of Firebase and show an alert
+        //     await firebase.auth().signOut();
+        //     alert("User not found in database. Please sign up first.");
+        //     return; // Stop the function here
+        // }
+
+        // TODO - This is where you would normally parse the actual response from your backend.
+        // const data = await response.json();
+        const data = {
+            firstName: user.displayName?.split(" ")[0] || "Anonymous",
+            lastName: user.displayName?.split(" ").slice(1).join(" ") || "User",
+            email: user.email,
+            role: "Applicant", // Mocked role for testing
+            ID: user.uid
         }
 
-        const data = await response.json();
-        
-        // 3. Redirect
-        if (data.role === 'Admin') window.location.href = '/admin.html';
-        else if (data.role === 'Provider') window.location.href = '/provider.html';
-        else window.location.href = '/applicant.html';
+        localStorage.setItem('userData', JSON.stringify(data)); // Store user info in localStorage for session persistence
+        //TODO - Must get the data from the db, not the Google response
+
+        // FIX: Redirect paths updated to match your loginAndRedirect function
+        if (data.role === 'Admin') window.location.href = '/admin';
+        else if (data.role === 'Provider') window.location.href = '/provider';
+        else window.location.href = '/applicant';
 
     } catch (error) {
-        throw error;
+        // FIX: Actually display the error so the user knows what went wrong
+        console.error("Google Login Error:", error);
+        alert("Failed to log in with Google. " + error.message);
     }
 }
