@@ -5,16 +5,19 @@ const hardcodedOpportunities = [
     { id: 4, title: "Marketing Learnership", company: "Nike", location: "Cape Town", duration: "6 months", stipend: "R4000/month", description: "Learn digital marketing, social media management, and brand strategy." }
 ];
 
-const fakeStatuses = { 1: 'Pending', 2: 'Hired', 3: 'Rejected', 4: 'Pending' };
+const fakeStatuses = { 1: 'Pending', 2: 'Hired', 3: 'Rejected'};
 
+// --- Utility Functions for Applications ---
 function getApplications() {
     return JSON.parse(localStorage.getItem('applications') || '[]');
 }
 
+// Check if the user has already applied to a specific opportunity by its ID
 function hasApplied(id) {
     return getApplications().some(a => a.opportunityId == id);
 }
 
+// Combine hardcoded opportunities with provider-submitted ones from localStorage, filtering for approved status and assigning unique IDs
 function getAllOpportunities() {
     const providerOpps = JSON.parse(localStorage.getItem('providerOpportunities') || '[]')
         .filter(o => o.status === 'approved')
@@ -22,6 +25,7 @@ function getAllOpportunities() {
     return [...hardcodedOpportunities, ...providerOpps];
 }
 
+// --- Render the Opportunities Tab with Real Data from localStorage (including provider-submitted ones) ---
 function renderOpportunities() {
     const container = document.getElementById('opportunitiesList');
     container.innerHTML = '';
@@ -39,7 +43,7 @@ function renderOpportunities() {
             <p><strong>Stipend:</strong> ${opp.stipend}</p>
             <p><strong>Description:</strong> ${opp.description}</p>
             ${applied
-                ? `<div class="already-applied">✅ Already Applied</div>`
+                ? `<div class="already-applied">Already Applied</div>`
                 : `<button class="apply-btn" data-id="${opp.id}" data-title="${opp.title}" data-company="${opp.company}">Apply Now</button>`
             }
             <div id="msg-${opp.id}" class="message"></div>
@@ -68,18 +72,19 @@ function renderOpportunities() {
                 status: fakeStatuses[id] || 'Pending'
             });
             localStorage.setItem('applications', JSON.stringify(applications));
-            document.getElementById(`msg-${id}`).innerHTML = '✅ Application submitted!';
+            document.getElementById(`msg-${id}`).innerHTML = 'Application submitted!';
             setTimeout(() => renderOpportunities(), 1000);
         });
     });
 }
 
+// --- Render the Applications Tab with Real Data from localStorage ---
 function renderApplications() {
     const applications = getApplications();
     const container = document.getElementById('applicationsList');
 
     if (applications.length === 0) {
-        container.innerHTML = '<div class="empty-state">😕 You have not applied to any opportunities yet.</div>';
+        container.innerHTML = '<div class="empty-state">You have not applied to any opportunities yet.</div>';
         return;
     }
 
@@ -98,6 +103,7 @@ function renderApplications() {
     });
 }
 
+// --- Toggle between View and Edit Modes in the Profile Tab ---
 function toggleProfileMode(mode) {
     const displayMode = document.getElementById('profileDisplayMode');
     const editMode = document.getElementById('profileForm');
@@ -112,32 +118,31 @@ function toggleProfileMode(mode) {
     }
 }
 
-// --- 2. Render Profile Data ---
+// --- Render Profile Data ---
 function renderProfile() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
-    // A. Populate the View Mode (Read-Only)
+    // Populate the View Mode (Read-Only)
     document.getElementById('displayFirstName').textContent = userData.firstName || 'Not set';
     document.getElementById('displayLastName').textContent = userData.lastName || 'Not set';
     document.getElementById('displayEmail').textContent = userData.email || 'Not set';
     document.getElementById('topName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`;
     document.getElementById('topRole').textContent = userData.role || 'Applicant';
 
-    const displayCv = document.getElementById('displayCv');
-    if (userData.cvName) {
-        displayCv.innerHTML = `📄 <strong>${userData.cvName}</strong>`;
-        displayCv.style.color = "#38ef7d"; // Theme green for uploaded CV
+    // For the bio, if it's empty or just whitespace, show a default message instead of a blank space
+    if (userData.bio && userData.bio.trim() !== '') {
+        document.getElementById('displayBio').textContent = userData.bio;
     } else {
-        displayCv.textContent = "No CV uploaded yet.";
-        displayCv.style.color = "#a0aec0"; // Gray for no CV
+        document.getElementById('displayBio').textContent = 'No professional summary added yet.';
     }
 
-    // B. Populate the Edit Mode Form Inputs
+    // Populate the Edit Mode Form Inputs
     document.getElementById('firstName').value = userData.firstName || '';
     document.getElementById('lastName').value = userData.lastName || '';
     document.getElementById('email').value = userData.email || '';
 
 
+    // For the CV file input, we can't set a value for security reasons, but we can show the current file name if it exists
     const currentCvDisplay = document.getElementById('currentCvDisplay');
     if (userData.cvName) {
         currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
@@ -185,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Show a success message
             const msgBox = document.getElementById('displayMsg');
-            msgBox.innerHTML = '✅ Profile updated successfully!';
+            msgBox.innerHTML = 'Profile updated successfully!';
             msgBox.style.color = "#38ef7d"; // Theme green
         });
     }
@@ -197,6 +202,7 @@ function showTab(tabName) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
+    // Show the selected tab and its content
     if (tabName === 'opportunities') {
         // Fallback to querySelector if you don't have IDs on your tab buttons
         const tabBtn = document.getElementById('tab-opps') || document.querySelectorAll('.tab')[0];
@@ -254,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('userData', JSON.stringify(userData));
 
             // Show success message and re-render to show updated CV text
-            document.getElementById('profileMsg').innerHTML = '✅ Profile saved successfully!';
+            document.getElementById('profileMsg').innerHTML = 'Profile saved successfully!';
             document.getElementById('profileMsg').style.color = "green";
             renderProfile();
         });
@@ -288,8 +294,8 @@ const nqfData = [
 // --- Dynamic Education Entries ---
 let educationCounter = 0;
 
+// Add a new education entry row to the modal form
 function addEducationRow() {
-    // openModal('educationModal'); // Ensure modal is open when adding rows
     educationCounter++;
     const container = document.getElementById('educationListContainer');
 
@@ -325,11 +331,14 @@ function addEducationRow() {
     container.appendChild(entryDiv);
 }
 
+
+// Remove an education entry row by its ID
 function removeEducationRow(rowId) {
     const row = document.getElementById(rowId);
     if (row) row.remove();
 }
 
+// --- Prepare the Education Modal with Existing Data ---
 function prepEducationInfoModal() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const container = document.getElementById('educationListContainer');
@@ -350,13 +359,14 @@ function prepEducationInfoModal() {
             lastEntry.querySelector('.edu-year').value = edu.graduationYear;
         });
     } else {
-        // If no data → start with one empty row
+        // If no data, start with one empty row
         addEducationRow();
     }
 
     openModal('educationInfoModal');
 }
 
+// --- Personal Info Modal ---
 function prepPersonalInfoModal() {
     // 1. Get the current data from local storage
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -377,6 +387,7 @@ function prepPersonalInfoModal() {
     openModal('personalInfoModal');
 }
 
+/// --- Save Personal Info from Modal ---
 function savePersonalInfo() {
     // 1. Get the existing local storage data so we don't overwrite the whole thing
     let userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -386,8 +397,6 @@ function savePersonalInfo() {
     userData.lastName = document.getElementById('editLastName').value;
     userData.phone = document.getElementById('editPhone').value;
     userData.dob = document.getElementById('editDob').value;
-    // Email and Role are usually locked/read-only on standard profiles, 
-    // but you can grab them here too if you want them editable.
 
     // 3. Save it back to local storage
     localStorage.setItem('userData', JSON.stringify(userData));
@@ -395,16 +404,17 @@ function savePersonalInfo() {
     // 4. Update the UI instantly so they see the change
     document.getElementById('displayFirstName').textContent = userData.firstName || 'Not set';
     document.getElementById('displayLastName').textContent = userData.lastName || 'Not set';
-    // Update the top header card too!
+    // Update the top header card too
     document.getElementById('topName').textContent = `${userData.firstName} ${userData.lastName}`;
 
     // 5. Close the modal
     closeModal('personalInfoModal');
 
-    // Optional: Show a quick success message
+    // 6. Show a success message
     alert('Profile updated successfully!');
 }
 
+/// --- Save Education Info from Modal ---
 function saveEducationInfo() {
 
     // 1. Get the existing local storage data so we don't overwrite the whole thing
@@ -412,6 +422,8 @@ function saveEducationInfo() {
     // 2. Gather all the education entries from the modal
     const educationEntries = document.getElementsByClassName('education-entry');
     userData.education = []; // Reset the education array
+
+    // Loop through each entry and extract the values, then push them into the userData.education array
     for (let entry of educationEntries) {
         const institution = entry.querySelector('.edu-institution').value;
         const nqfLevel = entry.querySelector('.edu-nqf').value;
@@ -437,10 +449,13 @@ function saveEducationInfo() {
 
 }
 
+
+// --- Display the Education Data in the Profile View ---
 function renderEducationDisplay() {
     const container = document.getElementById('educationDisplayContainer');
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
+    // If no education data exists, show a friendly message instead of an empty section
     if (!userData.education || userData.education.length === 0) {
         container.innerHTML = `
         <div class="card-grid">
@@ -463,6 +478,7 @@ function renderEducationDisplay() {
 
     container.innerHTML = '';
 
+    // Loop through each education entry and create a block for it
     userData.education.forEach(edu => {
         const block = document.createElement('div');
         block.className = 'education-block';
@@ -491,5 +507,40 @@ function renderEducationDisplay() {
     });
 }
 
+// --- Bio Modal ---
+function prepBioModal() {
+    // 1. Get current data
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    // 2. Set the textarea value
+    document.getElementById('editBioText').value = userData.bio || '';
+
+    // 3. Open the modal
+    openModal('bioModal');
+}
+
+function saveBio() {
+    // 1. Get existing data
+    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    // 2. Update the bio with the new text
+    userData.bio = document.getElementById('editBioText').value;
+
+    // 3. Save back to local storage
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    // 4. Update the UI
+    // If they wiped it blank, show the default message again
+    if (userData.bio.trim() === '') {
+        document.getElementById('displayBio').textContent = 'No professional summary added yet.';
+    } else {
+        document.getElementById('displayBio').textContent = userData.bio;
+    }
+
+    // 5. Close the modal
+    closeModal('bioModal');
+}
+
+// --- Initial Render when Page Loads ---
 renderOpportunities();
 renderEducationDisplay();
