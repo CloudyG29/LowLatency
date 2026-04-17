@@ -154,21 +154,30 @@
 <script src="../public/firebase.js"></script> 
 
 <script>
-    const errorDiv = document.getElementById('errorMsg'); // Assuming you have an error div
+    const errorDiv = document.getElementById('errorMsg');
 
-    // Listen for the login form submission
+    // Email/Password Login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault(); // Stop the page from refreshing
+        e.preventDefault();
+        errorDiv.innerText = '';
         
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
         try {
-            // Call the function from firebase.js
             await loginAndRedirect(email, password);
         } catch (error) {
-            // Show error if password is wrong or user doesn't exist
             errorDiv.innerText = error.message; 
+        }
+    });
+
+    // Google Login Button
+    document.getElementById('googleLogin').addEventListener('click', async () => {
+        errorDiv.innerText = '';
+        try {
+            await loginWithGoogle();
+        } catch (error) {
+            errorDiv.innerText = 'Google login failed: ' + error.message;
         }
     });
 </script>
