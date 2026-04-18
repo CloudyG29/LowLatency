@@ -25,11 +25,13 @@
       <!-- POST -->
       <div id="postTab" class="tab-content active">
         <div class="card">
-          <input id="title" placeholder="Title" />
-          <input id="company" placeholder="Company" />
-          <input id="location" placeholder="Location" />
-          <input id="duration" placeholder="Duration" />
-          <input id="stipend" placeholder="Stipend" />
+          <input id="listname" placeholder="Listing Name" />
+          <input id="list_type" placeholder="Type (e.g. Internship, Job)" />
+          <input
+            id="nqf_level"
+            placeholder="NQF Level (optional)"
+            type="number"
+          />
           <textarea id="description" placeholder="Description"></textarea>
           <button class="post-btn" onclick="postOpportunity()">Post</button>
           <p id="msg"></p>
@@ -51,6 +53,9 @@
       <a href="/login" class="back-link">← Logout</a>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="../public/firebase.js"></script>
     <script src="../roles_js/provider_view.js"></script>
   </body>
 </html>

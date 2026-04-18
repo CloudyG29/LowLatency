@@ -12,6 +12,9 @@ app.use(cors());
 app.use(express.json());
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
+const listingRoutes = require("./routes/listings");
+
+app.use("/api/listings", listingRoutes);
 
 app.use("/api/admin", adminRoutes);
 // Fix COOP header to allow Firebase popups
