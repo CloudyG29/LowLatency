@@ -40,6 +40,7 @@ model Provider {
   provider_name String
   profile       String?
   user_id       Int     @unique
+  onboarded     Boolean @default(false)
 
   user         User          @relation(fields: [user_id], references: [user_id])
   listings     Listing[]

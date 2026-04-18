@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Onboarding - SkillBridge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input::placeholder, textarea::placeholder { color: #718096; }
+        input:focus, textarea:focus { border-color: #38ef7d; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .complete-btn {
+            background: linear-gradient(90deg, #38ef7d, #11998e);
+            color: white;
+        }
+
+        .error {
+            color: #fc8181;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🏢 Complete Your Provider Profile</h2>
+        <p style="text-align: center; margin-bottom: 20px; color: #a0aec0;">Please provide your company details to get started.</p>
+
+        <form id="onboardingForm" autocomplete="off">
+            <input type="text" id="companyName" placeholder="Company Name" required autocomplete="off">
+            <textarea id="profile" placeholder="Company Profile/Description (optional)" rows="4"></textarea>
+            <button type="submit" class="complete-btn">Complete Onboarding</button>
+        </form>
+
+        <div id="errorMsg" class="error"></div>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="../public/firebase.js"></script>
+
+<script>
+    const errorDiv = document.getElementById('errorMsg');
+
+    // Get current user email
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (!user) {
+            window.location.href = '/login';
+            return;
+        }
+
+        // Form Submit
+        document.getElementById('onboardingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorDiv.innerText = '';
+            const companyName = document.getElementById('companyName').value;
+            const profile = document.getElementById('profile').value;
+
+            try {
+                const response = await fetch('/api/user/complete-onboarding', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        provider_name: companyName,
+                        profile: profile
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Onboarding failed");
+                }
+
+                alert("Onboarding completed successfully!");
+                window.location.href = '/provider';
+            } catch (error) {
+                errorDiv.innerText = error.message;
+            }
+        });
+    });
+</script>
+</body>
+</html>

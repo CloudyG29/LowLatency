@@ -173,13 +173,14 @@
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         errorDiv.innerText = '';
+        const companyName = document.getElementById('companyName').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        const fName = document.getElementById('firstName').value;
-        const lName = document.getElementById('lastName').value;
 
         try {
-            await signUpWithEmail(email, password, fName, lName, 'Provider');
+            await signUpWithEmail(email, password, companyName, '', 'Provider');
+            alert('Provider account created successfully. Please log in to continue.');
+            window.location.href = '/login';
         } catch (error) {
             errorDiv.innerText = error.message;
         }

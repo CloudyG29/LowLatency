@@ -52,6 +52,10 @@ app.get("/provider", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "provider_view.html"));
 });
 
+app.get("/provider-onboarding", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/views", "provider-onboarding.html"));
+});
+
 app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "forgot-password.html"));
 });
