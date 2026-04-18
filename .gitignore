@@ -2,4 +2,7 @@
 # Keep environment variables out of version control
 .env
 
-/generated/prisma
+/generated/prisma 
+backend/serviceAccountKey.json
+
+
