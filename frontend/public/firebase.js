@@ -109,27 +109,27 @@ async function loginWithGoogle() {
         const user = result.user;
         const email = user.email;
 
-        // 2. Fetch role from Prisma
-        // const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+       // 2. Fetch role from Prisma
+        const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
         
-        // Commented out for testing
-        // if (!response.ok) {
-        //     // FIX: If they aren't in Prisma, log them out of Firebase and show an alert
-        //     await firebase.auth().signOut();
-        //     alert("User not found in database. Please sign up first.");
-        //     return; // Stop the function here
-        // }
+       //Commented out for testing
+        if (!response.ok) {
+            // FIX: If they aren't in Prisma, log them out of Firebase and show an alert
+            await firebase.auth().signOut();
+            alert("User not found in database. Please sign up first.");
+            return; // Stop the function here
+        }
 
         // TODO - This is where you would normally parse the actual response from your backend.
-        // const data = await response.json()
+
 
 
         const data = await response.json();
         
         // 3. Redirect
         if (data.role === 'Admin') window.location.href = '/admin';
-        else if (data.role === 'Provider') window.location.href = '/provider';
-        else window.location.href = '/applicant';
+        else if (data.role === 'Applicant') window.location.href = '/applicant';
+        else window.location.href = '/provider';
 
     } catch (error) {
 
