@@ -27,6 +27,7 @@ model ApplicantProfile {
   phone String?
   dob   DateTime?
   bio   String?
+  cv    String?
 
   user User @relation(fields: [user_id], references: [user_id])
 
@@ -72,7 +73,6 @@ model Application {
   user_id        Int
   listing_id     Int
   provider_id    Int
-  cv             String
   status         String @default("pending")
 
   created_at DateTime @default(now())
