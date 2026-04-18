@@ -136,17 +136,11 @@ async function displayUsers() {
 }
 
 function showTab(tabName) {
-  document
-    .querySelectorAll(".tab")
-    .forEach((t) => t.classList.remove("active"));
-  document
-    .querySelectorAll(".tab-content")
-    .forEach((c) => c.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+
   if (tabName === "opportunities") {
-    document.querySelector(".tab:first-child").classList.add("active");
     document.getElementById("opportunitiesTab").classList.add("active");
   } else {
-    document.querySelector(".tab:last-child").classList.add("active");
     document.getElementById("usersTab").classList.add("active");
     displayUsers();
   }
