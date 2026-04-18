@@ -48,6 +48,23 @@ async function finalizeSession(role) {
 }
 
 // 4. Auth Functions (Passing UID to registerUser)
+async function cleanupFailedFirebaseUser() {
+    try {
+        const currentUser = firebase.auth().currentUser;
+        if (currentUser) {
+            await currentUser.delete();
+        }
+    } catch (cleanupError) {
+        console.error("Cleanup failed for Firebase user:", cleanupError);
+    } finally {
+        try {
+            await firebase.auth().signOut();
+        } catch (signOutError) {
+            console.error("Firebase sign out failed after cleanup:", signOutError);
+        }
+    }
+}
+
 async function signUpWithGoogle(role) {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
@@ -60,6 +77,7 @@ async function signUpWithGoogle(role) {
         await finalizeSession(role);
     } catch (error) {
         console.error("Google signup error:", error);
+        await cleanupFailedFirebaseUser();
         throw error;
     }
 }
@@ -71,6 +89,9 @@ async function signUpWithEmail(email, password, fName, lName, role) {
         await finalizeSession(role);
     } catch (error) {
         console.error("Email signup error:", error);
+        if (firebase.auth().currentUser) {
+            await cleanupFailedFirebaseUser();
+        }
         throw error;
     }
 }

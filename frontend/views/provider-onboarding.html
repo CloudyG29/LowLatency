@@ -107,6 +107,37 @@
             return;
         }
 
+        const companyNameInput = document.getElementById('companyName');
+        const profileInput = document.getElementById('profile');
+
+        try {
+            const infoResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(user.email)}`);
+            if (!infoResponse.ok) {
+                throw new Error('Unable to load provider onboarding data.');
+            }
+
+            const infoData = await infoResponse.json();
+            if (infoData.onboarded) {
+                window.location.href = '/provider';
+                return;
+            }
+
+            if (infoData.provider_name) {
+                companyNameInput.value = infoData.provider_name;
+                companyNameInput.readOnly = true;
+                companyNameInput.placeholder = "Company name already set";
+                const helper = document.createElement('div');
+                helper.style.color = '#a0aec0';
+                helper.style.marginTop = '8px';
+                helper.style.fontSize = '0.9rem';
+                helper.textContent = 'Company name already exists and will be used for your profile.';
+                companyNameInput.parentElement.insertBefore(helper, profileInput);
+            }
+        } catch (error) {
+            console.error('Provider onboarding load failed:', error);
+            errorDiv.innerText = error.message;
+        }
+
         // Form Submit
         document.getElementById('onboardingForm').addEventListener('submit', async (e) => {
             e.preventDefault();

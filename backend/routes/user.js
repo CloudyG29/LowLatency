@@ -17,29 +17,31 @@ async function registerUser(req, res) {
             return res.status(400).json({ error: "User already exists in the database." });
         }
 
-        // 2. Create the user in the database
-        const newUser = await prisma.user.create({
-            data: {
-                name,
-                surname,
-                email,
-                role,
-                firebase_uid
-            }
-        });
-
-        // 3. Handle the Provider Profile
-        // According to your schema, if the user is a Provider, they need a corresponding Provider record
-        if (role === 'Provider') {
-            await prisma.provider.create({
+        // 2. Create the user and provider profile atomically so partial registration cannot occur.
+        const newUser = await prisma.$transaction(async (tx) => {
+            const user = await tx.user.create({
                 data: {
-                    user_id: newUser.user_id,
-                    provider_name: `${name} ${surname}`, // You can update this later via a profile edit page
-                    profile: "New Provider Account",
-                    onboarded: false
+                    name,
+                    surname,
+                    email,
+                    role,
+                    firebase_uid
                 }
             });
-        }
+
+            if (role === 'Provider') {
+                await tx.provider.create({
+                    data: {
+                        user_id: user.user_id,
+                        provider_name: `${name} ${surname}`,
+                        profile: "New Provider Account",
+                        onboarded: false
+                    }
+                });
+            }
+
+            return user;
+        });
 
         console.log(`Successfully registered ${role}: ${email}`);
         res.status(201).json({ message: "User created successfully", user: newUser });
@@ -124,7 +126,11 @@ async function getProviderOnboarded(req, res) {
             return res.status(404).json({ error: "Provider not found." });
         }
 
-        res.status(200).json({ onboarded: user.provider.onboarded });
+        res.status(200).json({
+            onboarded: user.provider.onboarded,
+            provider_name: user.provider.provider_name ? user.provider.provider_name.trim() : "",
+            profile: user.provider.profile || ""
+        });
     } catch (error) {
         console.error("Error checking provider onboarding status:", error);
         res.status(500).json({ error: "Internal server error." });
