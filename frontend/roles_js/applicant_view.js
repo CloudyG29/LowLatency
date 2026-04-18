@@ -1,10 +1,12 @@
 let currentUser = null;
 const fakeStatuses = { 1: "Pending", 2: "Hired", 3: "Rejected", 4: "Pending" };
 
+// --- Utility Functions for Applications ---
 function getApplications() {
   return JSON.parse(localStorage.getItem("applications") || "[]");
 }
 
+// Check if the user has already applied to a specific opportunity by its ID
 function hasApplied(id) {
   return getApplications().some((a) => a.opportunityId == id);
 }
@@ -82,6 +84,100 @@ async function renderOpportunities() {
   });
 }
 
+// --- Toggle between View and Edit Modes in the Profile Tab ---
+function toggleProfileMode(mode) {
+    const displayMode = document.getElementById('profileDisplayMode');
+    const editMode = document.getElementById('profileForm');
+
+    if (mode === 'edit') {
+        displayMode.style.display = 'none';
+        editMode.style.display = 'block';
+        document.getElementById('displayMsg').innerHTML = ''; // Clear old messages
+    } else {
+        displayMode.style.display = 'block';
+        editMode.style.display = 'none';
+    }
+}
+
+// --- Render Profile Data ---
+function renderProfile() {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    // Populate the View Mode (Read-Only)
+    document.getElementById('displayFirstName').textContent = userData.firstName || 'Not set';
+    document.getElementById('displayLastName').textContent = userData.lastName || 'Not set';
+    document.getElementById('displayEmail').textContent = userData.email || 'Not set';
+    document.getElementById('topName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`;
+    document.getElementById('topRole').textContent = userData.role || 'Applicant';
+
+    // For the bio, if it's empty or just whitespace, show a default message instead of a blank space
+    if (userData.bio && userData.bio.trim() !== '') {
+        document.getElementById('displayBio').textContent = userData.bio;
+    } else {
+        document.getElementById('displayBio').textContent = 'No professional summary added yet.';
+    }
+
+    // Populate the Edit Mode Form Inputs
+    document.getElementById('firstName').value = userData.firstName || '';
+    document.getElementById('lastName').value = userData.lastName || '';
+    document.getElementById('email').value = userData.email || '';
+
+
+    // For the CV file input, we can't set a value for security reasons, but we can show the current file name if it exists
+    const currentCvDisplay = document.getElementById('currentCvDisplay');
+    if (userData.cvName) {
+        currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
+    } else {
+        currentCvDisplay.innerHTML = "";
+    }
+
+    // Ensure we start in View Mode whenever the tab is opened
+    toggleProfileMode('view');
+}
+
+// --- 3. Handle the Form Submission (Save Data) ---
+// This runs once when the page loads to attach the event listener
+document.addEventListener('DOMContentLoaded', () => {
+    const profileForm = document.getElementById('profileForm');
+
+    if (profileForm) {
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Stop page from refreshing
+
+            // Grab the values from the inputs
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const cvFileInput = document.getElementById('cvFile');
+
+            // Get existing data so we don't accidentally delete anything else
+            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            // Update the data
+            userData.firstName = firstName.trim();
+            userData.lastName = lastName.trim();
+            userData.email = email.trim();
+
+            // Mock the file upload (just save the file name)
+            if (cvFileInput.files.length > 0) {
+                userData.cvName = cvFileInput.files[0].name;
+            }
+
+            // Save it back to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            // Re-render data, switch back to View Mode automatically
+            renderProfile();
+
+            // Show a success message
+            const msgBox = document.getElementById('displayMsg');
+            msgBox.innerHTML = 'Profile updated successfully!';
+            msgBox.style.color = "#38ef7d"; // Theme green
+        });
+    }
+});
+
+// --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
   document
     .querySelectorAll(".tab")

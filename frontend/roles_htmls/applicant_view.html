@@ -1,42 +1,235 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Dashboard - SkillBridge</title>
     <link rel="stylesheet" href="../roles_css/applicant_view.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>🎓 Applicant Dashboard</h1>
-        <p>Welcome!</p>
-      </div>
+    <!-- <link rel="stylesheet" href="../roles_css/common.css" /> -->
+</head>
 
-      <div class="tabs">
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <h2>SkillBridge</h2>
+            <hr />
+            <ul class="nav-links">
+                <li><a href="#" onclick="showTab('opportunities')">Browse Opportunity</a></li>
+                <li><a href="#" onclick="showTab('applications')">My Applications</a></li>
+                <li><a href="#" onclick="showTab('profile')">Profile</a></li>
+                <li><a href="/login">Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="container">
+            <header class="header">
+                <h1>🎓 Applicant Dashboard</h1>
+                <p>Welcome!</p>
+            </header>
+
+            <!-- <div class="tabs">
         <button class="tab active" onclick="showTab('opportunities')">
           Browse Opportunities
         </button>
         <button class="tab" onclick="showTab('applications')">
           My Applications
         </button>
-      </div>
+      </div> -->
 
-      <div id="opportunitiesTab" class="tab-content active">
-        <h2>Available Opportunities</h2>
-        <div id="opportunitiesList" class="opportunities-grid"></div>
-      </div>
+            <div id="opportunitiesTab" class="tab-content active">
+                <h2>Available Opportunities</h2>
+                <div id="opportunitiesList" class="opportunities-grid"></div>
+            </div>
 
-      <div id="applicationsTab" class="tab-content">
-        <h2>My Applications</h2>
-        <div id="applicationsList"></div>
-      </div>
+            <div id="applicationsTab" class="tab-content">
+                <h2>My Applications</h2>
+                <div id="applicationsList"></div>
+            </div>
 
-      <a href="/login" class="back-link">← Logout</a>
+            <section id="profileTab" class="tab-content">
+                <!-- <header>
+            <h2>Applicant Profile</h2>
+        </header> -->
+
+                <section id="profileTab" class="profile-dashboard">
+                    <header class="page-header">
+                        <h2>My Profile</h2>
+                    </header>
+
+                    <article class="profile-card top-card">
+                        <div class="avatar-container">
+                            <!-- TODO: Uploading the profile picture -->
+                            <img src="https://ui-avatars.com/api/?name=User&background=random&size=128"
+                                alt="Profile Avatar" id="profileAvatar">
+                        </div>
+                        <div class="top-card-info">
+                            <h3 id="topName">Not set</h3>
+                            <p class="role-text" id="topRole">Applicant</p>
+                        </div>
+                    </article>
+                    <!-- Profile Page -->
+
+                    <!-- Professional Summary card -->
+                    <article class="profile-card">
+                        <div class="card-header">
+                            <h3>Professional Summary</h3>
+                            <button class="btn-edit-secondary" onclick="prepBioModal()">Edit </button>
+                        </div>
+                        <p id="displayBio">
+                            No professional summary added yet.
+                        </p>
+                    </article>
+
+                    <!-- Personal Information card -->
+                    <article class="profile-card">
+                        <div class="card-header">
+                            <h3>Personal Information</h3>
+                            <button class="btn-edit-primary" onclick="prepPersonalInfoModal()">Edit </button>
+                        </div>
+
+                        <div class="card-grid">
+                            <div class="data-group">
+                                <span class="data-label">First Name</span>
+                                <span class="data-value" id="displayFirstName">Not set</span>
+                            </div>
+                            <div class="data-group">
+                                <span class="data-label">Last Name</span>
+                                <span class="data-value" id="displayLastName">Not set</span>
+                            </div>
+                            <div class="data-group">
+                                <span class="data-label">Email Address</span>
+                                <span class="data-value" id="displayEmail">Not set</span>
+                            </div>
+                            <div class="data-group">
+                                <span class="data-label">User Role</span>
+                                <span class="data-value" id="displayRoleBottom">Applicant</span>
+                            </div>
+                            <div class="data-group">
+                                <span class="data-label">CV Document</span>
+                                <span class="data-value" id="displayCv">No CV uploaded</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Education card -->
+                    <article class="profile-card">
+                        <div class="card-header">
+                            <h3>Education</h3>
+                            <button class="btn-edit-secondary" onclick="prepEducationInfoModal()">Edit</button>
+                        </div>
+
+                        <div id="educationDisplayContainer">
+
+                        </div>
+                    </article>
+
+                    <!-- Skills card -->
+                    <article class="profile-card">
+                        <div class="card-header">
+                            <h3>Skills & Expertise</h3>
+                            <button class="btn-edit-secondary" onclick="alert('Skills editing coming soon!')">Edit
+                            </button>
+                        </div>
+
+                        <div class="skills-container" id="displaySkills">
+                            <span class="skill-pill">JavaScript</span>
+                            <span class="skill-pill">React.js</span>
+                            <span class="skill-pill">UI/UX Design</span>
+                            <span class="skill-pill">Node.js</span>
+                            <span class="skill-pill">Project Management</span>
+                            <span class="skill-pill">Agile</span>
+                        </div>
+                    </article>
+                </section>
+
+
+                <!-- Profile editing popups -->
+
+                <!-- Personal Information - Edit Popup -->
+                <div id="personalInfoModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Edit Personal Information</h3>
+                            <button class="btn-close" onclick="closeModal('personalInfoModal')">✕</button>
+                        </div>
+                        <form id="editPersonalForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="editFirstName" placeholder="Natashia">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" id="editLastName" placeholder="Khaleira">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Email Address</label>
+                                    <input type="email" id="editEmail" readonly
+                                        style="background: #f9f9f9; cursor: not-allowed;">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="editPhone" placeholder="(+62) 821...">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Date of Birth</label>
+                                    <input type="date" id="editDob">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>User Role</label>
+                                    <select id="editRole" disabled style="background: #f9f9f9;">
+                                        <option value="Admin">Admin</option>
+                                        <option value="Provider">Provider</option>
+                                        <option value="Applicant">Applicant</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-save" onclick="savePersonalInfo()">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Education Information - Edit Popup -->
+                <div id="educationInfoModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Edit Education & NQF Levels</h3>
+                            <button class="btn-close" onclick="closeModal('educationInfoModal')">✕</button>
+                        </div>
+                        <form id="editEducationForm">
+                            <div id="educationListContainer">
+                            </div>
+                            <button type="button" class="btn-add-outline" onclick="addEducationRow()">+ Add Another
+                                Qualification</button>
+                            <button type="button" class="btn-save" onclick="saveEducationInfo()">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Professional Summary - Edit Popup -->
+                <div id="bioModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Edit Professional Summary</h3>
+                            <button class="btn-close" onclick="closeModal('bioModal')">✕</button>
+                        </div>
+                        <div class="form-group">
+                            <label>Tell us about your professional background</label>
+                            <textarea id="editBioText" rows="5" placeholder="I am a highly motivated..."
+                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; resize: vertical; font-family: inherit; font-size: 14px; outline: none;"></textarea>
+                        </div>
+                        <button class="btn-save" style="margin-top: 15px;" onclick="saveBio()">Save Changes</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="../public/firebase.js"></script>
     <script src="../roles_js/applicant_view.js"></script>
-  </body>
+</body>
+
 </html>

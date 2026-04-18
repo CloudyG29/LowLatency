@@ -32,6 +32,7 @@ async function registerUser(firstName, lastName, email, role, uid) {
         }
         
         return await response.json();
+
     } catch (err) {
         console.error("DB Sync Error:", err);
         throw err; // Re-throw so signup functions can catch it
@@ -79,6 +80,7 @@ async function loginAndRedirect(email, password) {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         
         // Ask your backend: "What is the role of this email in the Prisma DB?"
+
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
         
         if (!response.ok) {
@@ -86,6 +88,7 @@ async function loginAndRedirect(email, password) {
         }
         
         const data = await response.json();
+
         
         // Redirect based on the DB response, not localStorage
         if (data.role === 'Admin') window.location.href = '/admin';
@@ -98,30 +101,40 @@ async function loginAndRedirect(email, password) {
     }
 }
 
-// Add this to your firebase.js
 async function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
         // 1. Auth with Firebase
         const result = await firebase.auth().signInWithPopup(provider);
-        const email = result.user.email;
+        const user = result.user;
+        const email = user.email;
 
-        // 2. Fetch role from Prisma
+       // 2. Fetch role from Prisma
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
         
+       //Commented out for testing
         if (!response.ok) {
-            throw new Error("User not found in database. Please sign up first.");
+            // FIX: If they aren't in Prisma, log them out of Firebase and show an alert
+            await firebase.auth().signOut();
+            alert("User not found in database. Please sign up first.");
+            return; // Stop the function here
         }
+
+        // TODO - This is where you would normally parse the actual response from your backend.
+
+
 
         const data = await response.json();
         
         // 3. Redirect
         if (data.role === 'Admin') window.location.href = '/admin';
-        else if (data.role === 'Provider') window.location.href = '/provider';
-        else window.location.href = '/applicant';
+        else if (data.role === 'Applicant') window.location.href = '/applicant';
+        else window.location.href = '/provider';
 
     } catch (error) {
+
         console.error("Google login error:", error);
         throw error;
+
     }
 }
