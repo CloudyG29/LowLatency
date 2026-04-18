@@ -15,10 +15,16 @@ function saveOpportunities() {
 async function postOpportunity() {
   if (!currentUser) return;
 
+  const msg = document.getElementById("msg");
   const listname = document.getElementById("listname").value;
   const list_type = document.getElementById("list_type").value;
   const nqf_level = document.getElementById("nqf_level").value;
   const description = document.getElementById("description").value;
+  const requirements = document.getElementById("requirements").value;
+  const closing_date = document.getElementById("closing_date").value;
+  const stipend = document.getElementById("stipend").value;
+  const location = document.getElementById("location").value;
+  const duration = document.getElementById("duration").value;
 
   if (!listname || !list_type) {
     msg.innerText = "⚠️ Fill listing name and type";
@@ -37,25 +43,24 @@ async function postOpportunity() {
         description,
         requirements,
         closing_date,
+        stipend,
+        location,
+        duration,
         email: currentUser.email,
       }),
     });
 
     const data = await response.json();
-
     if (!response.ok) throw new Error(data.error);
 
     msg.innerText = "✅ Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
-    document
-      .querySelectorAll("input, textarea")
-      .forEach((el) => (el.value = ""));
+    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
   } catch (error) {
     msg.innerText = "❌ " + error.message;
     msg.style.color = "#fc8181";
   }
 }
-
 // DISPLAY OPPORTUNITIES
 function displayOpportunities() {
   const container = document.getElementById("myOpportunities");

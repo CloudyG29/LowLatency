@@ -4,10 +4,9 @@ const prisma = require("../../DB_connect/prisma");
 
 // POST: /api/listings/post
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email } = req.body;
+  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
 
   try {
-    // 1. Find the user by email to get their user_id
     const user = await prisma.user.findUnique({
       where: { email },
       include: { provider: true },
@@ -17,13 +16,18 @@ async function postListing(req, res) {
       return res.status(404).json({ error: "Provider profile not found." });
     }
 
-    // 2. Create the listing associated with the provider_id
     const listing = await prisma.listing.create({
       data: {
         listname,
         list_type,
         nqf_level: nqf_level ? parseInt(nqf_level) : null,
         description,
+        stipend: stipend ? parseFloat(stipend) : null,
+        location: location || null,
+        duration: duration || null,
+     
+        closing_date: closing_date && !isNaN(new Date(closing_date)) ? new Date(closing_date) : null,
+        requirements: requirements && typeof requirements === "string" ? requirements : null,
         provider_id: user.provider.provider_id,
       },
     });
@@ -34,18 +38,6 @@ async function postListing(req, res) {
     res.status(500).json({ error: "Internal server error." });
   }
 }
-router.get("/approved", async (req, res) => {
-  try {
-    const listings = await prisma.listing.findMany({
-      where: { status: "approved" },
-      include: { provider: true },
-    });
-    res.status(200).json(listings);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
 // Get all listings
 router.get("/all", async (req, res) => {
   try {
