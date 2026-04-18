@@ -1,40 +1,50 @@
 async function guardProviderPage() {
-    try {
-        const currentUser = firebase.auth().currentUser;
+    return new Promise((resolve) => {
+        firebase.auth().onAuthStateChanged(async (currentUser) => {
+            try {
+                if (!currentUser) {
+                    window.location.href = "/login";
+                    return resolve(false);
+                }
 
-        if (!currentUser) {
-            window.location.href = "/login";
-            return false;
-        }
+                const token = await currentUser.getIdToken();
 
-        const token = await currentUser.getIdToken();
+                const response = await fetch("/api/user/role", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
 
-        const response = await fetch("/api/user/role", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
+                if (!response.ok) {
+                    await firebase.auth().signOut().catch(() => {});
+                    window.location.href = "/login";
+                    return resolve(false);
+                }
+
+                const data = await response.json();
+
+                if (data.role !== "Provider") {
+                    window.location.href = "/login";
+                    return resolve(false);
+                }
+
+                let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                userData.email = data.email || "";
+                userData.firstName = data.name || "";
+                userData.lastName = data.surname || "";
+                userData.role = data.role;
+
+                localStorage.setItem("userData", JSON.stringify(userData));
+
+                resolve(true);
+            } catch (error) {
+                console.error("Provider guard failed:", error);
+                window.location.href = "/login";
+                resolve(false);
             }
         });
-
-        if (!response.ok) {
-            await firebase.auth().signOut().catch(() => {});
-            window.location.href = "/login";
-            return false;
-        }
-
-        const data = await response.json();
-
-        if (data.role !== "Provider") {
-            window.location.href = "/login";
-            return false;
-        }
-
-        return true;
-    } catch (error) {
-        console.error("Provider guard failed:", error);
-        window.location.href = "/login";
-        return false;
-    }
+    });
 }
 
 // STORAGE

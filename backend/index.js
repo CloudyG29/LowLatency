@@ -41,15 +41,15 @@ app.get("/signup-admin", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "signup-admin.html"));
 });
 
-app.get("/applicant", authenticate, authorize(["Applicant"]), (req, res) => {
+app.get("/applicant", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "applicant_view.html"));
 });
 
-app.get("/admin", authenticate, authorize(["Admin"]), (req, res) => {
+app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "admin_view.html"));
 });
 
-app.get("/provider", authenticate, authorize(["Provider"]), (req, res) => {
+app.get("/provider", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "provider_view.html"));
 });
 

@@ -61,10 +61,46 @@ async function registerUser(req, res) {
 // You also have a fetch for this in your loginAndRedirect function!
 async function getUserRole(req, res) {
     try {
-        const user = await prisma.user.findUnique({
-            where: { firebase_uid: req.user.uid },
-            select: { role: true, email: true, name: true, surname: true }
+        const firebaseUid = req.user.uid;
+        const email = req.user.email;
+
+        // 1. First try finding user by firebase UID
+        let user = await prisma.user.findUnique({
+            where: { firebase_uid: firebaseUid },
+            select: {
+                user_id: true,
+                role: true,
+                email: true,
+                name: true,
+                surname: true,
+                firebase_uid: true
+            }
         });
+
+        // 2. If not found by UID, try email
+        if (!user && email) {
+            user = await prisma.user.findUnique({
+                where: { email: email },
+                select: {
+                    user_id: true,
+                    role: true,
+                    email: true,
+                    name: true,
+                    surname: true,
+                    firebase_uid: true
+                }
+            });
+
+            // 3. If found by email, sync the firebase UID
+            if (user && user.firebase_uid !== firebaseUid) {
+                await prisma.user.update({
+                    where: { user_id: user.user_id },
+                    data: { firebase_uid: firebaseUid }
+                });
+
+                user.firebase_uid = firebaseUid;
+            }
+        }
 
         if (!user) {
             return res.status(404).json({ error: "User not found in database" });

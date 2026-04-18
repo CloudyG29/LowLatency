@@ -139,11 +139,12 @@ async function loginWithGoogle() {
             headers
         });
 
-        if (!response.ok) {
-            await firebase.auth().signOut();
-            alert("User not found. Please sign up first.");
-            return;
-        }
+         if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    await firebase.auth().signOut();
+    alert(errorData.error || "User not found. Please sign up first.");
+    return;
+}
 
         const data = await response.json();
 
