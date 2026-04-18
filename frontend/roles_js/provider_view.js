@@ -35,6 +35,8 @@ async function postOpportunity() {
         list_type,
         nqf_level,
         description,
+        requirements,
+        closing_date,
         email: currentUser.email,
       }),
     });
