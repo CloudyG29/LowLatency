@@ -12,8 +12,8 @@
 <body>
   <div class="layout">
     <nav class="sidebar">
-     <h2>SkillBridge</h2>
-     <hr/>
+      <h2>SkillBridge</h2>
+      <hr />
       <ul class="nav-links">
         <li><a href="#" onclick="showTab('opportunities')">Opportunities</a></li>
         <li><a href="#" onclick="showTab('users')">Users</a></li>
@@ -46,13 +46,6 @@
         </div>
       </div>
 
-      <!-- <div class="tabs">
-        <button class="tab active" onclick="showTab('opportunities')">
-          Opportunities
-        </button>
-        <button class="tab" onclick="showTab('users')">Users</button>
-      </div> -->
-
       <div id="opportunitiesTab" class="tab-content active">
         <div class="section">
           <h2>Pending Opportunities</h2>
@@ -77,6 +70,9 @@
     </main>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../public/firebase.js"></script>
   <script src="../roles_js/admin_view.js"></script>
 </body>
 

@@ -14,7 +14,7 @@
 
     <nav class="sidebar">
       <h2>SkillBridge</h2>
-      <hr/>
+      <hr />
       <ul class="nav-links">
         <li><a href="#" onclick="showTab('post')">Post Opportunity</a></li>
         <li><a href="#" onclick="showTab('manage')">My Opportunities</a></li>
@@ -28,13 +28,6 @@
         <h1>🏢 Provider Dashboard</h1>
         <p>Welcome!</p>
       </div>
-      
-
-      <!-- <div class="tabs">
-        <button class="tab active" onclick="showTab('post')">Post</button>
-        <button class="tab" onclick="showTab('manage')">My Opportunities</button>
-        <button class="tab" onclick="showTab('applications')">Applications</button>
-      </div> -->
 
       <!-- POST -->
       <div id="postTab" class="tab-content active">
@@ -46,7 +39,7 @@
           <input id="duration" placeholder="Duration" />
           <input id="stipend" placeholder="Stipend" />
           <textarea id="description" placeholder="Description"></textarea>
-          <button class="post-btn" onclick="postOpportunity()">Post</button>
+          <button id="postOpportunityBtn" class="post-btn" onclick="postOpportunity()">Post</button>
           <p id="msg"></p>
         </div>
       </div>
@@ -62,12 +55,14 @@
         <h2>Applications</h2>
         <div id="applicationsList"></div>
       </div>
+    </main>
+
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../public/firebase.js"></script>
   <script src="../roles_js/provider_view.js"></script>
-  </main>
-  
-  </div>
 </body>
 
 </html>

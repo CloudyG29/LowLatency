@@ -1,4 +1,5 @@
-// backend/routes/user.js
+// backend/routes/user.js 
+const authenticate = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const prisma = require('../../DB_connect/prisma');
@@ -14,8 +15,11 @@ async function registerUser(req, res) {
         });
 
         if (existingUser) {
-            return res.status(400).json({ error: "User already exists in the database." });
-        }
+    return res.status(200).json({
+        message: "User already exists in the database.",
+        user: existingUser
+    });
+}
 
         // 2. Create the user in the database
         const newUser = await prisma.user.create({
@@ -56,19 +60,22 @@ async function registerUser(req, res) {
 // GET: /api/user/role?email=...
 // You also have a fetch for this in your loginAndRedirect function!
 async function getUserRole(req, res) {
-    const { email } = req.query;
-
     try {
         const user = await prisma.user.findUnique({
-            where: { email: email },
-            select: { role: true } // Only fetch the role to keep it lightweight
+            where: { firebase_uid: req.user.uid },
+            select: { role: true, email: true, name: true, surname: true }
         });
 
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found in database" });
         }
 
-        res.status(200).json({ role: user.role });
+        res.status(200).json({
+            role: user.role,
+            email: user.email,
+            name: user.name,
+            surname: user.surname
+        });
     } catch (error) {
         console.error("Error fetching user role:", error);
         res.status(500).json({ error: "Internal server error." });
@@ -76,7 +83,7 @@ async function getUserRole(req, res) {
 }
 
 router.post('/register', registerUser);
-router.get('/role', getUserRole);
+router.get('/role', authenticate, getUserRole);
 
 router.registerUser = registerUser;
 router.getUserRole = getUserRole;

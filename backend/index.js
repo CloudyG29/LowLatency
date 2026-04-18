@@ -1,5 +1,6 @@
 require('dotenv').config();
-
+const authenticate = require("./middleware/auth");
+const authorize = require("./middleware/role");
 const express = require("express");
 const path = require("path");
 const cors = require('cors');
@@ -40,15 +41,15 @@ app.get("/signup-admin", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "signup-admin.html"));
 });
 
-app.get("/applicant", (req, res) => {
+app.get("/applicant", authenticate, authorize(["Applicant"]), (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "applicant_view.html"));
 });
 
-app.get("/admin", (req, res) => {
+app.get("/admin", authenticate, authorize(["Admin"]), (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "admin_view.html"));
 });
 
-app.get("/provider", (req, res) => {
+app.get("/provider", authenticate, authorize(["Provider"]), (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/roles_htmls", "provider_view.html"));
 });
 
