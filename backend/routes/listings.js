@@ -17,7 +17,7 @@ async function postListing(req, res) {
       return res.status(404).json({ error: "Provider profile not found." });
     }
 
-    // 2. Create the listing
+    // 2. Create the listing associated with the provider_id
     const listing = await prisma.listing.create({
       data: {
         listname,
