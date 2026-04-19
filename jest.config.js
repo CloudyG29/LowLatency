@@ -5,7 +5,6 @@ module.exports = {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
   collectCoverageFrom: [
-    "backend/**/*.js",
-    "frontend/**/*.js"
+    "backend/**/*.js"
   ]
 };
