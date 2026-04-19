@@ -229,6 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allowed = await guardProviderPage();
     if (!allowed) return;
 
+    document.body.style.display = "block";
     displayOpportunities();
 
     const postButton = document.getElementById('postOpportunityBtn');

@@ -189,6 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allowed = await guardApplicantPage();
     if (!allowed) return;
 
+    document.body.style.display = "block";
     renderOpportunities();
 });
 

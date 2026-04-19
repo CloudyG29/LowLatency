@@ -248,6 +248,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allowed = await guardAdminPage();
     if (!allowed) return;
 
+    document.body.style.display = "block";
     displayPending();
     displayAll();
     updateStats();
