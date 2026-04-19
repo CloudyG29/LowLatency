@@ -29,12 +29,12 @@ async function registerUser(req, res) {
         });
 
         // 3. Handle the Provider Profile
-        // According to your schema, if the user is a Provider, they need a corresponding Provider record
+       
         if (role === 'Provider') {
             await prisma.provider.create({
                 data: {
                     user_id: newUser.user_id,
-                    provider_name: `${name} ${surname}`, // You can update this later via a profile edit page
+                    provider_name: `${name} ${surname}`, 
                     profile: "New Provider Account" 
                 }
             });
@@ -53,15 +53,14 @@ async function registerUser(req, res) {
     }
 }
 
-// GET: /api/user/role?email=...
-// You also have a fetch for this in your loginAndRedirect function!
+
 async function getUserRole(req, res) {
     const { email } = req.query;
 
     try {
         const user = await prisma.user.findUnique({
             where: { email: email },
-            select: { role: true } // Only fetch the role to keep it lightweight
+            select: { role: true } 
         });
 
         if (!user) {

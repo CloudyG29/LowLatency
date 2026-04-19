@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Provider Dashboard - SkillBridge</title>
   <link rel="stylesheet" href="../roles_css/provider_view.css" />
-  <!-- <link rel="stylesheet" href="../roles_css/common.css" /> -->
 </head>
 
 <body>
@@ -28,46 +27,43 @@
         <h1>🏢 Provider Dashboard</h1>
         <p>Welcome!</p>
       </div>
-      
 
-      <!-- <div class="tabs">
-        <button class="tab active" onclick="showTab('post')">Post</button>
-        <button class="tab" onclick="showTab('manage')">My Opportunities</button>
-        <button class="tab" onclick="showTab('applications')">Applications</button>
-      </div> -->
-
-      <!-- POST -->
+      <!-- POST TAB -->
       <div id="postTab" class="tab-content active">
         <h2>Post a New Opportunity</h2>
         <div class="card">
-          <input id="title" placeholder="Title" />
-          <input id="company" placeholder="Company" />
-          <input id="location" placeholder="Location" />
-          <input id="duration" placeholder="Duration" />
-          <input id="stipend" placeholder="Stipend" />
-          <textarea id="description" placeholder="Description"></textarea>
+          <input id="listname" placeholder="Title *" required />
+          <input id="list_type" placeholder="Type (e.g. Internship, Learnership, Job) *" required />
+          <input id="stipend" placeholder="Stipend (e.g., R5000/month)" />
+          <input id="location" placeholder="Location (e.g., Johannesburg, Cape Town)" />
+          <input id="duration" placeholder="Duration (e.g., 12 months)" />
+          <input id="requirements" placeholder="Requirements (e.g., Matric, NQF 4)" />
+          <input id="nqf_level" placeholder="NQF Level" type="number" />
+          <input id="closing_date" type="text" placeholder="Closing Date (YYYY-MM-DD)" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" />
+          <textarea id="description" placeholder="Description *"></textarea>
           <button class="post-btn" onclick="postOpportunity()">Post</button>
           <p id="msg"></p>
         </div>
       </div>
 
-      <!-- MANAGE -->
+      <!-- MANAGE TAB -->
       <div id="manageTab" class="tab-content">
         <h2>My Opportunities</h2>
         <div id="myOpportunities"></div>
       </div>
 
-      <!-- APPLICATIONS -->
+      <!-- APPLICATIONS TAB -->
       <div id="applicationsTab" class="tab-content">
         <h2>Applications</h2>
         <div id="applicationsList"></div>
       </div>
+    </main>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../public/firebase.js"></script>
   <script src="../roles_js/provider_view.js"></script>
-  </main>
-  
-  </div>
 </body>
 
 </html>
