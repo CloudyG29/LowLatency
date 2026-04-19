@@ -1,9 +1,17 @@
+function redirectToLogin() {
+    if (typeof window !== "undefined" && typeof window.__redirectToLoginMock === "function") {
+        window.__redirectToLoginMock("/login");
+        return;
+    }
+    window.location.assign("/login");
+}
+
 async function guardApplicantPage() {
     return new Promise((resolve) => {
         firebase.auth().onAuthStateChanged(async (currentUser) => {
             try {
                 if (!currentUser) {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -18,14 +26,14 @@ async function guardApplicantPage() {
 
                 if (!response.ok) {
                     await firebase.auth().signOut().catch(() => {});
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
                 const data = await response.json();
 
                 if (data.role !== "Applicant") {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -54,7 +62,7 @@ async function guardApplicantPage() {
                 resolve(true);
             } catch (error) {
                 console.error("Applicant guard failed:", error);
-                window.location.href = "/login";
+                redirectToLogin();
                 resolve(false);
             }
         });
@@ -183,3 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderOpportunities();
 });
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { guardApplicantPage };
+}

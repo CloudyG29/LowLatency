@@ -1,9 +1,17 @@
+function redirectToLogin() {
+    if (typeof window !== "undefined" && typeof window.__redirectToLoginMock === "function") {
+        window.__redirectToLoginMock("/login");
+        return;
+    }
+    window.location.assign("/login");
+}
+
 async function guardAdminPage() {
     return new Promise((resolve) => {
         firebase.auth().onAuthStateChanged(async (currentUser) => {
             try {
                 if (!currentUser) {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -18,14 +26,14 @@ async function guardAdminPage() {
 
                 if (!response.ok) {
                     await firebase.auth().signOut().catch(() => {});
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
                 const data = await response.json();
 
                 if (data.role !== "Admin") {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -40,13 +48,12 @@ async function guardAdminPage() {
                 resolve(true);
             } catch (error) {
                 console.error("Admin guard failed:", error);
-                window.location.href = "/login";
+                redirectToLogin();
                 resolve(false);
             }
         });
     });
 }
-
 // STORAGE
 function getOpportunities() {
     return JSON.parse(localStorage.getItem('providerOpportunities') || '[]');
@@ -246,3 +253,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateStats();
 });
 
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { guardAdminPage };
+}

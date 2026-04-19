@@ -1,9 +1,17 @@
+function redirectToLogin() {
+    if (typeof window !== "undefined" && typeof window.__redirectToLoginMock === "function") {
+        window.__redirectToLoginMock("/login");
+        return;
+    }
+    window.location.assign("/login");
+}
+
 async function guardProviderPage() {
     return new Promise((resolve) => {
         firebase.auth().onAuthStateChanged(async (currentUser) => {
             try {
                 if (!currentUser) {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -18,14 +26,14 @@ async function guardProviderPage() {
 
                 if (!response.ok) {
                     await firebase.auth().signOut().catch(() => {});
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
                 const data = await response.json();
 
                 if (data.role !== "Provider") {
-                    window.location.href = "/login";
+                    redirectToLogin();
                     return resolve(false);
                 }
 
@@ -40,7 +48,7 @@ async function guardProviderPage() {
                 resolve(true);
             } catch (error) {
                 console.error("Provider guard failed:", error);
-                window.location.href = "/login";
+                redirectToLogin();
                 resolve(false);
             }
         });
@@ -228,3 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         postButton.addEventListener('click', postOpportunity);
     }
 });
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { guardProviderPage };
+}
