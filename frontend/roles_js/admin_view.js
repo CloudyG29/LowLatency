@@ -9,12 +9,8 @@ async function updateStats() {
 
   document.getElementById("totalOpportunities").innerText = all.length;
   document.getElementById("pendingOpportunities").innerText = pending.length;
-  document.getElementById("totalApplicants").innerText = users.filter(
-    (u) => u.role === "Applicant",
-  ).length;
-  document.getElementById("totalProviders").innerText = users.filter(
-    (u) => u.role === "Provider",
-  ).length;
+  document.getElementById("totalApplicants").innerText = users.filter((u) => u.role === "Applicant").length;
+  document.getElementById("totalProviders").innerText = users.filter((u) => u.role === "Provider").length;
 }
 
 async function displayPending() {
@@ -26,19 +22,18 @@ async function displayPending() {
     return;
   }
 
-  let html =
-    "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
+  let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
   pending.forEach((opp) => {
     html += `<tr>
-            <td>${opp.listname}</td>
-            <td>${opp.provider.provider_name}</td>
-            <td>${opp.list_type}</td>
-            <td>${opp.nqf_level || "N/A"}</td>
-            <td>
-                <button class="btn-approve" data-id="${opp.listings_id}">Approve</button>
-                <button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
-            </td>
-        </tr>`;
+      <td>${opp.listname}</td>
+      <td>${opp.provider.provider_name}</td>
+      <td>${opp.list_type}</td>
+      <td>${opp.nqf_level || "N/A"}</td>
+      <td>
+        <button class="btn-approve" data-id="${opp.listings_id}">Approve</button>
+        <button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
+      </td>
+    </tr>`;
   });
   html += "</table>";
   container.innerHTML = html;
@@ -79,25 +74,22 @@ async function displayAll() {
     return;
   }
 
-  let html =
-    "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>Status</th><th>Action</th></tr>";
+  let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>Status</th><th>Action</th></tr>";
   listings.forEach((opp) => {
     html += `<tr>
-            <td>${opp.listname}</td>
-            <td>${opp.provider.provider_name}</td>
-            <td>${opp.list_type}</td>
-            <td><span class="status-${opp.status}">${opp.status}</span></td>
-            <td><button class="btn-delete" data-id="${opp.listings_id}">Delete</button></td>
-        </tr>`;
+      <td>${opp.listname}</td>
+      <td>${opp.provider.provider_name}</td>
+      <td>${opp.list_type}</td>
+      <td><span class="status-${opp.status}">${opp.status}</span></td>
+      <td><button class="btn-delete" data-id="${opp.listings_id}">Delete</button></td>
+    </tr>`;
   });
   html += "</table>";
   container.innerHTML = html;
 
   document.querySelectorAll(".btn-delete").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      await fetch(`/api/listings/${btn.getAttribute("data-id")}`, {
-        method: "DELETE",
-      });
+      await fetch(`/api/listings/${btn.getAttribute("data-id")}`, { method: "DELETE" });
       displayPending();
       displayAll();
       updateStats();
@@ -114,24 +106,22 @@ async function displayUsers() {
     applicants.length === 0
       ? "<p>No applicants yet.</p>"
       : "<table><tr><th>Name</th><th>Email</th></tr>" +
-        applicants
-          .map(
-            (u) =>
-              `<tr><td>${u.name} ${u.surname}</td><td>${u.email}</td></tr>`,
-          )
-          .join("") +
+        applicants.map((u) => `
+          <tr>
+            <td>${u.name} ${u.surname}</td>
+            <td>${u.email}</td>
+          </tr>`).join("") +
         "</table>";
 
   document.getElementById("providersTable").innerHTML =
     providers.length === 0
       ? "<p>No providers yet.</p>"
       : "<table><tr><th>Name</th><th>Email</th></tr>" +
-        providers
-          .map(
-            (u) =>
-              `<tr><td>${u.name} ${u.surname}</td><td>${u.email}</td></tr>`,
-          )
-          .join("") +
+        providers.map((u) => `
+          <tr>
+            <td>${u.name} ${u.surname}</td>
+            <td>${u.email}</td>
+          </tr>`).join("") +
         "</table>";
 }
 
