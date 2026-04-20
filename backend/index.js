@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const cors = require('cors');
 const userRoutes = require('./routes/user');
+const profileRoutes = require('./routes/profile');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,8 +19,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Routes
 app.use('/api/user', userRoutes);
+app.use('/api/profile', profileRoutes);
 
+// Serve HTML files for different routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });

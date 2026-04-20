@@ -5,7 +5,7 @@ const hardcodedOpportunities = [
     { id: 4, title: "Marketing Learnership", company: "Nike", location: "Cape Town", duration: "6 months", stipend: "R4000/month", description: "Learn digital marketing, social media management, and brand strategy." }
 ];
 
-const fakeStatuses = { 1: 'Pending', 2: 'Hired', 3: 'Rejected'};
+const fakeStatuses = { 1: 'Pending', 2: 'Hired', 3: 'Rejected' };
 
 // --- Utility Functions for Applications ---
 function getApplications() {
@@ -104,97 +104,69 @@ function renderApplications() {
 }
 
 // --- Toggle between View and Edit Modes in the Profile Tab ---
-function toggleProfileMode(mode) {
-    const displayMode = document.getElementById('profileDisplayMode');
-    const editMode = document.getElementById('profileForm');
+// function toggleProfileMode(mode) {
+//     const displayMode = document.getElementById('profileDisplayMode');
+//     const editMode = document.getElementById('profileForm');
 
-    if (mode === 'edit') {
-        displayMode.style.display = 'none';
-        editMode.style.display = 'block';
-        document.getElementById('displayMsg').innerHTML = ''; // Clear old messages
-    } else {
-        displayMode.style.display = 'block';
-        editMode.style.display = 'none';
-    }
-}
+//     if (mode === 'edit') {
+//         displayMode.style.display = 'none';
+//         editMode.style.display = 'block';
+//         document.getElementById('displayMsg').innerHTML = ''; // Clear old messages
+//     } else {
+//         displayMode.style.display = 'block';
+//         editMode.style.display = 'none';
+//     }
+// }
 
 // --- Render Profile Data ---
 function renderProfile() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
-    // Populate the View Mode (Read-Only)
-    document.getElementById('displayFirstName').textContent = userData.firstName || 'Not set';
-    document.getElementById('displayLastName').textContent = userData.lastName || 'Not set';
+    // 1. View Mode 
+    document.getElementById('displayFirstName').textContent = userData.name || 'Not set';
+    document.getElementById('displayLastName').textContent = userData.surname || 'Not set';
     document.getElementById('displayEmail').textContent = userData.email || 'Not set';
-    document.getElementById('topName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`;
+
+    // Top-right header name fix
+    const fullName = `${userData.name || ''} ${userData.surname || ''}`.trim();
+    document.getElementById('topName').textContent = fullName !== '' ? fullName : 'Not set';
+
     document.getElementById('topRole').textContent = userData.role || 'Applicant';
 
-    // For the bio, if it's empty or just whitespace, show a default message instead of a blank space
-    if (userData.bio && userData.bio.trim() !== '') {
-        document.getElementById('displayBio').textContent = userData.bio;
+    // 2. Safe Bio Check - Protects against "applicant: null"
+    // We check IF applicant exists FIRST before trying to read .bio
+    const applicantData = userData.applicant || {};
+    const bioText = (applicantData && applicantData.bio) ? applicantData.bio : '';
+
+    if (bioText.trim() !== '') {
+        document.getElementById('displayBio').textContent = bioText;
     } else {
         document.getElementById('displayBio').textContent = 'No professional summary added yet.';
     }
 
-    // Populate the Edit Mode Form Inputs
-    document.getElementById('firstName').value = userData.firstName || '';
-    document.getElementById('lastName').value = userData.lastName || '';
-    document.getElementById('email').value = userData.email || '';
+    // 3. Edit Mode Inputs - UPDATED to use .name and .surname
+    // (Make sure your HTML IDs 'firstName' and 'lastName' are correct here!)
+    const firstNameInput = document.getElementById('editFirstName');
+    const lastNameInput = document.getElementById('editLastName');
+    const emailInput = document.getElementById('editEmail');
 
+    if (firstNameInput) firstNameInput.value = userData.name || '';
+    if (lastNameInput) lastNameInput.value = userData.surname || '';
+    if (emailInput) emailInput.value = userData.email || '';
 
-    // For the CV file input, we can't set a value for security reasons, but we can show the current file name if it exists
+    // 4. CV Display
     const currentCvDisplay = document.getElementById('currentCvDisplay');
-    if (userData.cvName) {
-        currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
-    } else {
-        currentCvDisplay.innerHTML = "";
+    if (currentCvDisplay) {
+        if (userData.cvName) {
+            currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
+        } else {
+            currentCvDisplay.innerHTML = "";
+        }
     }
 
     // Ensure we start in View Mode whenever the tab is opened
-    toggleProfileMode('view');
+    // toggleProfileMode('view');
 }
-
-// --- 3. Handle the Form Submission (Save Data) ---
-// This runs once when the page loads to attach the event listener
-document.addEventListener('DOMContentLoaded', () => {
-    const profileForm = document.getElementById('profileForm');
-
-    if (profileForm) {
-        profileForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Stop page from refreshing
-
-            // Grab the values from the inputs
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const cvFileInput = document.getElementById('cvFile');
-
-            // Get existing data so we don't accidentally delete anything else
-            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-
-            // Update the data
-            userData.firstName = firstName.trim();
-            userData.lastName = lastName.trim();
-            userData.email = email.trim();
-
-            // Mock the file upload (just save the file name)
-            if (cvFileInput.files.length > 0) {
-                userData.cvName = cvFileInput.files[0].name;
-            }
-
-            // Save it back to localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
-
-            // Re-render data, switch back to View Mode automatically
-            renderProfile();
-
-            // Show a success message
-            const msgBox = document.getElementById('displayMsg');
-            msgBox.innerHTML = 'Profile updated successfully!';
-            msgBox.style.color = "#38ef7d"; // Theme green
-        });
-    }
-});
 
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
@@ -227,45 +199,6 @@ function showTab(tabName) {
     }
 }
 
-
-
-// --- 3. Handle the Profile Form Submission ---
-document.addEventListener('DOMContentLoaded', () => {
-    const profileForm = document.getElementById('profileForm');
-
-    if (profileForm) {
-        profileForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent page reload
-
-            // Grab the values
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const cvFileInput = document.getElementById('cvFile');
-
-            // Get existing data so we don't overwrite everything
-            let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-
-            // Update data
-            userData.firstName = firstName.trim();
-            userData.lastName = lastName.trim();
-            userData.email = email.trim();
-
-            // Mock the file upload (just save the file name)
-            if (cvFileInput.files.length > 0) {
-                userData.cvName = cvFileInput.files[0].name;
-            }
-
-            // Save back to localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
-
-            // Show success message and re-render to show updated CV text
-            document.getElementById('profileMsg').innerHTML = 'Profile saved successfully!';
-            document.getElementById('profileMsg').style.color = "green";
-            renderProfile();
-        });
-    }
-});
 
 // --- Modal Controls ---
 function openModal(modalId) {
@@ -342,21 +275,23 @@ function removeEducationRow(rowId) {
 function prepEducationInfoModal() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const container = document.getElementById('educationListContainer');
+    const applicantData = userData.applicant || {};
+    const educationList = applicantData.formattedQualifications || [];
 
     // Clear existing rows
     container.innerHTML = '';
     educationCounter = 0;
 
     // If user has saved education → rebuild rows
-    if (userData.education && userData.education.length > 0) {
-        userData.education.forEach(edu => {
+    if (educationList && educationList.length > 0) {
+        educationList.forEach(edu => {
             addEducationRow();
 
             const lastEntry = container.lastElementChild;
 
             lastEntry.querySelector('.edu-institution').value = edu.institution;
-            lastEntry.querySelector('.edu-nqf').value = edu.nqfLevel;
-            lastEntry.querySelector('.edu-year').value = edu.graduationYear;
+            lastEntry.querySelector('.edu-nqf').value = edu.nqf_level;
+            lastEntry.querySelector('.edu-year').value = edu.year_completed;
         });
     } else {
         // If no data, start with one empty row
@@ -368,85 +303,77 @@ function prepEducationInfoModal() {
 
 // --- Personal Info Modal ---
 function prepPersonalInfoModal() {
-    // 1. Get the current data from local storage
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const applicantData = userData.applicant || {}; // Defensively unpack!
 
-    // 2. Target the input fields and set their VALUES to the existing data
-    document.getElementById('editFirstName').value = userData.firstName || '';
-    document.getElementById('editLastName').value = userData.lastName || '';
+    document.getElementById('editFirstName').value = userData.name || '';
+    document.getElementById('editLastName').value = userData.surname || '';
     document.getElementById('editEmail').value = userData.email || '';
-    document.getElementById('editRole').value = userData.role || 'Applicant';
 
-    // For fields that might be totally new (like phone and DOB)
-    document.getElementById('editPhone').value = userData.phone || '';
-    document.getElementById('editPhone').placeholder = 'Not set';
+    // Safely grab from the nested applicant table
+    document.getElementById('editPhone').value = applicantData.phone || '';
 
-    document.getElementById('editDob').value = userData.dob || '';
+    // Clean up Prisma's Date format for the HTML input (YYYY-MM-DD)
+    const dob = applicantData.dob ? applicantData.dob.split('T')[0] : '';
+    document.getElementById('editDob').value = dob;
 
-    // 3. Finally, open the modal!
     openModal('personalInfoModal');
 }
 
-/// --- Save Personal Info from Modal ---
-function savePersonalInfo() {
-    // 1. Get the existing local storage data so we don't overwrite the whole thing
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+async function savePersonalInfo() {
+    // Just build a payload of what changed!
+    const updatedFields = {
+        name: document.getElementById('editFirstName').value,
+        surname: document.getElementById('editLastName').value,
+        phone: document.getElementById('editPhone').value,
+        dob: document.getElementById('editDob').value
+    };
 
-    // 2. Update it with the new values from the modal
-    userData.firstName = document.getElementById('editFirstName').value;
-    userData.lastName = document.getElementById('editLastName').value;
-    userData.phone = document.getElementById('editPhone').value;
-    userData.dob = document.getElementById('editDob').value;
+    const success = await saveProfileChanges(updatedFields);
 
-    // 3. Save it back to local storage
-    localStorage.setItem('userData', JSON.stringify(userData));
-
-    // 4. Update the UI instantly so they see the change
-    document.getElementById('displayFirstName').textContent = userData.firstName || 'Not set';
-    document.getElementById('displayLastName').textContent = userData.lastName || 'Not set';
-    // Update the top header card too
-    document.getElementById('topName').textContent = `${userData.firstName} ${userData.lastName}`;
-
-    // 5. Close the modal
-    closeModal('personalInfoModal');
-
-    // 6. Show a success message
-    alert('Profile updated successfully!');
+    if (success) {
+        closeModal('personalInfoModal');
+        alert('Profile updated successfully!');
+    } else {
+        alert("Failed to save Personal Info. Please try again.");
+    }
 }
 
-/// --- Save Education Info from Modal ---
-function saveEducationInfo() {
-
-    // 1. Get the existing local storage data so we don't overwrite the whole thing
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    // 2. Gather all the education entries from the modal
+// --- Save Education Info from Modal ---
+async function saveEducationInfo() {
     const educationEntries = document.getElementsByClassName('education-entry');
-    userData.education = []; // Reset the education array
+    let educationData = [];
 
-    // Loop through each entry and extract the values, then push them into the userData.education array
+    // Gather education entries
     for (let entry of educationEntries) {
         const institution = entry.querySelector('.edu-institution').value;
         const nqfLevel = entry.querySelector('.edu-nqf').value;
         const graduationYear = entry.querySelector('.edu-year').value;
 
         if (institution && nqfLevel && graduationYear) {
-            userData.education.push({
-                institution,
-                nqfLevel,
-                graduationYear
+            educationData.push({
+                institution: institution.trim(),
+                // Convert strings from the HTML inputs into integers for Prisma!
+                nqf_level: parseInt(nqfLevel, 10),
+                year_completed: parseInt(graduationYear, 10)
             });
         }
     }
 
-    // 3. Save it back to local storage
-    localStorage.setItem('userData', JSON.stringify(userData));
+    // Pass the payload strictly using the key 'qualifications' 
+    const success = await saveProfileChanges({
+        qualifications: educationData
+    });
 
-    // 4. Close the modal
-    closeModal('educationInfoModal');
-
-    // 5. Re-render the education display to show the new data
-    renderEducationDisplay();
-
+    if (success) {
+        closeModal('educationInfoModal');
+        // renderProfile() is already called in saveProfileChanges, 
+        alert('Education information updated successfully!');
+        renderEducationDisplay();
+    } else {
+        // Always good to have a fallback error message just in case
+        alert("Failed to save Education info. Please try again.");
+    }
 }
 
 
@@ -509,38 +436,161 @@ function renderEducationDisplay() {
 
 // --- Bio Modal ---
 function prepBioModal() {
-    // 1. Get current data
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const applicantData = userData.applicant || {}; // Defensively unpack!
 
-    // 2. Set the textarea value
-    document.getElementById('editBioText').value = userData.bio || '';
-
-    // 3. Open the modal
+    document.getElementById('editBioText').value = applicantData.bio || '';
     openModal('bioModal');
 }
 
-function saveBio() {
-    // 1. Get existing data
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+async function saveBio() {
+    const newBio = document.getElementById('editBioText').value;
 
-    // 2. Update the bio with the new text
-    userData.bio = document.getElementById('editBioText').value;
+    // Send ONLY what needs updating to the master function
+    const success = await saveProfileChanges({ bio: newBio });
 
-    // 3. Save back to local storage
-    localStorage.setItem('userData', JSON.stringify(userData));
-
-    // 4. Update the UI
-    // If they wiped it blank, show the default message again
-    if (userData.bio.trim() === '') {
-        document.getElementById('displayBio').textContent = 'No professional summary added yet.';
+    if (success) {
+        closeModal('bioModal');
+        // No need to manually update the UI text here, 
+        // because saveProfileChanges() calls renderProfile() for you automatically!
+        alert('Bio updated successfully!');
     } else {
-        document.getElementById('displayBio').textContent = userData.bio;
+        alert("Failed to save bio. Please try again.");
     }
-
-    // 5. Close the modal
-    closeModal('bioModal');
 }
 
+// The Master Save Function
+async function saveProfileChanges(fieldsToUpdate) {
+    const firebaseUid = localStorage.getItem('firebase_uid');
+
+    if (!firebaseUid) {
+        alert("User not logged in!");
+        return;
+    }
+
+    try {
+        // 1. SEND TO DATABASE 
+        const response = await fetch(`/api/profile/${firebaseUid}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fieldsToUpdate) // Pass whatever fields we are updating!
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to update database.");
+        }
+
+        // 2. UPDATE LOCAL STORAGE
+        const freshProfileData = await response.json();
+        localStorage.setItem('userData', JSON.stringify(freshProfileData));
+        console.log("Successfully saved and synced to Local Storage!", freshProfileData);
+
+        // 3. UPDATE THE UI
+        renderProfile();
+
+        // Return true so whatever button called this knows it worked!
+        return true;
+
+    } catch (error) {
+        console.error("Error saving profile changes:", error);
+        return false;
+    }
+}
+
+// RIGHT: This is how our code is structured
+async function loadDataOnStartup() {
+    const firebaseUid = localStorage.getItem('firebase_uid');
+
+    try {
+        // 1. JS hits 'await' and PAUSES this function.
+        // It waits here until the Express server sends the data back.
+        const response = await fetch(`/api/profile/${firebaseUid}`);
+        const profileData = await response.json();
+
+        // 2. We save the fresh data locally
+        localStorage.setItem('userData', JSON.stringify(profileData));
+
+        // 3. FINALLY, we render. 
+        // This line is physically impossible to reach until steps 1 and 2 are 100% finished!
+        renderProfile();
+        renderEducationDisplay(); // Add any other render functions here too!
+
+    } catch (error) {
+        console.error("Error loading profile:", error);
+    }
+}
+
+async function uploadCV() {
+    const fileInput = document.getElementById('cvFile');
+    const msgBox = document.getElementById('cvUploadMsg');
+
+    // 1. Check if the user actually selected a file
+    if (fileInput.files.length === 0) {
+        msgBox.innerHTML = "<span style='color: red;'>Please select a file first.</span>";
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    // Optional: Add a file size limit check on the frontend (e.g., max 5MB)
+    const maxSizeInBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeInBytes) {
+        msgBox.innerHTML = "<span style='color: red;'>File is too large. Max size is 5MB.</span>";
+        return;
+    }
+
+    // Show loading state
+    msgBox.innerHTML = "<span style='color: blue;'>Uploading...</span>";
+
+    // 2. Simulate a fake network delay so it feels like a real upload
+    setTimeout(() => {
+        // 3. Show success message
+        msgBox.innerHTML = "<span style='color: green;'>CV Uploaded Successfully!</span>";
+
+        // 4. Update local storage with just the file name so our UI can display it
+        let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        userData.cvName = file.name; // Save just the name, not the actual file!
+        localStorage.setItem('userData', JSON.stringify(userData));
+
+        // Re-render the profile to show the new CV text
+        if (typeof renderProfile === 'function') {
+            renderProfile();
+        }
+
+        // Optional: clear the file input after successful "upload"
+        fileInput.value = '';
+
+        // Optional: fade out the success message after 3 seconds
+        setTimeout(() => {
+            msgBox.innerHTML = '';
+        }, 3000);
+
+    }, 1500); // 1.5 second fake delay
+}
+
+// document.addEventListener('DOMContentLoaded', loadDataOnStartup);
+
 // --- Initial Render when Page Loads ---
-renderOpportunities();
-renderEducationDisplay();
+
+
+// --- JEST TESTING EXPORTS & BROWSER STARTUP ---
+if (typeof module !== 'undefined' && module.exports) {
+    // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
+    module.exports = {
+        renderProfile,
+        saveProfileChanges,
+        uploadCV,
+        renderOpportunities,
+        showTab,
+        openModal,
+        closeModal
+    };
+} else {
+    // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
+
+    // Move your loose function calls inside here:
+    renderOpportunities();
+    renderEducationDisplay();
+    loadDataOnStartup();
+}

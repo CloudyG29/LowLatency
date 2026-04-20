@@ -176,14 +176,16 @@
                                     <label>Date of Birth</label>
                                     <input type="date" id="editDob">
                                 </div>
-                                <div class="form-group full-width">
-                                    <label>User Role</label>
-                                    <select id="editRole" disabled style="background: #f9f9f9;">
-                                        <option value="Admin">Admin</option>
-                                        <option value="Provider">Provider</option>
-                                        <option value="Applicant">Applicant</option>
-                                    </select>
+                                <div class = "form-group full-width">
+                                    <label>CV Upload</label>
+                                    <div class="cv-upload-section">
+                                    <h3>Upload Your CV</h3>
+                                    <input type="file" id="cvFile" accept=".pdf,.doc,.docx" />
+                                    <button onclick="uploadCV()" class="btn-primary">Upload CV</button>
+                                    <div id="cvUploadMsg"></div>
                                 </div>
+                                </div>
+                                
                             </div>
                             <button type="button" class="btn-save" onclick="savePersonalInfo()">Save Changes</button>
                         </form>

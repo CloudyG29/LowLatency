@@ -581,3 +581,110 @@ h2 {
     text-decoration: underline;
     color: #0056b3;
 }
+
+/* --- CV Upload Section Card --- */
+.cv-upload-section {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 20px;
+
+    width: 100%;
+    max-width: 550px;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cv-upload-section h3 {
+    margin: 0;
+    color: #333333;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* --- The File Input --- */
+.cv-upload-section input[type="file"] {
+    padding: 12px;
+    border: 2px dashed #cccccc;
+    border-radius: 6px;
+    background-color: #fafafa;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
+    transition: border-color 0.3s ease;
+    width: 100%;
+}
+
+/* Lights up the dashed border when hovered */
+.cv-upload-section input[type="file"]:hover {
+    border-color: #00c6ff;
+}
+
+/* Styles the actual "Choose File" button inside the input */
+.cv-upload-section input[type="file"]::file-selector-button {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-right: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.cv-upload-section input[type="file"]::file-selector-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* --- The Upload Button --- */
+.cv-upload-section .btn-primary {
+    background-color: #00c6ff; /* Your theme green */
+    color: #111111;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.cv-upload-section .btn-primary:hover {
+    background-color: #017696; /* Slightly darker green on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(56, 227, 239, 0.629);
+}
+
+.cv-upload-section .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* --- Status Messages --- */
+#cvUploadMsg {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    min-height: 20px; /* Prevents the layout from jumping when text appears */
+}
+
+/* --- The Current CV Name Display --- */
+#currentCvDisplay {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #666;
+    background-color: #f4f4f4;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #00c6ff;
+}
+/* Hide it if it's completely empty */
+#currentCvDisplay:empty {
+    display: none;
+}
