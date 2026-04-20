@@ -27,7 +27,7 @@ model ApplicantProfile {
   phone String?
   dob   DateTime?
   bio   String?
-  cv    String?
+  
 
   user User @relation(fields: [user_id], references: [user_id])
 
