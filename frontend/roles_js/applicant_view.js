@@ -342,3 +342,69 @@ firebase.auth().onAuthStateChanged((user) => {
     window.location.href = "/login";
   }
 });
+
+// Function to fetch and render opportunities based on type
+async function fetchOpportunities(type = "") {
+    const container = document.getElementById("opportunitiesList");
+    const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
+
+    // Show loading state while fetching
+    container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
+
+    try {
+        // Build the URL with the type filter and userEmail to check application status [cite: 3]
+        let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
+        if (type && type !== "") {
+            url += `&type=${encodeURIComponent(type)}`;
+        }
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to fetch opportunities");
+        
+        const listings = await response.json();
+        container.innerHTML = ""; // Clear current list
+
+        if (listings.length === 0) {
+            container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
+            return;
+        }
+
+        // Render each card using classes defined in your CSS [cite: 2]
+        listings.forEach((listing) => {
+            const card = document.createElement("div");
+            card.className = "opportunity-card";
+            
+            // Logic to check if the user has already applied (requires backend support) [cite: 3]
+            const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
+
+            const actionUI = hasApplied 
+                ? `<div class="already-applied">✅ Already Applied</div>`
+                : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
+
+            card.innerHTML = `
+                <h3 class="opportunity-title">${listing.listname}</h3>
+                <div class="opportunity-details">
+                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+                    <p><strong>Type:</strong> ${listing.list_type}</p>
+                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+                </div>
+                ${actionUI}
+            `;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Error fetching opportunities:", error);
+        container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+    }
+}
+
+// Global filter function triggered by the dropdown [cite: 2]
+window.applyTypeFilter = function() {
+    const selectedType = document.getElementById("listTypeFilter").value;
+    fetchOpportunities(selectedType);
+};
