@@ -5,7 +5,7 @@ Welcome to the SkillBridge repository! This document outlines our project archit
 * **Mogomotsi Motoma(2898909)** - Mo06-exe
 * **Nduvho Mulaudzi(2801257)** - CloudyG29
 * **Kgaogelo Mohlala(2836959)** - Kgaogelo96
-* **Moteku Tetelo(2679354)** - MotekuMagolo
+* **Moteku Magolo(2679354)** - MotekuMagolo
 * **Lethabo Sekgobela(2684887)** - Lethabo809
 
   ## Project Structure
