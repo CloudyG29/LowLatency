@@ -1,11 +1,13 @@
 module.exports = {
-  // testEnvironment: "node",
+  testEnvironment: "node",
+  testMatch: ["**/__tests__/**/*.test.js"],
   collectCoverage: true,
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov"],
   collectCoverageFrom: [
     "backend/**/*.js",
     "frontend/script.js",
     "frontend/roles_js/applicant_view.js"
   ],
-  testMatch: ["**/tests/**/*.test.js"],
   testEnvironment: "jsdom",
 };

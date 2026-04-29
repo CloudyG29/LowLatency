@@ -193,3 +193,13 @@ input, textarea {
     color: #63b3ed;
     text-decoration: none;
 }
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+

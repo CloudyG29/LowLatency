@@ -95,7 +95,8 @@ async function getUserRole(req, res) {
 
     try {
         const user = await prisma.user.findUnique({
-            where: { email }
+            where: { email: email },
+            select: { role: true } 
         });
 
         if (!user) {

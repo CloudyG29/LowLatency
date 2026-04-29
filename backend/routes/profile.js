@@ -34,7 +34,7 @@ async function getUserProfile(req, res) {
         // Clean up the response payload so the frontend has an easier time reading it
         const responseData = { ...user };
         console.log("Fetched user profile data:", responseData);
-        
+
         // Flatten qualifications and skills for easier frontend mapping
         if (responseData.applicant) {
             responseData.applicant.formattedQualifications = responseData.applicant.qualifications.map(q => ({
@@ -44,12 +44,15 @@ async function getUserProfile(req, res) {
                 institution: q.institution,
                 year_completed: q.year_completed
             }));
-            
+
             responseData.applicant.formattedSkills = responseData.applicant.skills.map(s => ({
                 id: s.id,
                 name: s.skill.name,
                 nqf_level: s.skill.nqf_level
             }));
+
+            delete responseData.applicant.qualifications;
+            delete responseData.applicant.skills;
         }
 
         res.status(200).json(responseData);
@@ -62,17 +65,17 @@ async function getUserProfile(req, res) {
 // PUT: /api/profile/:firebase_uid
 async function updateUserProfile(req, res) {
     const { firebase_uid } = req.params;
-    
+
     // Extracting all possible fields from the frontend payload
-    const { 
-        name, 
-        surname, 
-        phone, 
-        dob, 
-        bio, 
+    const {
+        name,
+        surname,
+        phone,
+        dob,
+        bio,
         qualifications, // Array of education objects
         skills          // Array of skill objects (optional, if you have this section)
-    } = req.body; 
+    } = req.body;
 
     try {
         // 1. Verify user exists
@@ -115,19 +118,19 @@ async function updateUserProfile(req, res) {
 
             // --- 4. Handle Qualifications (Wipe and Replace) ---
             if (qualifications && Array.isArray(qualifications)) {
-                
+
                 // Wipe old joining records
                 await prisma.applicantQualification.deleteMany({
-                    where: { applicant_id: updatedApplicantProfile.applicant_id } 
+                    where: { applicant_id: updatedApplicantProfile.applicant_id }
                 });
 
                 // Insert new ones
                 for (let edu of qualifications) {
                     // Find or create the base Qualification
                     let baseQual = await prisma.qualification.findFirst({
-                        where: { 
-                            name: edu.name || "Unknown Qualification", 
-                            nqf_level: edu.nqf_level 
+                        where: {
+                            name: edu.name || "Unknown Qualification",
+                            nqf_level: edu.nqf_level
                         }
                     });
 
@@ -144,7 +147,7 @@ async function updateUserProfile(req, res) {
                     await prisma.applicantQualification.create({
                         data: {
                             applicant_id: updatedApplicantProfile.applicant_id,
-                            qualification_id: baseQual.qualification_id, 
+                            qualification_id: baseQual.qualification_id,
                             institution: edu.institution,
                             year_completed: edu.year_completed
                         }
@@ -154,7 +157,7 @@ async function updateUserProfile(req, res) {
 
             // --- 5. Handle Skills (Wipe and Replace) ---
             if (skills && Array.isArray(skills)) {
-                
+
                 // Wipe old joining records
                 await prisma.applicantSkill.deleteMany({
                     where: { applicant_id: updatedApplicantProfile.applicant_id }
@@ -164,8 +167,8 @@ async function updateUserProfile(req, res) {
                 for (let skillData of skills) {
                     // Find or create the base Skill
                     let baseSkill = await prisma.skill.findFirst({
-                        where: { 
-                            name: skillData.name 
+                        where: {
+                            name: skillData.name
                         }
                     });
 
@@ -211,7 +214,7 @@ async function updateUserProfile(req, res) {
                 institution: q.institution,
                 year_completed: q.year_completed
             }));
-            
+
             fullyRefreshedUser.applicant.formattedSkills = fullyRefreshedUser.applicant.skills.map(s => ({
                 id: s.id, // the unique ID of the applicantSkill joining record
                 name: s.skill.name,
@@ -224,16 +227,13 @@ async function updateUserProfile(req, res) {
         }
 
         // Send it back!
-        res.status(200).json({ 
-            message: "Profile updated successfully",
-            user: fullyRefreshedUser 
-        });
+        res.status(200).json(fullyRefreshedUser);
 
     } catch (error) {
         console.error("CRASH DETAILS during profile update:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: "Internal server error.",
-            details: error.message 
+            details: error.message
         });
     }
 }

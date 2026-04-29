@@ -688,3 +688,225 @@ h2 {
 #currentCvDisplay:empty {
     display: none;
 }
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 52, 96, 0.7); /* matches your theme */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Hide by default */
+.loader-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* From Uiverse.io by PriyanshuGupta28 */ 
+.spinner {
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .spinner div {
+    position: absolute;
+    width: 50%;
+    height: 150%;
+    background: #000000;
+    transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    animation: spinner-fzua35 1s calc(var(--delay) * 1s) infinite ease;
+  }
+  
+  .spinner div:nth-child(1) {
+    --delay: 0.1;
+    --rotation: 36;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(2) {
+    --delay: 0.2;
+    --rotation: 72;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(3) {
+    --delay: 0.3;
+    --rotation: 108;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(4) {
+    --delay: 0.4;
+    --rotation: 144;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(5) {
+    --delay: 0.5;
+    --rotation: 180;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(6) {
+    --delay: 0.6;
+    --rotation: 216;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(7) {
+    --delay: 0.7;
+    --rotation: 252;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(8) {
+    --delay: 0.8;
+    --rotation: 288;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(9) {
+    --delay: 0.9;
+    --rotation: 324;
+    --translation: 150;
+  }
+  
+  .spinner div:nth-child(10) {
+    --delay: 1;
+    --rotation: 360;
+    --translation: 150;
+  }
+  
+  @keyframes spinner-fzua35 {
+    0%, 10%, 20%, 30%, 50%, 60%, 70%, 80%, 90%, 100% {
+      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    }
+  
+    50% {
+      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+    }
+  }
+
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+
+    /* --- Layout Reset --- */
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    /* --- Sidebar → Top Navbar --- */
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin: 0 0 15px 0;
+        border-radius: 12px;
+    }
+
+    .sidebar h2 {
+        padding: 15px;
+        font-size: 1.2rem;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 10px;
+    }
+
+    .nav-links > li {
+        flex: 1 1 auto;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .nav-links > li a {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    /* --- Cards --- */
+    .opportunity-card,
+    .application-card,
+    .profile-card {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .application-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* --- Text Scaling --- */
+    .header h1 {
+        font-size: 1.4rem;
+    }
+
+    .opportunity-card h3 {
+        font-size: 1rem;
+    }
+
+    .opportunity-card p {
+        font-size: 0.8rem;
+    }
+
+    /* --- Buttons --- */
+    .apply-btn {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    /* --- Profile Layout --- */
+    .top-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .avatar-container img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* --- Grid → Stack --- */
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* --- Forms --- */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    /* --- Modal --- */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    /* --- CV Section --- */
+    .cv-upload-section {
+        max-width: 100%;
+    }
+}

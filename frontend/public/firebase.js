@@ -99,7 +99,8 @@ async function signUpWithEmail(email, password, fName, lName, role) {
 async function loginAndRedirect(email, password) {
     try {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        
+        const user = userCredential.user;
+        localStorage.setItem('firebase_uid', user.uid);
         // Ask your backend: "What is the role of this email in the Prisma DB?"
 
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
@@ -109,7 +110,6 @@ async function loginAndRedirect(email, password) {
         }
         
         const data = await response.json();
-
         
         // Redirect based on the DB response, not localStorage
         if (data.role === 'Admin') window.location.href = '/admin';
@@ -141,6 +141,7 @@ async function loginWithGoogle() {
         // 1. Auth with Firebase
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
+        localStorage.setItem('firebase_uid', user.uid);
         const email = user.email;
 
         // 2. Fetch role from Prisma
