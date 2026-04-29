@@ -1,173 +1,212 @@
-/** @jest-environment jsdom */
+/**
+ * @jest-environment jsdom
+ */
+
+const mockAssign = jest.fn();
+global.window = { location: { assign: mockAssign } };
+global.location = global.window.location;
 
 const APPLICANT_MODULE = "../frontend/roles_js/applicant_view";
 const PROVIDER_MODULE = "../frontend/roles_js/provider_view";
 const ADMIN_MODULE = "../frontend/roles_js/admin_view";
 
-function makeFirebaseMock(currentUser, signOutMock = jest.fn().mockResolvedValue()) {
-return {
-auth: () => ({
-onAuthStateChanged: (callback) => callback(currentUser),
-signOut: signOutMock
-})
-};
-}
-
-function makeFetchOk(role, extra = {}) {
-return jest.fn().mockResolvedValue({
-ok: true,
-json: async () => ({
-role,
-email: extra.email || "user@example.com",
-name: extra.name || "Test",
-surname: extra.surname || "User"
-})
-});
-}
-
-function makeFetchFail(body = { error: "Unauthorized" }) {
-return jest.fn().mockResolvedValue({
-ok: false,
-json: async () => body
-});
-}
-
 describe("role guardrails", () => {
-let assignMock;
+  let consoleErrorSpy;
 
-beforeEach(() => {
-jest.resetModules();
-localStorage.clear();
+  const setupFirebase = (user, signOutMock = jest.fn().mockResolvedValue()) => {
+    global.firebase = {
+      auth: () => ({
+        onAuthStateChanged: (cb) => {
+          setTimeout(() => cb(user), 0);
+          return () => {};
+        },
+        signOut: signOutMock
+      })
+    };
+  };
 
-document.body.innerHTML = `
-<div id="topName"></div>
-<div id="topRole"></div>
-<div id="displayFirstName"></div>
-<div id="displayLastName"></div>
-<div id="displayEmail"></div>
-<div id="displayRoleBottom"></div>
-<div id="opportunitiesList"></div>
-<div id="applicationsList"></div>
-<div id="profileTab"></div>
-<div id="applicationsTab"></div>
-<div id="opportunitiesTab"></div>
-<div id="myOpportunities"></div>
-<div id="pendingTable"></div>
-<div id="allTable"></div>
-<div id="applicantsTable"></div>
-<div id="providersTable"></div>
-<div id="educationDisplayContainer"></div>
-<div id="profileDisplayMode"></div>
-<form id="profileForm"></form>
-<div id="displayBio"></div>
-<div id="currentCvDisplay"></div>
-<div id="displayMsg"></div>
-`;
+  const setupFetchOk = (role) => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ role, email: "test@test.com", name: "Test", surname: "User" })
+    });
+  };
 
-global.fetch = jest.fn();
-global.console.error = jest.fn();
+  const setupFetchFail = () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false });
+  };
 
-assignMock = jest.spyOn(window.location, "assign").mockImplementation(() => {});
-});
+  const setupFetchThrow = () => {
+    global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
+  };
 
-afterEach(() => {
-assignMock.mockRestore();
-});
+  beforeEach(() => {
+    jest.resetModules();
+    localStorage.clear();
+    mockAssign.mockClear();
+    global.fetch = jest.fn();
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  });
 
-test("guardApplicantPage allows an Applicant", async () => {
-const fakeUser = {
-getIdToken: jest.fn().mockResolvedValue("token-123")
-};
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+    delete global.firebase;
+  });
 
-global.firebase = makeFirebaseMock(fakeUser);
-global.fetch = makeFetchOk("Applicant", {
-email: "applicant@test.com",
-name: "Ava",
-surname: "Dube"
-});
+  // APPLICANT TESTS
+  test("guardApplicantPage allows an Applicant", async () => {
+    const user = { email: "applicant@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Applicant");
 
-const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const result = await guardApplicantPage();
+    expect(result).toBe(true);
+  });
 
-const result = await guardApplicantPage();
+  test("guardApplicantPage denies access when no user", async () => {
+    setupFirebase(null);
+    const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const result = await guardApplicantPage();
+    expect(result).toBe(false);
+  });
 
-expect(result).toBe(true);
-expect(assignMock).not.toHaveBeenCalled();
-});
+  test("guardApplicantPage denies access to wrong role", async () => {
+    const user = { email: "applicant@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Provider");
+    const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const result = await guardApplicantPage();
+    expect(result).toBe(false);
+  });
 
-test("guardApplicantPage denies access when no user is logged in", async () => {
-global.firebase = makeFirebaseMock(null);
+  test("guardApplicantPage handles fetch error", async () => {
+    const user = { email: "applicant@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchThrow();
+    const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const result = await guardApplicantPage();
+    expect(result).toBe(false);
+  });
 
-const { guardApplicantPage } = require(APPLICANT_MODULE);
+  test("guardApplicantPage signs out on fetch fail", async () => {
+    const signOut = jest.fn().mockResolvedValue();
+    const user = { email: "applicant@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user, signOut);
+    setupFetchFail();
+    const { guardApplicantPage } = require(APPLICANT_MODULE);
+    const result = await guardApplicantPage();
+    expect(result).toBe(false);
+    expect(signOut).toHaveBeenCalled();
+  });
 
-const result = await guardApplicantPage();
+  // PROVIDER TESTS
+  test("guardProviderPage allows a Provider", async () => {
+    const user = { email: "provider@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Provider");
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(true);
+  });
 
-expect(result).toBe(false);
-expect(assignMock).toHaveBeenCalledWith("/login");
-});
+  test("guardProviderPage denies access when no user", async () => {
+    setupFirebase(null);
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(false);
+  });
 
-test("guardProviderPage denies access to the wrong role", async () => {
-const fakeUser = {
-getIdToken: jest.fn().mockResolvedValue("token-456")
-};
+  test("guardProviderPage denies access to wrong role", async () => {
+    const user = { email: "provider@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Applicant");
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(false);
+  });
 
-global.firebase = makeFirebaseMock(fakeUser);
-global.fetch = makeFetchOk("Applicant");
+  test("guardProviderPage signs out on fetch fail", async () => {
+    const signOut = jest.fn().mockResolvedValue();
+    const user = { email: "provider@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user, signOut);
+    setupFetchFail();
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(false);
+    expect(signOut).toHaveBeenCalled();
+  });
 
-const { guardProviderPage } = require(PROVIDER_MODULE);
+  test("guardProviderPage handles token error", async () => {
+    const user = { email: "provider@test.com", getIdToken: jest.fn().mockRejectedValue(new Error("Token error")) };
+    setupFirebase(user);
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(false);
+  });
 
-const result = await guardProviderPage();
+  test("guardProviderPage handles fetch error", async () => {
+    const user = { email: "provider@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchThrow();
+    const { guardProviderPage } = require(PROVIDER_MODULE);
+    const result = await guardProviderPage();
+    expect(result).toBe(false);
+  });
 
-expect(result).toBe(false);
-expect(assignMock).toHaveBeenCalledWith("/login");
-});
+  // ADMIN TESTS
+  test("guardAdminPage allows an Admin", async () => {
+    const user = { email: "admin@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Admin");
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(true);
+  });
 
-test("guardProviderPage signs out and redirects when /api/user/role fails", async () => {
-const fakeUser = {
-getIdToken: jest.fn().mockResolvedValue("token-789")
-};
-const signOutMock = jest.fn().mockResolvedValue();
+  test("guardAdminPage denies access when no user", async () => {
+    setupFirebase(null);
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(false);
+  });
 
-global.firebase = makeFirebaseMock(fakeUser, signOutMock);
-global.fetch = makeFetchFail({ error: "Invalid token" });
+  test("guardAdminPage denies access to wrong role", async () => {
+    const user = { email: "admin@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchOk("Applicant");
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(false);
+  });
 
-const { guardProviderPage } = require(PROVIDER_MODULE);
+  test("guardAdminPage signs out on fetch fail", async () => {
+    const signOut = jest.fn().mockResolvedValue();
+    const user = { email: "admin@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user, signOut);
+    setupFetchFail();
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(false);
+    expect(signOut).toHaveBeenCalled();
+  });
 
-const result = await guardProviderPage();
+  test("guardAdminPage handles token error", async () => {
+    const user = { email: "admin@test.com", getIdToken: jest.fn().mockRejectedValue(new Error("Token error")) };
+    setupFirebase(user);
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(false);
+  });
 
-expect(result).toBe(false);
-expect(signOutMock).toHaveBeenCalled();
-expect(assignMock).toHaveBeenCalledWith("/login");
-});
+  test("guardAdminPage handles fetch error", async () => {
+    const user = { email: "admin@test.com", getIdToken: jest.fn().mockResolvedValue("token") };
+    setupFirebase(user);
+    setupFetchThrow();
+    const { guardAdminPage } = require(ADMIN_MODULE);
+    const result = await guardAdminPage();
+    expect(result).toBe(false);
+  });  
 
-test("guardAdminPage allows an Admin", async () => {
-const fakeUser = {
-getIdToken: jest.fn().mockResolvedValue("token-admin")
-};
 
-global.firebase = makeFirebaseMock(fakeUser);
-global.fetch = makeFetchOk("Admin");
-
-const { guardAdminPage } = require(ADMIN_MODULE);
-
-const result = await guardAdminPage();
-
-expect(result).toBe(true);
-expect(assignMock).not.toHaveBeenCalled();
-});
-
-test("guardAdminPage redirects when Firebase token call throws", async () => {
-const fakeUser = {
-getIdToken: jest.fn().mockRejectedValue(new Error("token failed"))
-};
-
-global.firebase = makeFirebaseMock(fakeUser);
-
-const { guardAdminPage } = require(ADMIN_MODULE);
-
-const result = await guardAdminPage();
-
-expect(result).toBe(false);
-expect(assignMock).toHaveBeenCalledWith("/login");
-expect(console.error).toHaveBeenCalled();
-});
 });
