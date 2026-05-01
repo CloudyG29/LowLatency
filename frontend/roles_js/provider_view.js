@@ -13,6 +13,7 @@ async function postOpportunity() {
   const stipend = document.getElementById("stipend").value;
   const location = document.getElementById("location").value;
   const duration = document.getElementById("duration").value;
+  const sector = document.getElementById("sector").value;
 
   if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
     msg.innerText = " Please fill in all fields before posting a job";
