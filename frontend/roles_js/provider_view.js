@@ -15,8 +15,8 @@ async function postOpportunity() {
   const duration = document.getElementById("duration").value;
   const sector = document.getElementById("sector").value;
 
-  if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
-    msg.innerText = " Please fill in all fields before posting a job";
+  if (!listname || !list_type || !sector || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
+    msg.innerText = "Please fill in all fields before posting a job";
     msg.style.color = "#fc8181";
     return;
   }
@@ -26,7 +26,7 @@ async function postOpportunity() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        listname, list_type, nqf_level, description,
+        listname, list_type, sector, nqf_level, description,
         requirements, closing_date, stipend, location, duration,
         email: currentUser.email,
       }),
