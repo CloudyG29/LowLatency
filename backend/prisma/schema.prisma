@@ -60,8 +60,10 @@ model Listing {
   stipend      Float?
   location     String?
   duration     String?
-  requirements String?
-  closing_date DateTime?
+  requirements String? 
+  sector       String?
+  closing_date DateTime?  
+  
 
   status String @default("pending")
 
