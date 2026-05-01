@@ -33,6 +33,7 @@ async function postListing(req, res) {
         list_type,
         nqf_level: nqf_level ? parseInt(nqf_level) : null,
         description,
+        sector: sector || null,
         stipend: stipend ? parseFloat(stipend) : null,
         location: location || null,
         duration: duration || null,
