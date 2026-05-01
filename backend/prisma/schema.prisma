@@ -43,6 +43,7 @@ model Provider {
   user_id       Int     @unique
 
   user         User          @relation(fields: [user_id], references: [user_id])
+  onboarded     Boolean @default(false)
   listings     Listing[]
   applications Application[]
 }

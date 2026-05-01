@@ -3,7 +3,19 @@ const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
 
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
+  const {
+    listname,
+    list_type,
+    nqf_level,
+    description,
+    email,
+    stipend,
+    location,
+    duration,
+    requirements,
+    closing_date,
+    sector,
+  } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -24,8 +36,14 @@ async function postListing(req, res) {
         stipend: stipend ? parseFloat(stipend) : null,
         location: location || null,
         duration: duration || null,
-        closing_date: closing_date && !isNaN(new Date(closing_date)) ? new Date(closing_date) : null,
-        requirements: requirements && typeof requirements === "string" ? requirements : null,
+        closing_date:
+          closing_date && !isNaN(new Date(closing_date))
+            ? new Date(closing_date)
+            : null,
+        requirements:
+          requirements && typeof requirements === "string"
+            ? requirements
+            : null,
         provider_id: user.provider.provider_id,
       },
     });
@@ -112,7 +130,7 @@ router.post("/apply", async (req, res) => {
         user_id: user.user_id,
         listing_id: parseInt(listing_id),
         provider_id: listing.provider_id,
-        
+
         status: "pending",
       },
     });
