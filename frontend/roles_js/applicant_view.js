@@ -38,76 +38,6 @@ async function renderApplications() {
 
 }
 
-// async function renderOpportunities() {
-//   showLoader();
-//   const container = document.getElementById("opportunitiesList");
-//   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
-
-//   try {
-//     const [oppsRes, appsRes] = await Promise.all([
-//       fetch("/api/listings/approved"),
-//       fetch(`/api/listings/my-applications?email=${currentUser.email}`)
-//     ]);
-
-//     const allOpps = await oppsRes.json();
-//     const myApps = await appsRes.json();
-//     const appliedIds = myApps.map((a) => a.listing_id);
-
-//     if (allOpps.length === 0) {
-//       container.innerHTML = '<div class="empty-state">No opportunities available yet.</div>';
-//       return;
-//     }
-
-//     container.innerHTML = "";
-//     allOpps.forEach((opp) => {
-//       const card = document.createElement("div");
-//       card.className = "opportunity-card";
-//       const applied = appliedIds.includes(opp.listings_id);
-//       card.innerHTML = `
-//         <h3>${opp.listname}</h3>
-//         <p><strong>Provider:</strong> ${opp.provider.provider_name}</p>
-//         <p><strong>Type:</strong> ${opp.list_type}</p>
-//         <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
-//         <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
-//         <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
-//         <p><strong>NQF Level:</strong> ${opp.nqf_level || "N/A"}</p>
-//         <p><strong>Requirements:</strong> ${opp.requirements || "N/A"}</p>
-//         <p><strong>Closing Date:</strong> ${opp.closing_date ? new Date(opp.closing_date).toDateString() : "N/A"}</p>
-//         <p><strong>Description:</strong> ${opp.description || "N/A"}</p>
-//         ${applied
-//           ? `<div class="already-applied">✅ Already Applied</div>`
-//           : `<button class="apply-btn" data-id="${opp.listings_id}">Apply Now</button>`
-//         }
-//         <div id="msg-${opp.listings_id}" class="message"></div>
-//       `;
-//       container.appendChild(card);
-//     });
-
-//     document.querySelectorAll(".apply-btn").forEach((btn) => {
-//       btn.addEventListener("click", async () => {
-//         const id = btn.getAttribute("data-id");
-//         try {
-//           const response = await fetch("/api/listings/apply", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ listing_id: id, email: currentUser.email }),
-//           });
-//           const data = await response.json();
-//           if (!response.ok) throw new Error(data.error);
-//           document.getElementById(`msg-${id}`).innerHTML = "✅ Application submitted!";
-//           setTimeout(() => renderOpportunities(), 1000);
-//         } catch (error) {
-//           document.getElementById(`msg-${id}`).innerHTML = "❌ " + error.message;
-//         }
-//       });
-//     });
-//   } catch (error) {
-//     container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
-//   }
-
-//   hideLoader();
-// }
-
 function renderProfile() {
   showLoader();
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -623,30 +553,42 @@ async function fetchOpportunities(type = "") {
       container.appendChild(card);
     });
 
-    document.querySelectorAll(".apply-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        try {
-          const response = await fetch("/api/listings/apply", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ listing_id: id, email: currentUser.email }),
-          });
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.error);
-          document.getElementById(`msg-${id}`).innerHTML = "✅ Application submitted!";
-          setTimeout(() => renderOpportunities(), 1000);
-        } catch (error) {
-          document.getElementById(`msg-${id}`).innerHTML = "❌ " + error.message;
-        }
-      });
-    });
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
   }
 
   hideLoader();
+}
+
+async function applyForListing(listingId) {
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+  try {
+    const response = await fetch("/api/listings/apply", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        listing_id: listingId,
+        email: userData.email
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Application failed");
+    }
+
+    alert("Applied successfully!");
+    fetchOpportunities(); // refresh UI
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
 }
 
 // Global filter function triggered by the dropdown [cite: 2]
