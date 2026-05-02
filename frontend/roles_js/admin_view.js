@@ -1,79 +1,79 @@
-let currentUser = null;
+let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 
 async function guardAdminPage() {
-    return new Promise((resolve) => {
-        firebase.auth().onAuthStateChanged(async (user) => {
-            try {
-                if (!user) {
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      try {
+        if (!user) {
+          window.location.assign("/login");
+          return resolve(false);
+        }
 
-                const token = await user.getIdToken();
+        const token = await user.getIdToken();
 
-                const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    await firebase.auth().signOut().catch(() => { });
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
-
-                const data = await response.json();
-
-                if (data.role !== "Admin") {
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
-
-                currentUser = user;
-                resolve(true);
-            } catch (error) {
-                console.error("Admin guard failed:", error);
-                window.location.assign("/login");
-                resolve(false);
-            }
+        const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+
+        if (!response.ok) {
+          await firebase.auth().signOut().catch(() => { });
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        const data = await response.json();
+
+        if (data.role !== "Admin") {
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        currentUser = user;
+        resolve(true);
+      } catch (error) {
+        console.error("Admin guard failed:", error);
+        window.location.assign("/login");
+        resolve(false);
+      }
     });
+  });
 }
 
 async function updateStats() {
-    const [all, pending, users] = await Promise.all([
-        fetch("/api/listings/all").then((r) => r.json()),
-        fetch("/api/listings/pending").then((r) => r.json()),
-        fetch("/api/admin/users").then((r) => r.json()),
-    ]);
+  const [all, pending, users] = await Promise.all([
+    fetch("/api/listings/all").then((r) => r.json()),
+    fetch("/api/listings/pending").then((r) => r.json()),
+    fetch("/api/admin/users").then((r) => r.json()),
+  ]);
 
-    const totalOpportunities = document.getElementById("totalOpportunities");
-    const pendingOpportunities = document.getElementById("pendingOpportunities");
-    const totalApplicants = document.getElementById("totalApplicants");
-    const totalProviders = document.getElementById("totalProviders");
+  const totalOpportunities = document.getElementById("totalOpportunities");
+  const pendingOpportunities = document.getElementById("pendingOpportunities");
+  const totalApplicants = document.getElementById("totalApplicants");
+  const totalProviders = document.getElementById("totalProviders");
 
-    if (totalOpportunities) totalOpportunities.innerText = all.length;
-    if (pendingOpportunities) pendingOpportunities.innerText = pending.length;
-    if (totalApplicants) totalApplicants.innerText = users.filter((u) => u.role === "Applicant").length;
-    if (totalProviders) totalProviders.innerText = users.filter((u) => u.role === "Provider").length;
+  if (totalOpportunities) totalOpportunities.innerText = all.length;
+  if (pendingOpportunities) pendingOpportunities.innerText = pending.length;
+  if (totalApplicants) totalApplicants.innerText = users.filter((u) => u.role === "Applicant").length;
+  if (totalProviders) totalProviders.innerText = users.filter((u) => u.role === "Provider").length;
 }
 
 async function displayPending() {
-    const container = document.getElementById("pendingTable");
-    if (!container) return;
+  const container = document.getElementById("pendingTable");
+  if (!container) return;
 
-    const pending = await fetch("/api/listings/pending").then((r) => r.json());
+  const pending = await fetch("/api/listings/pending").then((r) => r.json());
 
-    if (pending.length === 0) {
-        container.innerHTML = "<p>No pending opportunities.</p>";
-        return;
-    }
+  if (pending.length === 0) {
+    container.innerHTML = "<p>No pending opportunities.</p>";
+    return;
+  }
 
-    let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
-    pending.forEach((opp) => {
-        html += `<tr>
+  let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
+  pending.forEach((opp) => {
+    html += `<tr>
 <td>${opp.listname}</td>
 <td>${opp.provider.provider_name}</td>
 <td>${opp.list_type}</td>
@@ -83,9 +83,9 @@ async function displayPending() {
 <button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
 </td>
 </tr>`;
-    });
-    html += "</table>";
-    container.innerHTML = html;
+  });
+  html += "</table>";
+  container.innerHTML = html;
 
   document.querySelectorAll(".btn-approve").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -155,55 +155,84 @@ async function displayUsers() {
     applicants.length === 0
       ? "<p>No applicants yet.</p>"
       : "<table><tr><th>Name</th><th>Email</th></tr>" +
-        applicants.map((u) => `
+      applicants.map((u) => `
           <tr>
             <td>${u.name} ${u.surname}</td>
             <td>${u.email}</td>
           </tr>`).join("") +
-        "</table>";
+      "</table>";
 
   document.getElementById("providersTable").innerHTML =
     providers.length === 0
       ? "<p>No providers yet.</p>"
       : "<table><tr><th>Name</th><th>Email</th></tr>" +
-        providers.map((u) => `
+      providers.map((u) => `
           <tr>
             <td>${u.name} ${u.surname}</td>
             <td>${u.email}</td>
           </tr>`).join("") +
-        "</table>";
+      "</table>";
 }
 
 function showTab(tabName) {
   document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
 
-    if (tabName === "opportunities") {
-        const opportunitiesTab = document.getElementById("opportunitiesTab");
-        if (opportunitiesTab) opportunitiesTab.classList.add("active");
-    } else {
-        const usersTab = document.getElementById("usersTab");
-        if (usersTab) usersTab.classList.add("active");
-        displayUsers();
-    }
   if (tabName === "opportunities") {
-    document.getElementById("opportunitiesTab").classList.add("active");
+    const opportunitiesTab = document.getElementById("opportunitiesTab");
+    if (opportunitiesTab) opportunitiesTab.classList.add("active");
   } else {
-    document.getElementById("usersTab").classList.add("active");
+    const usersTab = document.getElementById("usersTab");
+    if (usersTab) usersTab.classList.add("active");
+    showLoader();
     displayUsers();
+    hideLoader();
   }
+  // if (tabName === "opportunities") {
+  //   document.getElementById("opportunitiesTab").classList.add("active");
+  // } else {
+  //   document.getElementById("usersTab").classList.add("active");
+  //   displayUsers();
+  // }
 }
 
-    firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user;
-    displayPending();
-        displayAll();
-        updateStats();
-});
+async function loadDataOnStartup() {
+  const firebaseUid = localStorage.getItem('firebase_uid');
+
+  try {
+    // 1. JS hits 'await' and PAUSES this function.
+    // It waits here until the Express server sends the data back.
+    showLoader();
+    const response = await fetch(`/api/profile/${firebaseUid}`);
+    const profileData = await response.json();
+
+    // 2. We save the fresh data locally
+    localStorage.setItem('userData', JSON.stringify(profileData));
+    
+  } catch (error) {
+    console.error("Error loading profile:", error);
+  }
+
+  const allowed = await guardAdminPage();
+  if (!allowed) return;
+
+  displayPending();
+  displayAll();
+  updateStats();
+  hideLoader();
+}
+
+function showLoader() {
+  document.getElementById('loader').classList.remove('hidden');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
+}
 
 if (typeof module !== "undefined" && module.exports) {
-    module.exports = { guardAdminPage };
-}  } else {
-    window.location.href = "/login";
-  }
-});
+  module.exports = {
+    loadDataOnStartup
+   };
+} else {
+  loadDataOnStartup();
+}

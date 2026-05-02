@@ -2803,7 +2803,6 @@ export namespace Prisma {
     phone: string | null
     dob: Date | null
     bio: string | null
-    cv: string | null
   }
 
   export type ApplicantProfileMaxAggregateOutputType = {
@@ -2812,7 +2811,6 @@ export namespace Prisma {
     phone: string | null
     dob: Date | null
     bio: string | null
-    cv: string | null
   }
 
   export type ApplicantProfileCountAggregateOutputType = {
@@ -2821,7 +2819,6 @@ export namespace Prisma {
     phone: number
     dob: number
     bio: number
-    cv: number
     _all: number
   }
 
@@ -2842,7 +2839,6 @@ export namespace Prisma {
     phone?: true
     dob?: true
     bio?: true
-    cv?: true
   }
 
   export type ApplicantProfileMaxAggregateInputType = {
@@ -2851,7 +2847,6 @@ export namespace Prisma {
     phone?: true
     dob?: true
     bio?: true
-    cv?: true
   }
 
   export type ApplicantProfileCountAggregateInputType = {
@@ -2860,7 +2855,6 @@ export namespace Prisma {
     phone?: true
     dob?: true
     bio?: true
-    cv?: true
     _all?: true
   }
 
@@ -2956,7 +2950,6 @@ export namespace Prisma {
     phone: string | null
     dob: Date | null
     bio: string | null
-    cv: string | null
     _count: ApplicantProfileCountAggregateOutputType | null
     _avg: ApplicantProfileAvgAggregateOutputType | null
     _sum: ApplicantProfileSumAggregateOutputType | null
@@ -2984,7 +2977,6 @@ export namespace Prisma {
     phone?: boolean
     dob?: boolean
     bio?: boolean
-    cv?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
     qualifications?: boolean | ApplicantProfile$qualificationsArgs<ExtArgs>
@@ -2999,10 +2991,9 @@ export namespace Prisma {
     phone?: boolean
     dob?: boolean
     bio?: boolean
-    cv?: boolean
   }
 
-  export type ApplicantProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"applicant_id" | "user_id" | "phone" | "dob" | "bio" | "cv", ExtArgs["result"]["applicantProfile"]>
+  export type ApplicantProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"applicant_id" | "user_id" | "phone" | "dob" | "bio", ExtArgs["result"]["applicantProfile"]>
   export type ApplicantProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
@@ -3023,7 +3014,6 @@ export namespace Prisma {
       phone: string | null
       dob: Date | null
       bio: string | null
-      cv: string | null
     }, ExtArgs["result"]["applicantProfile"]>
     composites: {}
   }
@@ -3401,7 +3391,6 @@ export namespace Prisma {
     readonly phone: FieldRef<"ApplicantProfile", 'String'>
     readonly dob: FieldRef<"ApplicantProfile", 'DateTime'>
     readonly bio: FieldRef<"ApplicantProfile", 'String'>
-    readonly cv: FieldRef<"ApplicantProfile", 'String'>
   }
     
 
@@ -10861,8 +10850,7 @@ export namespace Prisma {
     user_id: 'user_id',
     phone: 'phone',
     dob: 'dob',
-    bio: 'bio',
-    cv: 'cv'
+    bio: 'bio'
   };
 
   export type ApplicantProfileScalarFieldEnum = (typeof ApplicantProfileScalarFieldEnum)[keyof typeof ApplicantProfileScalarFieldEnum]
@@ -11084,7 +11072,6 @@ export namespace Prisma {
     phone?: StringNullableFilter<"ApplicantProfile"> | string | null
     dob?: DateTimeNullableFilter<"ApplicantProfile"> | Date | string | null
     bio?: StringNullableFilter<"ApplicantProfile"> | string | null
-    cv?: StringNullableFilter<"ApplicantProfile"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     skills?: ApplicantSkillListRelationFilter
     qualifications?: ApplicantQualificationListRelationFilter
@@ -11096,7 +11083,6 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     dob?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    cv?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     skills?: ApplicantSkillOrderByRelationAggregateInput
     qualifications?: ApplicantQualificationOrderByRelationAggregateInput
@@ -11111,7 +11097,6 @@ export namespace Prisma {
     phone?: StringNullableFilter<"ApplicantProfile"> | string | null
     dob?: DateTimeNullableFilter<"ApplicantProfile"> | Date | string | null
     bio?: StringNullableFilter<"ApplicantProfile"> | string | null
-    cv?: StringNullableFilter<"ApplicantProfile"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     skills?: ApplicantSkillListRelationFilter
     qualifications?: ApplicantQualificationListRelationFilter
@@ -11123,7 +11108,6 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     dob?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    cv?: SortOrderInput | SortOrder
     _count?: ApplicantProfileCountOrderByAggregateInput
     _avg?: ApplicantProfileAvgOrderByAggregateInput
     _max?: ApplicantProfileMaxOrderByAggregateInput
@@ -11140,7 +11124,6 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"ApplicantProfile"> | string | null
     dob?: DateTimeNullableWithAggregatesFilter<"ApplicantProfile"> | Date | string | null
     bio?: StringNullableWithAggregatesFilter<"ApplicantProfile"> | string | null
-    cv?: StringNullableWithAggregatesFilter<"ApplicantProfile"> | string | null
   }
 
   export type ProviderWhereInput = {
@@ -11653,7 +11636,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     user: UserCreateNestedOneWithoutApplicantInput
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
@@ -11665,7 +11647,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
   }
@@ -11674,7 +11655,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutApplicantNestedInput
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
@@ -11686,7 +11666,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
   }
@@ -11696,14 +11675,12 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
   }
 
   export type ApplicantProfileUpdateManyMutationInput = {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicantProfileUncheckedUpdateManyInput = {
@@ -11712,7 +11689,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProviderCreateInput = {
@@ -12286,7 +12262,6 @@ export namespace Prisma {
     phone?: SortOrder
     dob?: SortOrder
     bio?: SortOrder
-    cv?: SortOrder
   }
 
   export type ApplicantProfileAvgOrderByAggregateInput = {
@@ -12300,7 +12275,6 @@ export namespace Prisma {
     phone?: SortOrder
     dob?: SortOrder
     bio?: SortOrder
-    cv?: SortOrder
   }
 
   export type ApplicantProfileMinOrderByAggregateInput = {
@@ -12309,7 +12283,6 @@ export namespace Prisma {
     phone?: SortOrder
     dob?: SortOrder
     bio?: SortOrder
-    cv?: SortOrder
   }
 
   export type ApplicantProfileSumOrderByAggregateInput = {
@@ -13589,7 +13562,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
   }
@@ -13599,7 +13571,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
   }
@@ -13681,7 +13652,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
   }
@@ -13691,7 +13661,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
   }
@@ -14330,7 +14299,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     user: UserCreateNestedOneWithoutApplicantInput
     qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
   }
@@ -14341,7 +14309,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
   }
 
@@ -14381,7 +14348,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
   }
@@ -14392,7 +14358,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
@@ -14460,7 +14425,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     user: UserCreateNestedOneWithoutApplicantInput
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
   }
@@ -14471,7 +14435,6 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    cv?: string | null
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
   }
 
@@ -14511,7 +14474,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutApplicantNestedInput
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
   }
@@ -14522,7 +14484,6 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    cv?: NullableStringFieldUpdateOperationsInput | string | null
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
   }
 

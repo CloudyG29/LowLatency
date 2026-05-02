@@ -135,8 +135,7 @@ exports.Prisma.ApplicantProfileScalarFieldEnum = {
   user_id: 'user_id',
   phone: 'phone',
   dob: 'dob',
-  bio: 'bio',
-  cv: 'cv'
+  bio: 'bio'
 };
 
 exports.Prisma.ProviderScalarFieldEnum = {

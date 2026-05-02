@@ -1,65 +1,67 @@
-let currentUser = null;
+let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 
 async function guardApplicantPage() {
-    return new Promise((resolve) => {
-        firebase.auth().onAuthStateChanged(async (user) => {
-            try {
-                if (!user) {
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      try {
+        if (!user) {
+          window.location.assign("/login");
+          return resolve(false);
+        }
 
-                const token = await user.getIdToken();
+        const token = await user.getIdToken();
 
-                const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    await firebase.auth().signOut().catch(() => { });
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
-
-                const data = await response.json();
-
-                if (data.role !== "Applicant") {
-                    window.location.assign("/login");
-                    return resolve(false);
-                }
-
-                currentUser = user;
-
-                let userData = JSON.parse(localStorage.getItem("userData") || "{}");
-                userData.email = data.email || "";
-                userData.firstName = data.name || "";
-                userData.lastName = data.surname || "";
-                userData.role = data.role;
-
-                localStorage.setItem("userData", JSON.stringify(userData));
-
-                resolve(true);
-            } catch (error) {
-                console.error("Applicant guard failed:", error);
-                window.location.assign("/login");
-                resolve(false);
-            }
+        const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+
+        if (!response.ok) {
+          await firebase.auth().signOut().catch(() => { });
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        const data = await response.json();
+
+        if (data.role !== "Applicant") {
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        currentUser = user;
+
+        let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        userData.email = data.email || "";
+        userData.firstName = data.name || "";
+        userData.lastName = data.surname || "";
+        userData.role = data.role;
+
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        resolve(true);
+      } catch (error) {
+        console.error("Applicant guard failed:", error);
+        window.location.assign("/login");
+        resolve(false);
+      }
     });
+  });
 }
 
 // DATABASE FUNCTIONS
 async function renderApplications() {
-    const container = document.getElementById("applicationsList");
-    if (!container) return;
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const container = document.getElementById("applicationsList");
+  if (!container) return;
 
-    container.innerHTML = '<div class="empty-state"> Loading...</div>';
-    try {
-        const response = await fetch(`/api/listings/my-applications?email=${currentUser.email}`);
-        const applications = await response.json();
+  container.innerHTML = '<div class="empty-state"> Loading...</div>';
+  try {
+    showLoader();
+    const response = await fetch(`/api/listings/my-applications?email=${userData.email}`);
+    const applications = await response.json();
 
     if (applications.length === 0) {
       container.innerHTML = '<div class="empty-state"> You have not applied to any opportunities yet.</div>';
@@ -547,7 +549,7 @@ function hideLoader() {
 
 // Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
-  
+
   const container = document.getElementById("opportunitiesList");
   // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -642,12 +644,6 @@ async function applyForListing(listingId) {
   }
 }
 
-// Global filter function triggered by the dropdown [cite: 2]
-// window.applyTypeFilter = function() {
-//     const selectedType = document.getElementById("listTypeFilter").value;
-//     fetchOpportunities(selectedType);
-// };
-
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
   // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
@@ -665,8 +661,6 @@ if (typeof module !== 'undefined' && module.exports) {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
 
   // Move your loose function calls inside here:
-  // renderOpportunities();
-  // renderApplications();
   renderEducationDisplay();
   loadDataOnStartup();
 }
