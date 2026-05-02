@@ -1,14 +1,65 @@
-let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+let currentUser = null;
+
+async function guardApplicantPage() {
+    return new Promise((resolve) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            try {
+                if (!user) {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                const token = await user.getIdToken();
+
+                const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    await firebase.auth().signOut().catch(() => { });
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                const data = await response.json();
+
+                if (data.role !== "Applicant") {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                currentUser = user;
+
+                let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                userData.email = data.email || "";
+                userData.firstName = data.name || "";
+                userData.lastName = data.surname || "";
+                userData.role = data.role;
+
+                localStorage.setItem("userData", JSON.stringify(userData));
+
+                resolve(true);
+            } catch (error) {
+                console.error("Applicant guard failed:", error);
+                window.location.assign("/login");
+                resolve(false);
+            }
+        });
+    });
+}
 
 // DATABASE FUNCTIONS
 async function renderApplications() {
-  showLoader();
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const container = document.getElementById("applicationsList");
-  container.innerHTML = '<div class="empty-state"> Loading...</div>';
-  try {
-    const response = await fetch(`/api/listings/my-applications?email=${userData.email}`);
-    const applications = await response.json();
+    const container = document.getElementById("applicationsList");
+    if (!container) return;
+
+    container.innerHTML = '<div class="empty-state"> Loading...</div>';
+    try {
+        const response = await fetch(`/api/listings/my-applications?email=${currentUser.email}`);
+        const applications = await response.json();
 
     if (applications.length === 0) {
       container.innerHTML = '<div class="empty-state"> You have not applied to any opportunities yet.</div>';

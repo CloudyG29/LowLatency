@@ -1,24 +1,77 @@
 let currentUser = null;
 
+async function guardProviderPage() {
+    return new Promise((resolve) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            try {
+                if (!user) {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                const token = await user.getIdToken();
+
+                const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    await firebase.auth().signOut().catch(() => { });
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                const data = await response.json();
+
+                if (data.role !== "Provider") {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                currentUser = user;
+
+                let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                userData.email = data.email || "";
+                userData.firstName = data.name || "";
+                userData.lastName = data.surname || "";
+                userData.role = data.role;
+
+                localStorage.setItem("userData", JSON.stringify(userData));
+
+                resolve(true);
+            } catch (error) {
+                console.error("Provider guard failed:", error);
+                window.location.assign("/login");
+                resolve(false);
+            }
+        });
+    });
+}
+
 async function postOpportunity() {
-  if (!currentUser) return;
+    if (!currentUser) return;
 
-  const msg = document.getElementById("msg");
-  const listname = document.getElementById("listname").value;
-  const list_type = document.getElementById("list_type").value;
-  const nqf_level = document.getElementById("nqf_level").value;
-  const description = document.getElementById("description").value;
-  const requirements = document.getElementById("requirements").value;
-  const closing_date = document.getElementById("closing_date").value;
-  const stipend = document.getElementById("stipend").value;
-  const location = document.getElementById("location").value;
-  const duration = document.getElementById("duration").value;
+    const msg = document.getElementById("msg");
+    if (!msg) return;
 
-  if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
-    msg.innerText = " Please fill in all fields before posting a job";
-    msg.style.color = "#fc8181";
-    return;
-  }
+    const listname = document.getElementById("listname")?.value;
+    const list_type = document.getElementById("list_type")?.value;
+    const nqf_level = document.getElementById("nqf_level")?.value;
+    const description = document.getElementById("description")?.value;
+    const requirements = document.getElementById("requirements")?.value;
+    const closing_date = document.getElementById("closing_date")?.value;
+    const stipend = document.getElementById("stipend")?.value;
+    const location = document.getElementById("location")?.value;
+    const duration = document.getElementById("duration")?.value;
+
+    if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
+        msg.innerText = " Please fill in all fields before posting a job";
+        msg.style.color = "#fc8181";
+        return;
+    }
 
   try {
     const response = await fetch("/api/listings/post", {
@@ -145,6 +198,16 @@ function showTab(tab) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const allowed = await guardProviderPage();
+    if (!allowed) return;
+
+    displayOpportunities();
+});
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { guardProviderPage };
+}
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;

@@ -1,42 +1,91 @@
 let currentUser = null;
 
-async function updateStats() {
-  const [all, pending, users] = await Promise.all([
-    fetch("/api/listings/all").then((r) => r.json()),
-    fetch("/api/listings/pending").then((r) => r.json()),
-    fetch("/api/admin/users").then((r) => r.json()),
-  ]);
+async function guardAdminPage() {
+    return new Promise((resolve) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            try {
+                if (!user) {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
 
-  document.getElementById("totalOpportunities").innerText = all.length;
-  document.getElementById("pendingOpportunities").innerText = pending.length;
-  document.getElementById("totalApplicants").innerText = users.filter((u) => u.role === "Applicant").length;
-  document.getElementById("totalProviders").innerText = users.filter((u) => u.role === "Provider").length;
+                const token = await user.getIdToken();
+
+                const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    await firebase.auth().signOut().catch(() => { });
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                const data = await response.json();
+
+                if (data.role !== "Admin") {
+                    window.location.assign("/login");
+                    return resolve(false);
+                }
+
+                currentUser = user;
+                resolve(true);
+            } catch (error) {
+                console.error("Admin guard failed:", error);
+                window.location.assign("/login");
+                resolve(false);
+            }
+        });
+    });
+}
+
+async function updateStats() {
+    const [all, pending, users] = await Promise.all([
+        fetch("/api/listings/all").then((r) => r.json()),
+        fetch("/api/listings/pending").then((r) => r.json()),
+        fetch("/api/admin/users").then((r) => r.json()),
+    ]);
+
+    const totalOpportunities = document.getElementById("totalOpportunities");
+    const pendingOpportunities = document.getElementById("pendingOpportunities");
+    const totalApplicants = document.getElementById("totalApplicants");
+    const totalProviders = document.getElementById("totalProviders");
+
+    if (totalOpportunities) totalOpportunities.innerText = all.length;
+    if (pendingOpportunities) pendingOpportunities.innerText = pending.length;
+    if (totalApplicants) totalApplicants.innerText = users.filter((u) => u.role === "Applicant").length;
+    if (totalProviders) totalProviders.innerText = users.filter((u) => u.role === "Provider").length;
 }
 
 async function displayPending() {
-  const pending = await fetch("/api/listings/pending").then((r) => r.json());
-  const container = document.getElementById("pendingTable");
+    const container = document.getElementById("pendingTable");
+    if (!container) return;
 
-  if (pending.length === 0) {
-    container.innerHTML = "<p>No pending opportunities.</p>";
-    return;
-  }
+    const pending = await fetch("/api/listings/pending").then((r) => r.json());
 
-  let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
-  pending.forEach((opp) => {
-    html += `<tr>
-      <td>${opp.listname}</td>
-      <td>${opp.provider.provider_name}</td>
-      <td>${opp.list_type}</td>
-      <td>${opp.nqf_level || "N/A"}</td>
-      <td>
-        <button class="btn-approve" data-id="${opp.listings_id}">Approve</button>
-        <button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
-      </td>
-    </tr>`;
-  });
-  html += "</table>";
-  container.innerHTML = html;
+    if (pending.length === 0) {
+        container.innerHTML = "<p>No pending opportunities.</p>";
+        return;
+    }
+
+    let html = "<table><tr><th>Title</th><th>Provider</th><th>Type</th><th>NQF</th><th>Actions</th></tr>";
+    pending.forEach((opp) => {
+        html += `<tr>
+<td>${opp.listname}</td>
+<td>${opp.provider.provider_name}</td>
+<td>${opp.list_type}</td>
+<td>${opp.nqf_level || "N/A"}</td>
+<td>
+<button class="btn-approve" data-id="${opp.listings_id}">Approve</button>
+<button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
+</td>
+</tr>`;
+    });
+    html += "</table>";
+    container.innerHTML = html;
 
   document.querySelectorAll(".btn-approve").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -128,6 +177,14 @@ async function displayUsers() {
 function showTab(tabName) {
   document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
 
+    if (tabName === "opportunities") {
+        const opportunitiesTab = document.getElementById("opportunitiesTab");
+        if (opportunitiesTab) opportunitiesTab.classList.add("active");
+    } else {
+        const usersTab = document.getElementById("usersTab");
+        if (usersTab) usersTab.classList.add("active");
+        displayUsers();
+    }
   if (tabName === "opportunities") {
     document.getElementById("opportunitiesTab").classList.add("active");
   } else {
@@ -136,13 +193,17 @@ function showTab(tabName) {
   }
 }
 
-firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;
     displayPending();
-    displayAll();
-    updateStats();
-  } else {
+        displayAll();
+        updateStats();
+});
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { guardAdminPage };
+}  } else {
     window.location.href = "/login";
   }
 });
