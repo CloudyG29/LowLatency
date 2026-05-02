@@ -44,12 +44,22 @@
                 <p>Welcome!</p>
             </header>
 
-            <div id="opportunitiesTab" class="tab-content active">
-                <h2>Available Opportunities</h2>
-                <div id="opportunitiesList" class="opportunities-grid">
-                    <div class="empty-state"> Loading...</div>
-                </div>
-            </div>
+<div id="opportunitiesTab" class="tab-content active">
+    <h2>Available Opportunities</h2>
+    
+    <div class="filter-controls" style="margin-bottom: 20px;">
+        <label for="listTypeFilter"><strong>Filter by Type:</strong> </label>
+<select id="listTypeFilter" onchange="fetchOpportunities(this.value)">
+    <option value="">All Opportunities</option>
+    <option value="Internship">Internship</option>
+    <option value="Learnership">Learnership</option>
+    <option value="Apprenticeship">Apprenticeship</option>
+</select>
+    </div>
+    <div id="opportunitiesList" class="opportunities-grid">
+        <div class="empty-state">Loading...</div>
+    </div>
+</div>
 
             <div id="applicationsTab" class="tab-content">
                 <h2>My Applications</h2>
@@ -154,8 +164,7 @@
                                 </div>
                                 <div class="form-group full-width">
                                     <label>Email Address</label>
-                                    <input type="email" id="editEmail" readonly
-                                        style="background: #f9f9f9; cursor: not-allowed;">
+                                    <input type="email" id="editEmail" readonly style="background: #f9f9f9; cursor: not-allowed;">
                                 </div>
                                 <div class="form-group full-width">
                                     <label>Phone Number</label>
@@ -221,5 +230,4 @@
     <script src="../public/firebase.js"></script>
     <script src="../roles_js/applicant_view.js"></script>
 </body>
-
 </html>

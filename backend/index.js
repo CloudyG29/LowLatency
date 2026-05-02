@@ -3,8 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cors = require('cors');
-const userRoutes = require('./routes/user');
-const profileRoutes = require('./routes/profile');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,8 +11,10 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.use(cors());
 app.use(express.json());
+const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
+const profileRoutes = require('./routes/profile');
 
 app.use("/api/listings", listingRoutes);
 

@@ -3,10 +3,11 @@ let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 // DATABASE FUNCTIONS
 async function renderApplications() {
   showLoader();
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const container = document.getElementById("applicationsList");
   container.innerHTML = '<div class="empty-state"> Loading...</div>';
   try {
-    const response = await fetch(`/api/listings/my-applications?email=${currentUser.email}`);
+    const response = await fetch(`/api/listings/my-applications?email=${userData.email}`);
     const applications = await response.json();
 
     if (applications.length === 0) {
@@ -14,7 +15,7 @@ async function renderApplications() {
       hideLoader();
       return;
     }
-    
+
     container.innerHTML = "";
     applications.forEach((app) => {
       const div = document.createElement("div");
@@ -34,80 +35,79 @@ async function renderApplications() {
     container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
     hideLoader();
   }
-  
+
 }
 
-async function renderOpportunities() {
-  showLoader();
-  const container = document.getElementById("opportunitiesList");
-  container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
+// async function renderOpportunities() {
+//   showLoader();
+//   const container = document.getElementById("opportunitiesList");
+//   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
 
-  try {
-    const [oppsRes, appsRes] = await Promise.all([
-      fetch("/api/listings/approved"),
-      fetch(`/api/listings/my-applications?email=${currentUser.email}`)
-    ]);
+//   try {
+//     const [oppsRes, appsRes] = await Promise.all([
+//       fetch("/api/listings/approved"),
+//       fetch(`/api/listings/my-applications?email=${currentUser.email}`)
+//     ]);
 
-    const allOpps = await oppsRes.json();
-    const myApps = await appsRes.json();
-    const appliedIds = myApps.map((a) => a.listing_id);
+//     const allOpps = await oppsRes.json();
+//     const myApps = await appsRes.json();
+//     const appliedIds = myApps.map((a) => a.listing_id);
 
-    if (allOpps.length === 0) {
-      container.innerHTML = '<div class="empty-state">No opportunities available yet.</div>';
-      return;
-    }
+//     if (allOpps.length === 0) {
+//       container.innerHTML = '<div class="empty-state">No opportunities available yet.</div>';
+//       return;
+//     }
 
-    container.innerHTML = "";
-    allOpps.forEach((opp) => {
-      const card = document.createElement("div");
-      card.className = "opportunity-card";
-      const applied = appliedIds.includes(opp.listings_id);
-      card.innerHTML = `
-        <h3>${opp.listname}</h3>
-        <p><strong>Provider:</strong> ${opp.provider.provider_name}</p>
-        <p><strong>Type:</strong> ${opp.list_type}</p>
-        <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
-        <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
-        <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
-        <p><strong>NQF Level:</strong> ${opp.nqf_level || "N/A"}</p>
-        <p><strong>Requirements:</strong> ${opp.requirements || "N/A"}</p>
-        <p><strong>Closing Date:</strong> ${opp.closing_date ? new Date(opp.closing_date).toDateString() : "N/A"}</p>
-        <p><strong>Description:</strong> ${opp.description || "N/A"}</p>
-        ${applied
-          ? `<div class="already-applied">✅ Already Applied</div>`
-          : `<button class="apply-btn" data-id="${opp.listings_id}">Apply Now</button>`
-        }
-        <div id="msg-${opp.listings_id}" class="message"></div>
-      `;
-      container.appendChild(card);
-    });
+//     container.innerHTML = "";
+//     allOpps.forEach((opp) => {
+//       const card = document.createElement("div");
+//       card.className = "opportunity-card";
+//       const applied = appliedIds.includes(opp.listings_id);
+//       card.innerHTML = `
+//         <h3>${opp.listname}</h3>
+//         <p><strong>Provider:</strong> ${opp.provider.provider_name}</p>
+//         <p><strong>Type:</strong> ${opp.list_type}</p>
+//         <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
+//         <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
+//         <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
+//         <p><strong>NQF Level:</strong> ${opp.nqf_level || "N/A"}</p>
+//         <p><strong>Requirements:</strong> ${opp.requirements || "N/A"}</p>
+//         <p><strong>Closing Date:</strong> ${opp.closing_date ? new Date(opp.closing_date).toDateString() : "N/A"}</p>
+//         <p><strong>Description:</strong> ${opp.description || "N/A"}</p>
+//         ${applied
+//           ? `<div class="already-applied">✅ Already Applied</div>`
+//           : `<button class="apply-btn" data-id="${opp.listings_id}">Apply Now</button>`
+//         }
+//         <div id="msg-${opp.listings_id}" class="message"></div>
+//       `;
+//       container.appendChild(card);
+//     });
 
-    document.querySelectorAll(".apply-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        try {
-          const response = await fetch("/api/listings/apply", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ listing_id: id, email: currentUser.email }),
-          });
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.error);
-          document.getElementById(`msg-${id}`).innerHTML = "✅ Application submitted!";
-          setTimeout(() => renderOpportunities(), 1000);
-        } catch (error) {
-          document.getElementById(`msg-${id}`).innerHTML = "❌ " + error.message;
-        }
-      });
-    });
-  } catch (error) {
-    container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
-  }
+//     document.querySelectorAll(".apply-btn").forEach((btn) => {
+//       btn.addEventListener("click", async () => {
+//         const id = btn.getAttribute("data-id");
+//         try {
+//           const response = await fetch("/api/listings/apply", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ listing_id: id, email: currentUser.email }),
+//           });
+//           const data = await response.json();
+//           if (!response.ok) throw new Error(data.error);
+//           document.getElementById(`msg-${id}`).innerHTML = "✅ Application submitted!";
+//           setTimeout(() => renderOpportunities(), 1000);
+//         } catch (error) {
+//           document.getElementById(`msg-${id}`).innerHTML = "❌ " + error.message;
+//         }
+//       });
+//     });
+//   } catch (error) {
+//     container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
+//   }
 
-  hideLoader();
-}
+//   hideLoader();
+// }
 
-// --- Render Profile Data ---
 function renderProfile() {
   showLoader();
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -171,7 +171,7 @@ function showTab(tabName) {
     if (tabBtn) tabBtn.classList.add('active');
 
     document.getElementById('opportunitiesTab').classList.add('active');
-    renderOpportunities();
+    fetchOpportunities(this.document.getElementById("listTypeFilter").value);
 
   } else if (tabName === 'applications') {
     const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[1];
@@ -199,25 +199,21 @@ function closeModal(modalId) {
   document.getElementById(modalId).classList.remove('active');
 }
 
-// --- Official SAQA NQF Framework Data ---
-// Source: South African Qualifications Authority (SAQA) National Learners' Records Database
 const nqfData = [
-  { level: 1, title: "NQF Level 1", description: "Grade 9 / General Certificate" },
-  { level: 2, title: "NQF Level 2", description: "Grade 10 / National Certificate (Vocational) Level 2" },
-  { level: 3, title: "NQF Level 3", description: "Grade 11 / National Certificate (Vocational) Level 3" },
-  { level: 4, title: "NQF Level 4", description: "Grade 12 (Matric) / National Senior Certificate" },
-  { level: 5, title: "NQF Level 5", description: "Higher Certificate / Advanced National (Vocational) Cert." },
-  { level: 6, title: "NQF Level 6", description: "Diploma / Advanced Certificate" },
-  { level: 7, title: "NQF Level 7", description: "Bachelor's Degree / Advanced Diploma" },
-  { level: 8, title: "NQF Level 8", description: "Honours Degree / Post Graduate Diploma" },
-  { level: 9, title: "NQF Level 9", description: "Master's Degree" },
-  { level: 10, title: "NQF Level 10", description: "Doctoral Degree" }
+  { level: 1, description: "Grade 9 / General Certificate" },
+  { level: 2, description: "Grade 10 / National Certificate (Vocational) Level 2" },
+  { level: 3, description: "Grade 11 / National Certificate (Vocational) Level 3" },
+  { level: 4, description: "Grade 12 (Matric) / National Senior Certificate" },
+  { level: 5, description: "Higher Certificate / Advanced National (Vocational) Cert." },
+  { level: 6, description: "Diploma / Advanced Certificate" },
+  { level: 7, description: "Bachelor's Degree / Advanced Diploma" },
+  { level: 8, description: "Honours Degree / Post Graduate Diploma" },
+  { level: 9, description: "Master's Degree" },
+  { level: 10, description: "Doctoral Degree" }
 ];
 
-// --- Dynamic Education Entries ---
 let educationCounter = 0;
 
-// Add a new education entry row to the modal form
 function addEducationRow() {
   educationCounter++;
   const container = document.getElementById('educationListContainer');
@@ -254,14 +250,11 @@ function addEducationRow() {
   container.appendChild(entryDiv);
 }
 
-
-// Remove an education entry row by its ID
 function removeEducationRow(rowId) {
   const row = document.getElementById(rowId);
   if (row) row.remove();
 }
 
-// --- Prepare the Education Modal with Existing Data ---
 function prepEducationInfoModal() {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const container = document.getElementById('educationListContainer');
@@ -291,7 +284,6 @@ function prepEducationInfoModal() {
   openModal('educationInfoModal');
 }
 
-// --- Personal Info Modal ---
 function prepPersonalInfoModal() {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const applicantData = userData.applicant || {}; // Defensively unpack!
@@ -366,8 +358,6 @@ async function saveEducationInfo() {
   }
 }
 
-
-// --- Display the Education Data in the Profile View ---
 function renderEducationDisplay() {
   const container = document.getElementById('educationDisplayContainer');
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -426,7 +416,6 @@ function renderEducationDisplay() {
   });
 }
 
-// --- Bio Modal ---
 function prepBioModal() {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const applicantData = userData.applicant || {}; // Defensively unpack!
@@ -506,9 +495,10 @@ async function loadDataOnStartup() {
     localStorage.setItem('userData', JSON.stringify(profileData));
 
     // 3. FINALLY, we render. 
-    // This line is physically impossible to reach until steps 1 and 2 are 100% finished!
     renderProfile();
-    renderEducationDisplay(); // Add any other render functions here too!
+    renderEducationDisplay();
+    fetchOpportunities(document.getElementById("listTypeFilter").value);
+    renderApplications();
 
   } catch (error) {
     console.error("Error loading profile:", error);
@@ -573,8 +563,97 @@ function hideLoader() {
   document.getElementById('loader').classList.add('hidden');
 }
 
-// --- Initial Render when Page Loads ---
 
+// Function to fetch and render opportunities based on type
+async function fetchOpportunities(type = "") {
+  
+  const container = document.getElementById("opportunitiesList");
+  // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
+  // Show loading state while fetching
+  showLoader();
+  container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
+
+  try {
+    // Build the URL with the type filter and userEmail to check application status [cite: 3]
+    let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
+    if (type && type !== "") {
+      url += `&type=${encodeURIComponent(type)}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch opportunities");
+
+    const listings = await response.json();
+    container.innerHTML = ""; // Clear current list
+
+    if (listings.length === 0) {
+      container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
+      hideLoader();
+      return;
+    }
+
+    // Render each card using classes defined in your CSS [cite: 2]
+    listings.forEach((listing) => {
+      const card = document.createElement("div");
+      card.className = "opportunity-card";
+
+      // Logic to check if the user has already applied (requires backend support) [cite: 3]
+      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
+
+      const actionUI = hasApplied
+        ? `<div class="already-applied">✅ Already Applied</div>`
+        : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
+
+      card.innerHTML = `
+                <h3 class="opportunity-title">${listing.listname}</h3>
+                <div class="opportunity-details">
+                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+                    <p><strong>Type:</strong> ${listing.list_type}</p>
+                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+                </div>
+                ${actionUI}
+            `;
+      container.appendChild(card);
+    });
+
+    document.querySelectorAll(".apply-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-id");
+        try {
+          const response = await fetch("/api/listings/apply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ listing_id: id, email: currentUser.email }),
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error);
+          document.getElementById(`msg-${id}`).innerHTML = "✅ Application submitted!";
+          setTimeout(() => renderOpportunities(), 1000);
+        } catch (error) {
+          document.getElementById(`msg-${id}`).innerHTML = "❌ " + error.message;
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+  }
+
+  hideLoader();
+}
+
+// Global filter function triggered by the dropdown [cite: 2]
+// window.applyTypeFilter = function() {
+//     const selectedType = document.getElementById("listTypeFilter").value;
+//     fetchOpportunities(selectedType);
+// };
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
@@ -583,7 +662,8 @@ if (typeof module !== 'undefined' && module.exports) {
     renderProfile,
     saveProfileChanges,
     uploadCV,
-    renderOpportunities,
+    renderApplications,
+    fetchOpportunities,
     showTab,
     openModal,
     closeModal
@@ -592,17 +672,8 @@ if (typeof module !== 'undefined' && module.exports) {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
 
   // Move your loose function calls inside here:
-  renderOpportunities();
+  // renderOpportunities();
+  // renderApplications();
   renderEducationDisplay();
   loadDataOnStartup();
 }
-
-// INIT
-// firebase.auth().onAuthStateChanged((user) => {
-//   if (user) {
-//     currentUser = user;
-//     renderOpportunities();
-//   } else {
-//     window.location.href = "/login";
-//   }
-// });
