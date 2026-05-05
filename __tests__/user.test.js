@@ -23,6 +23,16 @@ const mockRes = () => {
   return res;
 };
 
+// Add this to mock the $transaction function!
+prisma.$transaction = jest.fn().mockImplementation(async (arg) => {
+  // If your backend uses an array: prisma.$transaction([ query1, query2 ])
+  if (Array.isArray(arg)) {
+    return Promise.all(arg);
+  }
+  // If your backend uses a callback: prisma.$transaction(async (tx) => { ... })
+  return arg(prisma);
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -42,7 +52,7 @@ describe('registerUser', () => {
 
     await registerUser(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'User created successfully' }));
   });
 

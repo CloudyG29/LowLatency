@@ -18,7 +18,7 @@ describe("role guardrails", () => {
       auth: () => ({
         onAuthStateChanged: (cb) => {
           setTimeout(() => cb(user), 0);
-          return () => {};
+          return () => { };
         },
         signOut: signOutMock
       })
@@ -42,13 +42,14 @@ describe("role guardrails", () => {
 
   beforeEach(() => {
     document.body.innerHTML = `
+    <div id="loader"></div>
       <div id="myOpportunities"></div>
       `;
     jest.resetModules();
     localStorage.clear();
     mockAssign.mockClear();
     global.fetch = jest.fn();
-    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => { });
   });
 
   afterEach(() => {
@@ -209,7 +210,7 @@ describe("role guardrails", () => {
     const { guardAdminPage } = require(ADMIN_MODULE);
     const result = await guardAdminPage();
     expect(result).toBe(false);
-  });  
+  });
 
 
 });

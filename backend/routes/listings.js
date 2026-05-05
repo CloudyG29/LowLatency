@@ -83,6 +83,7 @@ router.get("/approved", async (req, res) => {
 
     res.status(200).json(results);
   } catch (error) {
+    console.error("REAL LISTINGS ERROR:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });

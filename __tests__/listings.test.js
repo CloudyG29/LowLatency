@@ -104,17 +104,19 @@ describe('GET /api/listings/pending', () => {
 describe('GET /api/listings/approved', () => {
   test('should return only approved listings', async () => {
     prisma.listing.findMany.mockResolvedValue([
-      { id: 1, title: 'Test Job', status: 'approved' }
+      { 
+        id: 1, 
+        title: 'Test Job', 
+        status: 'approved',
+        provider: {},        
+        applications: []   
+      }
     ]);
 
     const res = await request(app).get('/api/listings/approved');
-    
-    if (res.status === 500) {
-      console.log("SERVER CRASH REASON:", res.body); 
-    }
-
     expect(res.status).toBe(200);
     expect(res.body[0].status).toBe('approved');
+    expect(res.body[0].hasApplied).toBe(false);
   });
 });
 
