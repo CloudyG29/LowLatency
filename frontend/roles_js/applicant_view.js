@@ -33,14 +33,6 @@ async function guardApplicantPage() {
 
         currentUser = user;
 
-        let userData = JSON.parse(localStorage.getItem("userData") || "{}");
-        userData.email = data.email || "";
-        userData.firstName = data.name || "";
-        userData.lastName = data.surname || "";
-        userData.role = data.role;
-
-        localStorage.setItem("userData", JSON.stringify(userData));
-
         resolve(true);
       } catch (error) {
         console.error("Applicant guard failed:", error);
@@ -93,8 +85,7 @@ async function renderApplications() {
 
 function renderProfile() {
   showLoader();
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-
+  let userData = JSON.parse(localStorage.getItem('userData') || '{}');
   // 1. View Mode 
   document.getElementById('displayFirstName').textContent = userData.name || 'Not set';
   document.getElementById('displayLastName').textContent = userData.surname || 'Not set';
@@ -478,6 +469,9 @@ async function loadDataOnStartup() {
     localStorage.setItem('userData', JSON.stringify(profileData));
 
     // 3. FINALLY, we render. 
+    const allowed = await guardApplicantPage();
+    if (!allowed) return;
+
     renderProfile();
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
