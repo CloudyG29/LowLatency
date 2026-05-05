@@ -33,13 +33,13 @@ async function guardProviderPage() {
 
                 currentUser = user;
 
-                let userData = JSON.parse(localStorage.getItem("userData") || "{}");
-                userData.email = data.email || "";
-                userData.firstName = data.name || "";
-                userData.lastName = data.surname || "";
-                userData.role = data.role;
+                // let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+                // userData.email = data.email || "";
+                // userData.firstName = data.name || "";
+                // userData.lastName = data.surname || "";
+                // userData.role = data.role;
 
-                localStorage.setItem("userData", JSON.stringify(userData));
+                // localStorage.setItem("userData", JSON.stringify(userData));
 
                 resolve(true);
             } catch (error) {
@@ -101,11 +101,13 @@ async function displayOpportunities() {
   const container = document.getElementById("myOpportunities");
   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
   try {
+    showLoader();
     const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
     const listings = await response.json();
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
+      hideLoader();
       return;
     }
 
@@ -124,8 +126,10 @@ async function displayOpportunities() {
         <p><strong>Status:</strong> <span class="status-badge status-${opp.status}">${opp.status}</span></p>
       `;
       container.appendChild(div);
+      hideLoader();
     });
   } catch (error) {
+    hideLoader();
     container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
   }
 }
@@ -134,10 +138,12 @@ async function displayApplications() {
   const container = document.getElementById("applicationsList");
   container.innerHTML = '<div class="empty-state">Loading applications...</div>';
   try {
+    showLoader();
     const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
     const applications = await response.json();
 
     if (applications.length === 0) {
+      hideLoader();
       container.innerHTML = '<div class="empty-state">No applications received yet.</div>';
       return;
     }
@@ -158,8 +164,10 @@ async function displayApplications() {
       `;
       container.appendChild(div);
     });
+    hideLoader();
 
     document.querySelectorAll(".btn-hire").forEach((btn) => {
+      showLoader();
       btn.addEventListener("click", async () => {
         await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
           method: "PUT",
@@ -168,9 +176,11 @@ async function displayApplications() {
         });
         displayApplications();
       });
+      hideLoader();
     });
 
     document.querySelectorAll(".btn-reject").forEach((btn) => {
+      showLoader();
       btn.addEventListener("click", async () => {
         await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
           method: "PUT",
@@ -180,9 +190,20 @@ async function displayApplications() {
         displayApplications();
       });
     });
+    hideLoader();
   } catch (error) {
+    hideLoader();
     container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
   }
+}
+
+// --- Loader Controls ---
+function showLoader() {
+  document.getElementById('loader').classList.remove('hidden');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
 }
 
 function showTab(tab) {
