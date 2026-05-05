@@ -41,6 +41,9 @@ describe("role guardrails", () => {
   };
 
   beforeEach(() => {
+    document.body.innerHTML = `
+      <div id="myOpportunities"></div>
+      `;
     jest.resetModules();
     localStorage.clear();
     mockAssign.mockClear();

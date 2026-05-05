@@ -227,7 +227,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 if (typeof module !== "undefined" && module.exports) {
-    module.exports = { guardProviderPage };
+    module.exports = { 
+      guardProviderPage,
+      displayOpportunities,
+      displayApplications
+    };
 }
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {

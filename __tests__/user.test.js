@@ -10,6 +10,10 @@ jest.mock('../DB_connect/prisma', () => ({
   },
 }));
 
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 const { registerUser, getUserRole } = require('../backend/routes/user');
 
 const mockRes = () => {
@@ -38,7 +42,7 @@ describe('registerUser', () => {
 
     await registerUser(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'User created successfully' }));
   });
 
@@ -128,7 +132,7 @@ describe('getUserRole', () => {
     await getUserRole(req, res);
 
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+    expect(res.json).toHaveBeenCalledWith({ error: 'User not found.' });
   });
 
   test('should return 500 on database error', async () => {

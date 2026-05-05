@@ -231,7 +231,8 @@ function hideLoader() {
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
-    loadDataOnStartup
+    loadDataOnStartup,
+    guardAdminPage
    };
 } else {
   loadDataOnStartup();

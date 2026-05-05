@@ -2,15 +2,29 @@
  * @jest-environment node
  */
 
-jest.mock('../DB_connect/prisma', () => ({
-  user: {
-    findUnique: jest.fn(),
-    create: jest.fn()
-  },
-  provider: {
-    create: jest.fn()
-  }
-}));
+jest.mock('../DB_connect/prisma', () => {
+  // 1. Setup the fake models exactly as you had them
+  const mockPrisma = {
+    user: {
+      findUnique: jest.fn(),
+      create: jest.fn()
+    },
+    provider: {
+      create: jest.fn()
+    }
+  };
+
+  // 2. The "Smart" Transaction Fix
+  mockPrisma.$transaction = jest.fn().mockImplementation(async (arg) => {
+    if (Array.isArray(arg)) {
+      return Promise.all(arg);
+    } else if (typeof arg === 'function') {
+      return arg(mockPrisma); 
+    }
+  });
+
+  return mockPrisma;
+});
 
 const prisma = require('../DB_connect/prisma');
 const userRoutes = require('../backend/routes/user');
@@ -94,7 +108,8 @@ describe('backend/routes/user', () => {
       data: {
         user_id: newUser.user_id,
         provider_name: 'Bob Lee',
-        profile: 'New Provider Account'
+        profile: 'New Provider Account',
+        onboarded: false
       }
     });
     expect(res.status).toHaveBeenCalledWith(201);

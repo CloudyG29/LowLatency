@@ -649,7 +649,8 @@ if (typeof module !== 'undefined' && module.exports) {
     fetchOpportunities,
     showTab,
     openModal,
-    closeModal
+    closeModal,
+    guardApplicantPage
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
