@@ -79,7 +79,12 @@ router.get("/approved", async (req, res) => {
   try {
     const listings = await prisma.listing.findMany({
       where: { status: "approved" },
-      include: { provider: true },
+      include: {
+        provider: true,
+        _count: {
+          select: { applications: true }, // Include application count for each listing
+        },
+      },
     });
     res.status(200).json(listings);
   } catch (error) {
