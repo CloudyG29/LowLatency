@@ -65,7 +65,7 @@ router.get("/approved", async (req, res) => {
 
     const listings = await prisma.listing.findMany({
       where: whereClause,
-      include: { 
+      include: {
         provider: true,
         applications: {
           where: {
@@ -111,8 +111,10 @@ router.get("/pending", async (req, res) => {
   }
 });
 
+
 router.post("/apply", async (req, res) => {
-  const { listing_id, email } = req.body;
+  const { listing_id, email, motivation, availability, cv_name } = req.body;
+
   try {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(404).json({ error: "User not found." });
@@ -132,7 +134,9 @@ router.post("/apply", async (req, res) => {
         user_id: user.user_id,
         listing_id: parseInt(listing_id),
         provider_id: listing.provider_id,
-        
+        motivation: motivation || null,
+        availability: availability || null,
+        cv_name: cv_name || null,
         status: "pending",
       },
     });
@@ -143,6 +147,7 @@ router.post("/apply", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 
 router.get("/my-applications", async (req, res) => {
   const { email } = req.query;
