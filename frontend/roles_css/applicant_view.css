@@ -147,6 +147,14 @@ h2 {
     color: #e2e8f0;
 }
 
+.opportunity-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
 .apply-btn {
     background: linear-gradient(90deg, #38ef7d, #11998e);
     color: white;

@@ -541,11 +541,17 @@ function hideLoader() {
 }
 
 
+function getCompetition(count) {
+  if (count <= 10) return { label: `${count} applicant${count !== 1 ? "s" : ""}`, level: "low", text: "Low competition", styles: "background:#EAF3DE;color:#3B6D11;" };
+  if (count <= 30) return { label: `${count} applicants`, level: "moderate", text: "Moderate", styles: "background:#FAEEDA;color:#854F0B;" };
+  if (count <= 75) return { label: `${count} applicants`, level: "high", text: "High competition", styles: "background:#FAECE7;color:#993C1D;" };
+  return { label: `${count} applicants`, level: "very-high", text: "Very high", styles: "background:#FCEBEB;color:#A32D2D;" };
+}
+
 // Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
 
   const container = document.getElementById("opportunitiesList");
-  // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
   // Show loading state while fetching
@@ -583,8 +589,18 @@ async function fetchOpportunities(type = "") {
         ? `<div class="already-applied">✅ Already Applied</div>`
         : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
 
+      const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
+      const competition = getCompetition(applicantCount);
+
       card.innerHTML = `
+                <header class="opportunity-header">
                 <h3 class="opportunity-title">${listing.listname}</h3>
+                <span
+                class="competition-badge competition-badge--${competition.level}"
+                style="${competition.styles}padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap;"role="status"
+                aria-label="${competition.label} — ${competition.text}">${competition.label}
+                </span>
+                </header>
                 <div class="opportunity-details">
                     <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
                     <p><strong>Type:</strong> ${listing.list_type}</p>
