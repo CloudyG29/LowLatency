@@ -64,7 +64,7 @@ model Listing {
   requirements String?
   sector       String?
   closing_date DateTime? 
- 
+  
 
   status String @default("pending")
 
