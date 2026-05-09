@@ -62,7 +62,9 @@ model Listing {
   location     String?
   duration     String?
   requirements String?
-  closing_date DateTime?
+  sector       String?
+  closing_date DateTime? 
+ 
 
   status String @default("pending")
 
