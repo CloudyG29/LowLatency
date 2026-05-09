@@ -78,7 +78,10 @@ model Application {
   status         String @default("pending")
 
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @updatedAt 
+  motivation   String?
+  availability String?
+  cv_name      String?
 
   user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
   listing  Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)
