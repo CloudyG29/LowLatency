@@ -582,7 +582,6 @@ async function fetchOpportunities(type = "") {
 
     const response = await fetch(url);
     if (!response.ok) {
-      hideLoader();
       throw new Error("Failed to fetch opportunities");
     } 
 
@@ -591,7 +590,6 @@ async function fetchOpportunities(type = "") {
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
-      hideLoader();
       return;
     }
 
@@ -613,10 +611,9 @@ async function fetchOpportunities(type = "") {
       card.innerHTML = `
                 <header class="opportunity-header">
                 <h3 class="opportunity-title">${listing.listname}</h3>
-                <div
-                class="competition-badge competition-badge--${competition.level}"
-                style="${competition.styles}padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap;"role="status"
-                aria-label="${competition.label} — ${competition.text}">${competition.label}
+                <div class="competition-badge competition-badge--${competition.level}" role="status"
+                aria-label="${competition.label} — ${competition.text}">
+                ${competition.label}
                 </div>
                 </header>
                 <div class="opportunity-details">
