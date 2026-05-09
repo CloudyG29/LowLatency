@@ -541,19 +541,17 @@ function hideLoader() {
 }
 
 
+
 // Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
-
   const container = document.getElementById("opportunitiesList");
-  // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
-  // Show loading state while fetching
+  const userEmail = userData.email || "";
+
   showLoader();
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
   try {
-    // Build the URL with the type filter and userEmail to check application status [cite: 3]
     let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
     if (type && type !== "") {
       url += `&type=${encodeURIComponent(type)}`;
@@ -563,7 +561,7 @@ async function fetchOpportunities(type = "") {
     if (!response.ok) throw new Error("Failed to fetch opportunities");
 
     const listings = await response.json();
-    container.innerHTML = ""; // Clear current list
+    container.innerHTML = "";
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
@@ -571,33 +569,79 @@ async function fetchOpportunities(type = "") {
       return;
     }
 
-    // Render each card using classes defined in your CSS [cite: 2]
     listings.forEach((listing) => {
       const card = document.createElement("div");
-      card.className = "opportunity-card";
 
-      // Logic to check if the user has already applied (requires backend support) [cite: 3]
+      // CHANGE: new cleaner card class
+      card.className = "opportunity-preview-card";
+
       const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
 
       const actionUI = hasApplied
         ? `<div class="already-applied">✅ Already Applied</div>`
         : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
 
+      // CHANGE: redesigned preview + expandable details layout
       card.innerHTML = `
-                <h3 class="opportunity-title">${listing.listname}</h3>
-                <div class="opportunity-details">
-                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
-                    <p><strong>Type:</strong> ${listing.list_type}</p>
-                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
-                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
-                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
-                </div>
-                ${actionUI}
-            `;
+        <div class="opportunity-preview-main">
+          <div>
+            <p class="opportunity-label">Opportunity</p>
+            <h3>${listing.listname}</h3>
+            <p class="opportunity-subtext">${listing.provider?.provider_name || "Provider not listed"}</p>
+          </div>
+
+          <div>
+            <p class="opportunity-label">Details</p>
+            <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
+            <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+          </div>
+
+          <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
+        </div>
+
+        <div class="opportunity-actions">
+          <button class="view-opportunity-details-btn" type="button">View Details</button>
+          ${actionUI}
+        </div>
+
+        <div class="opportunity-expanded-details hidden">
+          <div class="opportunity-details-grid">
+            <div class="opportunity-details-section">
+              <h4>Opportunity Details</h4>
+              <p><strong>Type:</strong> ${listing.list_type || "N/A"}</p>
+              <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+              <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+              <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+              <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+              <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+            </div>
+
+            <div class="opportunity-details-section">
+              <h4>Provider</h4>
+              <p><strong>Name:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+              <p><strong>Requirements:</strong> ${listing.requirements || "N/A"}</p>
+            </div>
+          </div>
+
+          <div class="opportunity-details-section full-width">
+            <h4>Description</h4>
+            <p>${listing.description || "No description provided."}</p>
+          </div>
+        </div>
+      `;
+
       container.appendChild(card);
+
+      // CHANGE: expandable details functionality
+      const detailsBtn = card.querySelector(".view-opportunity-details-btn");
+      const detailsSection = card.querySelector(".opportunity-expanded-details");
+
+      detailsBtn.addEventListener("click", () => {
+        detailsSection.classList.toggle("hidden");
+        detailsBtn.textContent = detailsSection.classList.contains("hidden")
+          ? "View Details"
+          : "Hide Details";
+      });
     });
 
   } catch (error) {
@@ -607,6 +651,9 @@ async function fetchOpportunities(type = "") {
 
   hideLoader();
 }
+
+
+
 
 async function applyForListing(listingId) {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
