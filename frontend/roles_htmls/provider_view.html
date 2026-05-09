@@ -9,11 +9,28 @@
 </head>
 
 <body>
+
+  <!-- From Uiverse.io by PriyanshuGupta28 -->
+  <div id="loader" class="loader-overlay hidden">
+    <div class="spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
   <div class="layout">
 
     <nav class="sidebar">
       <h2>SkillBridge</h2>
-      <hr/>
+      <hr />
       <ul class="nav-links">
         <li><a href="#" onclick="showTab('post')">Post Opportunity</a></li>
         <li><a href="#" onclick="showTab('manage')">My Opportunities</a></li>
@@ -39,7 +56,8 @@
           <input id="duration" placeholder="Duration (e.g., 12 months)" />
           <input id="requirements" placeholder="Requirements (e.g., Matric, NQF 4)" />
           <input id="nqf_level" placeholder="NQF Level" type="number" />
-          <input id="closing_date" type="text" placeholder="Closing Date (YYYY-MM-DD)" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" />
+          <input id="closing_date" type="text" placeholder="Closing Date (YYYY-MM-DD)" onfocus="this.type='date'"
+            onblur="if(!this.value)this.type='text'" />
           <textarea id="description" placeholder="Description *"></textarea>
           <button class="post-btn" onclick="postOpportunity()">Post</button>
           <p id="msg"></p>

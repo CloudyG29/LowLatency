@@ -5,6 +5,9 @@ module.exports = {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
   collectCoverageFrom: [
-    "backend/**/*.js"
-  ]
+    "backend/**/*.js",
+    "frontend/script.js",
+    "frontend/roles_js/applicant_view.js"
+  ],
+  testEnvironment: "jsdom",
 };

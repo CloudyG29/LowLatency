@@ -2,7 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
-const cors = require("cors");
+const cors = require('cors');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.json());
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
+const profileRoutes = require('./routes/profile');
 
 app.use("/api/listings", listingRoutes);
 
@@ -23,8 +25,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/user", userRoutes);
+// Routes
+app.use('/api/user', userRoutes);
+app.use('/api/profile', profileRoutes);
 
+// Serve HTML files for different routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "index.html"));
 });
@@ -65,6 +70,10 @@ app.get("/provider", (req, res) => {
   res.sendFile(
     path.join(__dirname, "../frontend/roles_htmls", "provider_view.html"),
   );
+});
+
+app.get("/provider-onboarding", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/views", "provider-onboarding.html"));
 });
 
 app.get("/forgot-password", (req, res) => {
