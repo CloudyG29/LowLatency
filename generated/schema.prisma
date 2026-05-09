@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model User {
+  user_id      Int    @id @default(autoincrement())
+  firebase_uid String @unique
+  email        String @unique
+  name         String
+  surname      String
+  role         String // "Admin" or "Applicant"
+
+  // Relations
+  applications Application[]
+  provider     Provider?
+  applicant    ApplicantProfile?
+}
+
+model ApplicantProfile {
+  applicant_id Int @id @default(autoincrement())
+  user_id      Int @unique
+
+  phone String?
+  dob   DateTime?
+  bio   String?
+
+  user User @relation(fields: [user_id], references: [user_id])
+
+  skills         ApplicantSkill[]
+  qualifications ApplicantQualification[]
+}
+
+model Provider {
+  provider_id   Int     @id @default(autoincrement())
+  provider_name String
+  profile       String?
+  user_id       Int     @unique
+  onboarded     Boolean @default(false)
+
+  user         User          @relation(fields: [user_id], references: [user_id])
+  listings     Listing[]
+  applications Application[]
+}
+
+model Listing {
+  listings_id Int @id @default(autoincrement())
+  provider_id Int
+
+  listname  String
+  list_type String // Learnership, Internship, Apprenticeship
+
+  nqf_level   Int?
+  description String?
+
+  stipend      Float?
+  location     String?
+  duration     String?
+  requirements String?
+  closing_date DateTime?
+
+  status String @default("pending")
+
+  provider     Provider      @relation(fields: [provider_id], references: [provider_id])
+  applications Application[]
+}
+
+model Application {
+  application_id Int    @id @default(autoincrement())
+  user_id        Int
+  listing_id     Int
+  provider_id    Int
+  status         String @default("pending")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
+  listing  Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)
+  provider Provider @relation(fields: [provider_id], references: [provider_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Skill {
+  skill_id        Int              @id @default(autoincrement())
+  name            String
+  nqf_level       Int?
+  applicantSkills ApplicantSkill[]
+}
+
+model ApplicantSkill {
+  id           Int @id @default(autoincrement())
+  applicant_id Int
+  skill_id     Int
+
+  applicant ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
+  skill     Skill            @relation(fields: [skill_id], references: [skill_id])
+}
+
+model Qualification {
+  qualification_id Int    @id @default(autoincrement())
+  name             String
+  nqf_level        Int
+
+  applicantQualifications ApplicantQualification[]
+}
+
+model ApplicantQualification {
+  id               Int     @id @default(autoincrement())
+  applicant_id     Int
+  qualification_id Int
+  institution      String?
+  year_completed   Int?
+
+  applicant     ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
+  qualification Qualification    @relation(fields: [qualification_id], references: [qualification_id])
+}
