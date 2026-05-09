@@ -9,7 +9,7 @@ const request = require('supertest');
 const profileRouter = require('../backend/routes/profile.js'); 
 
 // 2. Mock your Prisma Client
-jest.mock('@prisma/client', () => {
+jest.mock('../generated/client', () => {
     const mPrisma = {
         user: {
             findUnique: jest.fn(),
@@ -41,7 +41,7 @@ jest.mock('@prisma/client', () => {
     return { PrismaClient: jest.fn(() => mPrisma) };
 });
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../generated/client');
 const prisma = new PrismaClient();
 
 // 3. Set up a dummy Express app for testing
