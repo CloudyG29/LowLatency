@@ -132,6 +132,70 @@ function renderProfile() {
   hideLoader();
 }
 
+function renderNotifications(notifications) {
+  const container = document.getElementById("notificationsList");
+  container.innerHTML = ""; // Clear out old data
+
+  if (notifications.length === 0) {
+    container.innerHTML = '<p class="empty-state">No new notifications.</p>';
+    return;
+  }
+
+  notifications.forEach(notif => {
+    const card = document.createElement("div");
+    card.className = "notification-card";
+
+    card.innerHTML = `
+      <div class="notification-info">
+        <h3>${notif.type || "Status Update"}</h3>
+        <p><strong>Message:</strong> ${notif.message}</p>
+        <p style="font-size: 12px; color: #a0aec0; margin-top: 8px;">${notif.time || "Just now"}</p>
+      </div>
+      <span class="status-badge ${notif.isRead ? 'status-read' : 'status-unread'}">
+        ${notif.isRead ? 'read' : 'unread'}
+      </span>
+    `;
+
+    card.onclick = () => markAsRead(notif.id);
+
+    container.appendChild(card);
+  });
+}
+
+
+
+
+const mockNotifications = [
+  {
+    id: 1,
+    type: "Status Update",
+    message: "Great news! Your application for 'Data Science Internship' has been moved to Hired.",
+    time: "Just now",
+    isRead: false
+  },
+  {
+    id: 2,
+    type: "Interview Invite",
+    message: "The provider for 'Web Development Learnership' has requested an interview.",
+    time: "2 hours ago",
+    isRead: false
+  },
+  {
+    id: 3,
+    type: "Status Update",
+    message: "Your application for 'Marketing Apprenticeship' is currently Under Review.",
+    time: "1 day ago",
+    isRead: true
+  },
+  {
+    id: 4,
+    type: "System Welcome",
+    message: "Welcome to the platform! Complete your profile to get matched with better opportunities.",
+    time: "3 days ago",
+    isRead: true
+  }
+];
+
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
   // Hide all tabs and contents
@@ -160,6 +224,14 @@ function showTab(tabName) {
 
     document.getElementById('profileTab').classList.add('active');
     renderProfile(); // Load saved data when tab is opened
+  }
+
+  else if(tabName === 'notifications') {
+    const tabBtn = document.getElementById('tab-notifications') || document.querySelectorAll('.tab')[3];
+    if (tabBtn) tabBtn.classList.add('active');
+
+    document.getElementById('notificationsTab').classList.add('active');
+    
   }
 }
 
@@ -476,6 +548,7 @@ async function loadDataOnStartup() {
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
+    renderNotifications(mockNotifications || []);
 
   } catch (error) {
     console.error("Error loading profile:", error);
