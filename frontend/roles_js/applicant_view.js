@@ -655,10 +655,33 @@ async function fetchOpportunities(type = "") {
 
 
 
-async function applyForListing(listingId) {
+function applyForListing(listingId) {
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const cvName = userData.cvName || "";
+
+  const motivation = prompt("Why are you interested in this opportunity?");
+
+  if (!motivation || motivation.trim() === "") {
+    alert("Please add a short motivation before applying.");
+    return;
+  }
+
+  const availability = prompt("When are you available to start? Example: Immediately, January 2026, after exams");
+
+  if (!availability || availability.trim() === "") {
+    alert("Please add your availability before applying.");
+    return;
+  }
+
+  submitApplication(listingId, motivation, availability, cvName);
+}
+
+async function submitApplication(listingId, motivation, availability, cvName) {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
   try {
+    showLoader();
+
     const response = await fetch("/api/listings/apply", {
       method: "POST",
       headers: {
@@ -666,7 +689,10 @@ async function applyForListing(listingId) {
       },
       body: JSON.stringify({
         listing_id: listingId,
-        email: userData.email
+        email: userData.email,
+        motivation: motivation.trim(),
+        availability: availability.trim(),
+        cv_name: cvName || null
       })
     });
 
@@ -676,12 +702,13 @@ async function applyForListing(listingId) {
       throw new Error(data.error || "Application failed");
     }
 
-    alert("Applied successfully!");
-    fetchOpportunities(); // refresh UI
-
+    alert("Application submitted successfully!");
+    fetchOpportunities();
   } catch (error) {
     console.error(error);
     alert(error.message);
+  } finally {
+    hideLoader();
   }
 }
 
