@@ -648,7 +648,8 @@ if (typeof module !== 'undefined' && module.exports) {
     openModal,
     closeModal,
     guardApplicantPage,
-    getCompetition
+    getCompetition,
+    renderNotifications
   };
 } else {
   renderEducationDisplay();
