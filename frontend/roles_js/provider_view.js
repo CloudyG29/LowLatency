@@ -14,7 +14,16 @@ async function postOpportunity() {
   const location = document.getElementById("location").value;
   const duration = document.getElementById("duration").value;
 
-  if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
+  if (
+    !listname ||
+    !list_type ||
+    !stipend ||
+    !location ||
+    !duration ||
+    !requirements ||
+    !nqf_level ||
+    !closing_date
+  ) {
     msg.innerText = " Please fill in all fields before posting a job";
     msg.style.color = "#fc8181";
     return;
@@ -25,8 +34,15 @@ async function postOpportunity() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        listname, list_type, nqf_level, description,
-        requirements, closing_date, stipend, location, duration,
+        listname,
+        list_type,
+        nqf_level,
+        description,
+        requirements,
+        closing_date,
+        stipend,
+        location,
+        duration,
         email: currentUser.email,
       }),
     });
@@ -36,7 +52,9 @@ async function postOpportunity() {
 
     msg.innerText = "✅ Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
-    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
+    document
+      .querySelectorAll("input, textarea")
+      .forEach((el) => (el.value = ""));
     displayOpportunities();
   } catch (error) {
     msg.innerText = "❌ " + error.message;
@@ -46,13 +64,17 @@ async function postOpportunity() {
 
 async function displayOpportunities() {
   const container = document.getElementById("myOpportunities");
-  container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
+  container.innerHTML =
+    '<div class="empty-state"> Loading opportunities...</div>';
   try {
-    const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
+    const response = await fetch(
+      `/api/listings/provider?email=${currentUser.email}`,
+    );
     const listings = await response.json();
 
     if (listings.length === 0) {
-      container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
+      container.innerHTML =
+        '<div class="empty-state">You have not posted any opportunities yet.</div>';
       return;
     }
 
@@ -73,19 +95,24 @@ async function displayOpportunities() {
       container.appendChild(div);
     });
   } catch (error) {
-    container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities.</div>';
   }
 }
 
 async function displayApplications() {
   const container = document.getElementById("applicationsList");
-  container.innerHTML = '<div class="empty-state">Loading applications...</div>';
+  container.innerHTML =
+    '<div class="empty-state">Loading applications...</div>';
   try {
-    const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
+    const response = await fetch(
+      `/api/listings/provider-applications?email=${currentUser.email}`,
+    );
     const applications = await response.json();
 
     if (applications.length === 0) {
-      container.innerHTML = '<div class="empty-state">No applications received yet.</div>';
+      container.innerHTML =
+        '<div class="empty-state">No applications received yet.</div>';
       return;
     }
 
@@ -94,15 +121,26 @@ async function displayApplications() {
       const div = document.createElement("div");
       div.className = "opportunity-card";
       div.innerHTML = `
-        <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
-        <p><strong>Email:</strong> ${app.user.email}</p>
-        <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
-        <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
-        ${app.status === "pending" ? `
-          <button class="btn-hire" data-id="${app.application_id}">Hire</button>
-          <button class="btn-reject" data-id="${app.application_id}">Reject</button>
-        ` : ""}
-      `;
+    <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
+    <p><strong>Email:</strong> ${app.user.email}</p>
+    <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
+    <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
+    ${
+      app.cvFilePath
+        ? `
+      <button class="btn-cv" data-id="${app.application_id}">📄 View CV</button>
+    `
+        : `<p><em>No CV uploaded</em></p>`
+    }
+    ${
+      app.status === "pending"
+        ? `
+      <button class="btn-hire" data-id="${app.application_id}">Hire</button>
+      <button class="btn-reject" data-id="${app.application_id}">Reject</button>
+    `
+        : ""
+    }
+  `;
       container.appendChild(div);
     });
 
@@ -127,14 +165,29 @@ async function displayApplications() {
         displayApplications();
       });
     });
+    document.querySelectorAll(".btn-cv").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const response = await fetch(`/api/listings/${btn.dataset.id}/cv`);
+        const data = await response.json();
+        if (data.url) {
+          window.open(data.url, "_blank");
+        } else {
+          alert("Could not retrieve CV.");
+        }
+      });
+    });
   } catch (error) {
-    container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
   }
 }
 
 function showTab(tab) {
-  document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
-  if (tab === "post") document.getElementById("postTab").classList.add("active");
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((c) => c.classList.remove("active"));
+  if (tab === "post")
+    document.getElementById("postTab").classList.add("active");
   if (tab === "manage") {
     document.getElementById("manageTab").classList.add("active");
     displayOpportunities();
