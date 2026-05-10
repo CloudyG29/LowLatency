@@ -1092,4 +1092,101 @@ h2 {
     .already-applied {
         width: 100%;
     }
+} 
+
+/* =================================
+   Application Modal Styling
+================================= */
+
+.application-modal-content {
+    max-width: 650px;
+    width: 95%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    animation: fadeInApplicationModal 0.25s ease;
+}
+
+.application-modal-content .form-group label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.application-modal-content textarea,
+.application-modal-content input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 14px;
+    color: white;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.application-modal-content textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.application-modal-content textarea::placeholder,
+.application-modal-content input::placeholder {
+    color: #94a3b8;
+}
+
+.application-modal-content textarea:focus,
+.application-modal-content input:focus {
+    border-color: rgba(0, 198, 255, 0.7);
+    box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.12);
+}
+
+.application-cv-note {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    font-size: 0.88rem;
+}
+
+.application-submit-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    transition: all 0.25s ease;
+}
+
+.application-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 114, 255, 0.25);
+}
+
+@keyframes fadeInApplicationModal {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .application-modal-content {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .application-submit-btn {
+        font-size: 0.9rem;
+    }
 }
