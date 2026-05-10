@@ -689,7 +689,7 @@ async function submitApplicationFromModal() {
 }
 
 async function submitApplication(listingId, motivation, availability, cvName) {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const email = currentUser?.email || JSON.parse(localStorage.getItem('userData') || '{}').email;
 
   try {
     showLoader();
@@ -701,7 +701,7 @@ async function submitApplication(listingId, motivation, availability, cvName) {
       },
       body: JSON.stringify({
         listing_id: listingId,
-        email: userData.email,
+        email: email,
         motivation: motivation.trim(),
         availability: availability.trim(),
         cv_name: cvName || null
