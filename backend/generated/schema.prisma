@@ -36,11 +36,11 @@ model ApplicantProfile {
 }
 
 model Provider {
-  provider_id   Int     @id @default(autoincrement())
+  provider_id   Int      @id @default(autoincrement())
   provider_name String
   profile       String?
   onboarded     Boolean?
-  user_id       Int     @unique
+  user_id       Int      @unique
 
   user         User          @relation(fields: [user_id], references: [user_id])
   listings     Listing[]
@@ -60,7 +60,7 @@ model Listing {
   stipend      Float?
   location     String?
   duration     String?
-  sector        String?
+  sector       String?
   requirements String?
   closing_date DateTime?
 
@@ -71,11 +71,11 @@ model Listing {
 }
 
 model Application {
-  application_id Int    @id @default(autoincrement())
-  user_id        Int
-  listing_id     Int
-  provider_id    Int
-  status         String @default("pending")
+  application_id     Int       @id @default(autoincrement())
+  user_id            Int
+  listing_id         Int
+  provider_id        Int
+  status             String    @default("pending")
   cvFilePath         String?
   cvOriginalFilename String?
   cvUploadedAt       DateTime?

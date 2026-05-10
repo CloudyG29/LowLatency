@@ -1,9 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
+const multer = require("multer");
+const { uploadCV, getCVUrl, deleteCV } = require("../storage_service");
 
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
+  const {
+    listname,
+    list_type,
+    nqf_level,
+    description,
+    email,
+    stipend,
+    location,
+    duration,
+    requirements,
+    closing_date,
+  } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -24,8 +37,14 @@ async function postListing(req, res) {
         stipend: stipend ? parseFloat(stipend) : null,
         location: location || null,
         duration: duration || null,
-        closing_date: closing_date && !isNaN(new Date(closing_date)) ? new Date(closing_date) : null,
-        requirements: requirements && typeof requirements === "string" ? requirements : null,
+        closing_date:
+          closing_date && !isNaN(new Date(closing_date))
+            ? new Date(closing_date)
+            : null,
+        requirements:
+          requirements && typeof requirements === "string"
+            ? requirements
+            : null,
         provider_id: user.provider.provider_id,
       },
     });
@@ -112,7 +131,7 @@ router.post("/apply", async (req, res) => {
         user_id: user.user_id,
         listing_id: parseInt(listing_id),
         provider_id: listing.provider_id,
-        
+
         status: "pending",
       },
     });
@@ -158,7 +177,8 @@ router.get("/provider-applications", async (req, res) => {
     });
     res.status(200).json(applications);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error." });
+    console.error("PROVIDER-APPLICATIONS ERROR:", error.message); // 👈 add this
+    res.status(500).json({ error: error.message }); // 👈 and this
   }
 });
 
@@ -203,4 +223,71 @@ router.put("/applications/:id/status", async (req, res) => {
   }
 });
 router.post("/post", postListing);
+
+//the upcoming section is for CV upload and retrieval.
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    allowed.includes(file.mimetype)
+      ? cb(null, true)
+      : cb(new Error("Only PDF, DOC, and DOCX files are allowed"));
+  },
+});
+
+router.post("/:id/cv", upload.single("cv"), async (req, res) => {
+  try {
+    const applicationId = parseInt(req.params.id);
+    const { email } = req.body; // 👈 get email from body instead
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(404).json({ error: "User not found." });
+
+    const filePath = await uploadCV(
+      req.file.buffer,
+      req.file.mimetype,
+      user.user_id, // 👈 use DB user_id instead of Firebase uid
+      applicationId,
+    );
+
+    await prisma.application.update({
+      where: { application_id: applicationId },
+      data: {
+        cvFilePath: filePath,
+        cvOriginalFilename: req.file.originalname,
+        cvUploadedAt: new Date(),
+      },
+    });
+
+    res.json({ success: true, message: "CV uploaded successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/:id/cv", async (req, res) => {
+  try {
+    const application = await prisma.application.findUnique({
+      where: { application_id: parseInt(req.params.id) },
+      select: { cvFilePath: true },
+    });
+
+    if (!application?.cvFilePath) {
+      return res
+        .status(404)
+        .json({ error: "No CV found for this application" });
+    }
+
+    const signedUrl = await getCVUrl(application.cvFilePath);
+    res.json({ url: signedUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

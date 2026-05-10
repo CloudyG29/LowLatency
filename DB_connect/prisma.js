@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../backend/generated");
 const { PrismaMssql } = require("@prisma/adapter-mssql");
 
 const adapter = new PrismaMssql(process.env.DATABASE_URL);
