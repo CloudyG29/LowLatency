@@ -135,8 +135,11 @@ async function displayOpportunities() {
 }
 
 async function displayApplications() {
-  const container = document.getElementById("applicationsList");
-  container.innerHTML = '<div class="empty-state">Loading applications...</div>';
+  const listContainer = document.getElementById("applicationsList");
+  const detailsContainer = document.getElementById("selectedApplicationDetails");
+  const emptyState = document.getElementById("emptyApplicationState");
+
+  listContainer.innerHTML = '<div class="empty-state">Loading applications...</div>';
 
   try {
     showLoader();
@@ -144,100 +147,145 @@ async function displayApplications() {
     const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
     const applications = await response.json();
 
+    // --- DASHBOARD STATS ---
+    document.getElementById("totalApplications").textContent = applications.length;
+
+    document.getElementById("pendingApplications").textContent =
+      applications.filter(app => app.status === "pending").length;
+
+    document.getElementById("hiredApplications").textContent =
+      applications.filter(app => app.status === "hired").length;
+
     if (applications.length === 0) {
-      container.innerHTML = '<div class="empty-state">No applications received yet.</div>';
+      listContainer.innerHTML = '<div class="empty-state">No applications received yet.</div>';
       return;
     }
 
-    container.innerHTML = "";
+    listContainer.innerHTML = "";
 
-    applications.forEach((app) => {
-      const div = document.createElement("div");
-      div.className = "application-preview-card";
+    applications.forEach((app, index) => {
 
       const status = app.status || "pending";
 
-      div.innerHTML = `
-        <div class="application-preview-main">
+      const card = document.createElement("div");
+      card.className = "dashboard-application-card";
+
+      card.innerHTML = `
+        <div class="dashboard-application-card-top">
           <div>
-            <p class="application-label">Applicant</p>
             <h3>${app.user.name || "N/A"} ${app.user.surname || ""}</h3>
-            <p class="application-subtext">${app.user.email || "No email provided"}</p>
+            <p>${app.user.email || "No email"}</p>
           </div>
 
-          <div>
-            <p class="application-label">Opportunity</p>
-            <p class="application-job">${app.listing.listname || "N/A"}</p>
-            <p class="application-subtext">Applied on ${new Date(app.created_at).toDateString()}</p>
-          </div>
-
-          <span class="status-badge status-${status}">${status}</span>
+          <span class="status-badge status-${status}">
+            ${status}
+          </span>
         </div>
 
-        <div class="application-actions">
-          <button class="view-details-btn" data-id="${app.application_id}">View Details</button>
-
-          ${status === "pending" ? `
-            <button class="btn-hire" data-id="${app.application_id}">Hire</button>
-            <button class="btn-reject" data-id="${app.application_id}">Reject</button>
-          ` : ""}
-        </div>
-
-        <div class="application-details hidden" id="details-${app.application_id}">
-          <div class="details-grid">
-            <div class="details-section">
-              <h4>Applicant Details</h4>
-              <p><strong>Name:</strong> ${app.user.name || "N/A"} ${app.user.surname || ""}</p>
-              <p><strong>Email:</strong> ${app.user.email || "N/A"}</p>
-              <p><strong>Phone:</strong> ${app.user.applicant?.phone || "N/A"}</p>
-              <p><strong>CV:</strong> ${app.cv_name || "No CV submitted"}</p>
-            </div>
-
-            <div class="details-section">
-              <h4>Application Details</h4>
-              <p><strong>Motivation:</strong> ${app.motivation || "No motivation provided."}</p>
-              <p><strong>Availability:</strong> ${app.availability || "No availability provided."}</p>
-              <p><strong>Status:</strong> ${status}</p>
-            </div>
-          </div>
-
-          <div class="details-section full-width">
-            <h4>Opportunity Details</h4>
-            <p><strong>Title:</strong> ${app.listing.listname || "N/A"}</p>
-            <p><strong>Type:</strong> ${app.listing.list_type || "N/A"}</p>
-            <p><strong>Location:</strong> ${app.listing.location || "N/A"}</p>
-            <p><strong>Requirements:</strong> ${app.listing.requirements || "N/A"}</p>
-            <p><strong>Description:</strong> ${app.listing.description || "No description provided."}</p>
-          </div>
+        <div class="dashboard-application-meta">
+          <p>${app.listing.listname || "N/A"}</p>
+          <span>${new Date(app.created_at).toDateString()}</span>
         </div>
       `;
 
-      container.appendChild(div);
-    });
+      card.addEventListener("click", () => {
 
-    document.querySelectorAll(".view-details-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const details = document.getElementById(`details-${btn.dataset.id}`);
-        details.classList.toggle("hidden");
-        btn.textContent = details.classList.contains("hidden") ? "View Details" : "Hide Details";
-      });
-    });
+        document.querySelectorAll(".dashboard-application-card")
+          .forEach(c => c.classList.remove("selected"));
 
-    document.querySelectorAll(".btn-hire").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        await updateApplicationStatus(btn.dataset.id, "hired");
-      });
-    });
+        card.classList.add("selected");
 
-    document.querySelectorAll(".btn-reject").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        await updateApplicationStatus(btn.dataset.id, "rejected");
+        emptyState.style.display = "none";
+
+        detailsContainer.innerHTML = `
+          <div class="selected-application-wrapper">
+
+            <div class="selected-app-header">
+              <div>
+                <h2>${app.user.name || "N/A"} ${app.user.surname || ""}</h2>
+                <p>${app.user.email || "No email provided"}</p>
+              </div>
+
+              <span class="status-badge status-${status}">
+                ${status}
+              </span>
+            </div>
+
+            <div class="selected-app-grid">
+
+              <div class="selected-card">
+                <h3>Applicant Details</h3>
+
+                <p><strong>Phone:</strong> ${app.user.applicant?.phone || "N/A"}</p>
+                <p><strong>CV:</strong> ${app.cv_name || "No CV submitted"}</p>
+                <p><strong>Availability:</strong> ${app.availability || "Not provided"}</p>
+              </div>
+
+              <div class="selected-card">
+                <h3>Opportunity</h3>
+
+                <p><strong>Title:</strong> ${app.listing.listname || "N/A"}</p>
+                <p><strong>Type:</strong> ${app.listing.list_type || "N/A"}</p>
+                <p><strong>Location:</strong> ${app.listing.location || "N/A"}</p>
+              </div>
+
+            </div>
+
+            <div class="selected-card motivation-card">
+              <h3>Motivation</h3>
+
+              <p>
+                ${app.motivation || "No motivation submitted."}
+              </p>
+            </div>
+
+            <div class="selected-card">
+              <h3>Opportunity Description</h3>
+
+              <p>${app.listing.description || "No description available."}</p>
+            </div>
+
+            ${status === "pending" ? `
+              <div class="selected-actions">
+                <button class="btn-hire action-btn" data-id="${app.application_id}">
+                  Hire Applicant
+                </button>
+
+                <button class="btn-reject action-btn" data-id="${app.application_id}">
+                  Reject Applicant
+                </button>
+              </div>
+            ` : ""}
+          </div>
+        `;
+
+        // --- ACTION BUTTONS ---
+        document.querySelectorAll(".btn-hire").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "hired");
+          });
+        });
+
+        document.querySelectorAll(".btn-reject").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "rejected");
+          });
+        });
+
       });
+
+      listContainer.appendChild(card);
+
+      // Auto-select first application
+      if (index === 0) {
+        card.click();
+      }
     });
 
   } catch (error) {
     console.error(error);
-    container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
+    listContainer.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
   } finally {
     hideLoader();
   }
