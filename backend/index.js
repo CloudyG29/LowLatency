@@ -74,6 +74,11 @@ app.get("/provider", (req, res) => {
   );
 });
 
+app.get("/dashboard", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../frontend/roles_htmls", "dashboard.html"),
+  );
+});
 app.get("/provider-onboarding", (req, res) => {
   res.sendFile(
     path.join(__dirname, "../frontend/views", "provider-onboarding.html"),
