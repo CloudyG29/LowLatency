@@ -657,23 +657,35 @@ async function fetchOpportunities(type = "") {
 
 function applyForListing(listingId) {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const cvName = userData.cvName || "";
+  const cvName = userData.cvName || "No CV uploaded yet";
 
-  const motivation = prompt("Why are you interested in this opportunity?");
+  document.getElementById("applicationListingId").value = listingId;
+  document.getElementById("applicationMotivation").value = "";
+  document.getElementById("applicationAvailability").value = "";
+  document.getElementById("applicationCvName").textContent = cvName;
 
-  if (!motivation || motivation.trim() === "") {
+  openModal("applicationModal"); 
+}
+
+async function submitApplicationFromModal() {
+  const listingId = document.getElementById("applicationListingId").value;
+  const motivation = document.getElementById("applicationMotivation").value.trim();
+  const availability = document.getElementById("applicationAvailability").value.trim();
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const cvName = userData.cvName || null;
+
+  if (!motivation) {
     alert("Please add a short motivation before applying.");
     return;
   }
 
-  const availability = prompt("When are you available to start? Example: Immediately, January 2026, after exams");
-
-  if (!availability || availability.trim() === "") {
+  if (!availability) {
     alert("Please add your availability before applying.");
     return;
   }
 
-  submitApplication(listingId, motivation, availability, cvName);
+  await submitApplication(listingId, motivation, availability, cvName);
+  closeModal("applicationModal");
 }
 
 async function submitApplication(listingId, motivation, availability, cvName) {
