@@ -10,6 +10,10 @@ jest.mock('../DB_connect/prisma', () => ({
   },
 }));
 
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 const { registerUser, getUserRole } = require('../backend/routes/user');
 
 const mockRes = () => {
@@ -18,6 +22,16 @@ const mockRes = () => {
   res.json = jest.fn().mockReturnValue(res);
   return res;
 };
+
+// Add this to mock the $transaction function!
+prisma.$transaction = jest.fn().mockImplementation(async (arg) => {
+  // If your backend uses an array: prisma.$transaction([ query1, query2 ])
+  if (Array.isArray(arg)) {
+    return Promise.all(arg);
+  }
+  // If your backend uses a callback: prisma.$transaction(async (tx) => { ... })
+  return arg(prisma);
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -128,7 +142,7 @@ describe('getUserRole', () => {
     await getUserRole(req, res);
 
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+    expect(res.json).toHaveBeenCalledWith({ error: 'User not found.' });
   });
 
   test('should return 500 on database error', async () => {

@@ -19,12 +19,16 @@ model User {
 }
 
 model ApplicantProfile {
-  applicant_id   Int                      @id @default(autoincrement())
-  user_id        Int                      @unique
-  phone          String?
-  dob            DateTime?
-  bio            String?
-  user           User                     @relation(fields: [user_id], references: [user_id])
+  applicant_id Int @id @default(autoincrement())
+  user_id      Int @unique
+
+  phone String?
+  dob   DateTime?
+  bio   String?
+
+  user User @relation(fields: [user_id], references: [user_id])
+
+  skills         ApplicantSkill[]
   qualifications ApplicantQualification[]
   skills         ApplicantSkill[]
 }

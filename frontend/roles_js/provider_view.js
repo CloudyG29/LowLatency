@@ -1,18 +1,77 @@
 let currentUser = null;
 
+async function guardProviderPage() {
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      try {
+        if (!user) {
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        const token = await user.getIdToken();
+
+        const response = await fetch(
+          `/api/user/role?email=${encodeURIComponent(user.email)}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (!response.ok) {
+          await firebase
+            .auth()
+            .signOut()
+            .catch(() => {});
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        const data = await response.json();
+
+        if (data.role !== "Provider") {
+          window.location.assign("/login");
+          return resolve(false);
+        }
+
+        currentUser = user;
+
+        // let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        // userData.email = data.email || "";
+        // userData.firstName = data.name || "";
+        // userData.lastName = data.surname || "";
+        // userData.role = data.role;
+
+        // localStorage.setItem("userData", JSON.stringify(userData));
+
+        resolve(true);
+      } catch (error) {
+        console.error("Provider guard failed:", error);
+        window.location.assign("/login");
+        resolve(false);
+      }
+    });
+  });
+}
+
 async function postOpportunity() {
   if (!currentUser) return;
 
   const msg = document.getElementById("msg");
-  const listname = document.getElementById("listname").value;
-  const list_type = document.getElementById("list_type").value;
-  const nqf_level = document.getElementById("nqf_level").value;
-  const description = document.getElementById("description").value;
-  const requirements = document.getElementById("requirements").value;
-  const closing_date = document.getElementById("closing_date").value;
-  const stipend = document.getElementById("stipend").value;
-  const location = document.getElementById("location").value;
-  const duration = document.getElementById("duration").value;
+  if (!msg) return;
+
+  const listname = document.getElementById("listname")?.value;
+  const list_type = document.getElementById("list_type")?.value;
+  const nqf_level = document.getElementById("nqf_level")?.value;
+  const description = document.getElementById("description")?.value;
+  const requirements = document.getElementById("requirements")?.value;
+  const closing_date = document.getElementById("closing_date")?.value;
+  const stipend = document.getElementById("stipend")?.value;
+  const location = document.getElementById("location")?.value;
+  const duration = document.getElementById("duration")?.value;
 
   if (
     !listname ||
@@ -67,6 +126,7 @@ async function displayOpportunities() {
   container.innerHTML =
     '<div class="empty-state"> Loading opportunities...</div>';
   try {
+    showLoader();
     const response = await fetch(
       `/api/listings/provider?email=${currentUser.email}`,
     );
@@ -75,6 +135,7 @@ async function displayOpportunities() {
     if (listings.length === 0) {
       container.innerHTML =
         '<div class="empty-state">You have not posted any opportunities yet.</div>';
+      hideLoader();
       return;
     }
 
@@ -93,8 +154,10 @@ async function displayOpportunities() {
         <p><strong>Status:</strong> <span class="status-badge status-${opp.status}">${opp.status}</span></p>
       `;
       container.appendChild(div);
+      hideLoader();
     });
   } catch (error) {
+    hideLoader();
     container.innerHTML =
       '<div class="empty-state">Error loading opportunities.</div>';
   }
@@ -105,12 +168,14 @@ async function displayApplications() {
   container.innerHTML =
     '<div class="empty-state">Loading applications...</div>';
   try {
+    showLoader();
     const response = await fetch(
       `/api/listings/provider-applications?email=${currentUser.email}`,
     );
     const applications = await response.json();
 
     if (applications.length === 0) {
+      hideLoader();
       container.innerHTML =
         '<div class="empty-state">No applications received yet.</div>';
       return;
@@ -143,8 +208,10 @@ async function displayApplications() {
   `;
       container.appendChild(div);
     });
+    hideLoader();
 
     document.querySelectorAll(".btn-hire").forEach((btn) => {
+      showLoader();
       btn.addEventListener("click", async () => {
         await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
           method: "PUT",
@@ -153,9 +220,11 @@ async function displayApplications() {
         });
         displayApplications();
       });
+      hideLoader();
     });
 
     document.querySelectorAll(".btn-reject").forEach((btn) => {
+      showLoader();
       btn.addEventListener("click", async () => {
         await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
           method: "PUT",
@@ -176,10 +245,21 @@ async function displayApplications() {
         }
       });
     });
+    hideLoader();
   } catch (error) {
+    hideLoader();
     container.innerHTML =
       '<div class="empty-state">Error loading applications.</div>';
   }
+}
+
+// --- Loader Controls ---
+function showLoader() {
+  document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader() {
+  document.getElementById("loader").classList.add("hidden");
 }
 
 function showTab(tab) {
@@ -198,6 +278,20 @@ function showTab(tab) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const allowed = await guardProviderPage();
+  if (!allowed) return;
+
+  displayOpportunities();
+});
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    guardProviderPage,
+    displayOpportunities,
+    displayApplications,
+  };
+}
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;

@@ -7,6 +7,10 @@ jest.mock('../DB_connect/prisma', () => ({
   },
 }));
 
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 const prisma = require('../DB_connect/prisma');
 const { getUsers, getUserByEmail } = require('../backend/routes/get_user');
 

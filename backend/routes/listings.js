@@ -76,13 +76,33 @@ router.get("/provider", async (req, res) => {
 });
 
 router.get("/approved", async (req, res) => {
+  const { type, userEmail } = req.query;
+
   try {
+    const whereClause = { status: "approved" };
+    if (type) whereClause.list_type = type;
+
     const listings = await prisma.listing.findMany({
-      where: { status: "approved" },
-      include: { provider: true },
+      where: whereClause,
+      include: { 
+        provider: true,
+        applications: {
+          where: {
+            user: { email: userEmail || "" }
+          }
+        }
+      },
     });
-    res.status(200).json(listings);
+
+    // Map the results to include an 'hasApplied' boolean
+    const results = listings.map(listing => ({
+      ...listing,
+      hasApplied: listing.applications.length > 0
+    }));
+
+    res.status(200).json(results);
   } catch (error) {
+    console.error("REAL LISTINGS ERROR:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });

@@ -48,6 +48,23 @@ async function finalizeSession(role) {
 }
 
 // 4. Auth Functions (Passing UID to registerUser)
+async function cleanupFailedFirebaseUser() {
+    try {
+        const currentUser = firebase.auth().currentUser;
+        if (currentUser) {
+            await currentUser.delete();
+        }
+    } catch (cleanupError) {
+        console.error("Cleanup failed for Firebase user:", cleanupError);
+    } finally {
+        try {
+            await firebase.auth().signOut();
+        } catch (signOutError) {
+            console.error("Firebase sign out failed after cleanup:", signOutError);
+        }
+    }
+}
+
 async function signUpWithGoogle(role) {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
@@ -60,6 +77,7 @@ async function signUpWithGoogle(role) {
         await finalizeSession(role);
     } catch (error) {
         console.error("Google signup error:", error);
+        await cleanupFailedFirebaseUser();
         throw error;
     }
 }
@@ -71,6 +89,9 @@ async function signUpWithEmail(email, password, fName, lName, role) {
         await finalizeSession(role);
     } catch (error) {
         console.error("Email signup error:", error);
+        if (firebase.auth().currentUser) {
+            await cleanupFailedFirebaseUser();
+        }
         throw error;
     }
 }
@@ -78,7 +99,8 @@ async function signUpWithEmail(email, password, fName, lName, role) {
 async function loginAndRedirect(email, password) {
     try {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        
+        const user = userCredential.user;
+        localStorage.setItem('firebase_uid', user.uid);
         // Ask your backend: "What is the role of this email in the Prisma DB?"
 
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
@@ -88,11 +110,23 @@ async function loginAndRedirect(email, password) {
         }
         
         const data = await response.json();
-
         
         // Redirect based on the DB response, not localStorage
         if (data.role === 'Admin') window.location.href = '/admin';
-        else if (data.role === 'Provider') window.location.href = '/provider';
+        else if (data.role === 'Provider') {
+            // Check if provider is onboarded
+            const onboardResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(email)}`);
+            if (onboardResponse.ok) {
+                const onboardData = await onboardResponse.json();
+                if (onboardData.onboarded) {
+                    window.location.href = '/provider';
+                } else {
+                    window.location.href = '/provider-onboarding';
+                }
+            } else {
+                window.location.href = '/provider-onboarding'; // Default to onboarding if check fails
+            }
+        }
         else window.location.href = '/applicant';
         
     } catch (error) {
@@ -107,34 +141,42 @@ async function loginWithGoogle() {
         // 1. Auth with Firebase
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
+        localStorage.setItem('firebase_uid', user.uid);
         const email = user.email;
 
-       // 2. Fetch role from Prisma
+        // 2. Fetch role from Prisma
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
-        
-       //Commented out for testing
         if (!response.ok) {
-            // FIX: If they aren't in Prisma, log them out of Firebase and show an alert
             await firebase.auth().signOut();
             alert("User not found in database. Please sign up first.");
             return; // Stop the function here
         }
 
-        // TODO - This is where you would normally parse the actual response from your backend.
-
-
-
         const data = await response.json();
-        
+
         // 3. Redirect
-        if (data.role === 'Admin') window.location.href = '/admin';
-        else if (data.role === 'Applicant') window.location.href = '/applicant';
-        else window.location.href = '/provider';
+        if (data.role === 'Admin') {
+            window.location.href = '/admin';
+        } else if (data.role === 'Applicant') {
+            window.location.href = '/applicant';
+        } else if (data.role === 'Provider') {
+            const onboardResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(email)}`);
+            if (onboardResponse.ok) {
+                const onboardData = await onboardResponse.json();
+                if (onboardData.onboarded) {
+                    window.location.href = '/provider';
+                } else {
+                    window.location.href = '/provider-onboarding';
+                }
+            } else {
+                window.location.href = '/provider-onboarding';
+            }
+        } else {
+            window.location.href = '/login';
+        }
 
     } catch (error) {
-
         console.error("Google login error:", error);
         throw error;
-
     }
 }

@@ -7,5 +7,8 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
-  collectCoverageFrom: ["backend/**/*.js"],
+  collectCoverageFrom: ["backend/**/*.js",
+    "frontend/script.js",
+    "frontend/roles_js/applicant_view.js"],,
+  testEnvironment: "jsdom",
 };

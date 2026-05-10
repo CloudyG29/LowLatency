@@ -17,6 +17,10 @@ jest.mock('../DB_connect/prisma', () => ({
   },
 }));
 
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 const prisma = require('../DB_connect/prisma');
 const express = require('express');
 const request = require('supertest');
@@ -100,13 +104,19 @@ describe('GET /api/listings/pending', () => {
 describe('GET /api/listings/approved', () => {
   test('should return only approved listings', async () => {
     prisma.listing.findMany.mockResolvedValue([
-      { listings_id: 1, listname: 'Test', status: 'approved' }
+      { 
+        id: 1, 
+        title: 'Test Job', 
+        status: 'approved',
+        provider: {},        
+        applications: []   
+      }
     ]);
 
     const res = await request(app).get('/api/listings/approved');
-
     expect(res.status).toBe(200);
     expect(res.body[0].status).toBe('approved');
+    expect(res.body[0].hasApplied).toBe(false);
   });
 });
 
