@@ -4,82 +4,158 @@
   <title>SkillBridge Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="../roles_js/dashboard.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .dashboard-container {
+      padding: 30px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .dashboard-header h1 {
+      margin: 0;
+      color: #1e3a8a;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    select,
+    button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      cursor: pointer;
+    }
+
+    button {
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 30px;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .chart-card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .chart-card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #1e3a8a;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>SkillBridge Dashboard</h1>
-
-  <section class="cards">
-    <div class="card">
-      <h3>Total Listings</h3>
-      <p id="totalListings">0</p>
+  <main class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>SkillBridge Dashboard</h1>
+      <button id="exportCsvBtn">Export CSV</button>
     </div>
 
-    <div class="card">
-      <h3>Total Applications</h3>
-      <p id="totalApplications">0</p>
-    </div>
+    <section class="filters">
+      <select id="statusFilter">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="hired">Hired</option>
+        <option value="rejected">Rejected</option>
+      </select>
 
-    <div class="card">
-      <h3>Pending Applications</h3>
-      <p id="pendingApplications">0</p>
-    </div>
+      <select id="opportunityFilter">
+        <option value="all">All Opportunities</option>
+        <option value="nonZero">Only Opportunities With Applications</option>
+      </select>
 
-    <div class="card">
-      <h3>Successful Placements</h3>
-      <p id="successfulPlacements">0</p>
-    </div>
-  </section>
+      <button id="resetFiltersBtn">Reset Filters</button>
+    </section>
 
-  <section>
-    <h2>Application Status Breakdown</h2>
-    <canvas id="statusChart"></canvas>
-  </section>
+    <section class="cards">
+      <div class="card">
+        <h3>Total Listings</h3>
+        <p id="totalListings">0</p>
+      </div>
 
-  <section>
-    <h2>Applications Per Opportunity</h2>
-    <canvas id="opportunityChart"></canvas>
-  </section>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-  <title>SkillBridge Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="../roles_js/dashboard.js"></script>
-</head>
-<body>
-  <h1>SkillBridge Dashboard</h1>
+      <div class="card">
+        <h3>Total Applications</h3>
+        <p id="totalApplications">0</p>
+      </div>
 
-  <section class="cards">
-    <div class="card">
-      <h3>Total Listings</h3>
-      <p id="totalListings">0</p>
-    </div>
+      <div class="card">
+        <h3>Pending Applications</h3>
+        <p id="pendingApplications">0</p>
+      </div>
 
-    <div class="card">
-      <h3>Total Applications</h3>
-      <p id="totalApplications">0</p>
-    </div>
+      <div class="card">
+        <h3>Successful Placements</h3>
+        <p id="successfulPlacements">0</p>
+      </div>
+    </section>
 
-    <div class="card">
-      <h3>Pending Applications</h3>
-      <p id="pendingApplications">0</p>
-    </div>
+    <section class="charts">
+      <div class="chart-card">
+        <h2>Application Status Breakdown</h2>
+        <canvas id="statusChart"></canvas>
+      </div>
 
-    <div class="card">
-      <h3>Successful Placements</h3>
-      <p id="successfulPlacements">0</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>Application Status Breakdown</h2>
-    <canvas id="statusChart"></canvas>
-  </section>
-
-  <section>
-    <h2>Applications Per Opportunity</h2>
-    <canvas id="opportunityChart"></canvas>
-  </section>
+      <div class="chart-card">
+        <h2>Applications Per Opportunity</h2>
+        <canvas id="opportunityChart"></canvas>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
