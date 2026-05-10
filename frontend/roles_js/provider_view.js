@@ -19,7 +19,7 @@ async function guardProviderPage() {
         });
 
         if (!response.ok) {
-          await firebase.auth().signOut().catch(() => { });
+          await firebase.auth().signOut().catch(() => {});
           window.location.assign("/login");
           return resolve(false);
         }
@@ -32,15 +32,6 @@ async function guardProviderPage() {
         }
 
         currentUser = user;
-
-        // let userData = JSON.parse(localStorage.getItem("userData") || "{}");
-        // userData.email = data.email || "";
-        // userData.firstName = data.name || "";
-        // userData.lastName = data.surname || "";
-        // userData.role = data.role;
-
-        // localStorage.setItem("userData", JSON.stringify(userData));
-
         resolve(true);
       } catch (error) {
         console.error("Provider guard failed:", error);
@@ -78,8 +69,15 @@ async function postOpportunity() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        listname, list_type, nqf_level, description,
-        requirements, closing_date, stipend, location, duration,
+        listname,
+        list_type,
+        nqf_level,
+        description,
+        requirements,
+        closing_date,
+        stipend,
+        location,
+        duration,
         email: currentUser.email,
       }),
     });
@@ -100,8 +98,10 @@ async function postOpportunity() {
 async function displayOpportunities() {
   const container = document.getElementById("myOpportunities");
   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
+
   try {
     showLoader();
+
     const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
     const listings = await response.json();
 
@@ -112,6 +112,7 @@ async function displayOpportunities() {
     }
 
     container.innerHTML = "";
+
     listings.forEach((opp) => {
       const div = document.createElement("div");
       div.className = "opportunity-card";
@@ -151,10 +152,14 @@ async function displayApplications() {
     document.getElementById("totalApplications").textContent = applications.length;
 
     document.getElementById("pendingApplications").textContent =
-      applications.filter(app => app.status === "pending").length;
+      applications.filter((app) => app.status === "pending").length;
+
+    // ADDED: count shortlisted applications
+    document.getElementById("shortlistedApplications").textContent =
+      applications.filter((app) => app.status === "shortlisted").length;
 
     document.getElementById("hiredApplications").textContent =
-      applications.filter(app => app.status === "hired").length;
+      applications.filter((app) => app.status === "hired").length;
 
     if (applications.length === 0) {
       listContainer.innerHTML = '<div class="empty-state">No applications received yet.</div>';
@@ -164,7 +169,6 @@ async function displayApplications() {
     listContainer.innerHTML = "";
 
     applications.forEach((app, index) => {
-
       const status = app.status || "pending";
 
       const card = document.createElement("div");
@@ -189,12 +193,10 @@ async function displayApplications() {
       `;
 
       card.addEventListener("click", () => {
-
         document.querySelectorAll(".dashboard-application-card")
-          .forEach(c => c.classList.remove("selected"));
+          .forEach((c) => c.classList.remove("selected"));
 
         card.classList.add("selected");
-
         emptyState.style.display = "none";
 
         detailsContainer.innerHTML = `
@@ -247,6 +249,12 @@ async function displayApplications() {
 
             ${status === "pending" ? `
               <div class="selected-actions">
+
+                <!-- ADDED: shortlist action -->
+                <button class="btn-shortlist action-btn" data-id="${app.application_id}">
+                  Shortlist Applicant
+                </button>
+
                 <button class="btn-hire action-btn" data-id="${app.application_id}">
                   Hire Applicant
                 </button>
@@ -254,12 +262,19 @@ async function displayApplications() {
                 <button class="btn-reject action-btn" data-id="${app.application_id}">
                   Reject Applicant
                 </button>
+
               </div>
             ` : ""}
           </div>
         `;
 
-        // --- ACTION BUTTONS ---
+        // ADDED: shortlist button event
+        document.querySelectorAll(".btn-shortlist").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "shortlisted");
+          });
+        });
+
         document.querySelectorAll(".btn-hire").forEach((btn) => {
           btn.addEventListener("click", async () => {
             await updateApplicationStatus(btn.dataset.id, "hired");
@@ -271,17 +286,14 @@ async function displayApplications() {
             await updateApplicationStatus(btn.dataset.id, "rejected");
           });
         });
-
       });
 
       listContainer.appendChild(card);
 
-      // Auto-select first application
       if (index === 0) {
         card.click();
       }
     });
-
   } catch (error) {
     console.error(error);
     listContainer.innerHTML =
@@ -310,22 +322,24 @@ async function updateApplicationStatus(applicationId, status) {
   }
 }
 
-// --- Loader Controls ---
 function showLoader() {
-  document.getElementById('loader').classList.remove('hidden');
+  document.getElementById("loader").classList.remove("hidden");
 }
 
 function hideLoader() {
-  document.getElementById('loader').classList.add('hidden');
+  document.getElementById("loader").classList.add("hidden");
 }
 
 function showTab(tab) {
   document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+
   if (tab === "post") document.getElementById("postTab").classList.add("active");
+
   if (tab === "manage") {
     document.getElementById("manageTab").classList.add("active");
     displayOpportunities();
   }
+
   if (tab === "applications") {
     document.getElementById("applicationsTab").classList.add("active");
     displayApplications();
@@ -343,9 +357,11 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     guardProviderPage,
     displayOpportunities,
-    displayApplications
+    displayApplications,
+    updateApplicationStatus,
   };
 }
+
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;

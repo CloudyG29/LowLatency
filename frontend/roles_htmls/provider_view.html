@@ -71,62 +71,67 @@
       </div>
 
       <!-- APPLICATIONS TAB -->
-      <!-- APPLICATIONS TAB -->
-<div id="applicationsTab" class="tab-content">
+      <div id="applicationsTab" class="tab-content">
 
-  <div class="applications-dashboard-header">
-    <div>
-      <h2>Applications Dashboard</h2>
-      <p>Manage applicants, review details, and track hiring decisions.</p>
-    </div>
+        <div class="applications-dashboard-header">
+          <div>
+            <h2>Applications Dashboard</h2>
+            <p>Manage applicants, review details, and track hiring decisions.</p>
+          </div>
 
-    <div class="dashboard-stats">
-      <div class="stat-card">
-        <span class="stat-number" id="totalApplications">0</span>
-        <span class="stat-label">Applications</span>
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <span class="stat-number" id="totalApplications">0</span>
+              <span class="stat-label">Applications</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-number" id="pendingApplications">0</span>
+              <span class="stat-label">Pending</span>
+            </div>
+
+            <!-- ADDED: shows number of shortlisted applications -->
+            <div class="stat-card">
+              <span class="stat-number" id="shortlistedApplications">0</span>
+              <span class="stat-label">Shortlisted</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-number" id="hiredApplications">0</span>
+              <span class="stat-label">Hired</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="applications-dashboard-layout">
+
+          <!-- LEFT PANEL -->
+          <div class="applications-sidebar">
+
+            <div class="applications-toolbar">
+              <input 
+                type="text" 
+                id="applicationSearch"
+                placeholder="Search applicants..."
+              />
+            </div>
+
+            <div id="applicationsList" class="applications-list"></div>
+          </div>
+
+          <!-- RIGHT PANEL -->
+          <div class="application-details-panel">
+
+            <div id="emptyApplicationState" class="empty-details-state">
+              <h3>Select an Application</h3>
+              <p>Choose an applicant from the left panel to view full details.</p>
+            </div>
+
+            <div id="selectedApplicationDetails"></div>
+
+          </div>
+        </div>
       </div>
-
-      <div class="stat-card">
-        <span class="stat-number" id="pendingApplications">0</span>
-        <span class="stat-label">Pending</span>
-      </div>
-
-      <div class="stat-card">
-        <span class="stat-number" id="hiredApplications">0</span>
-        <span class="stat-label">Hired</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="applications-dashboard-layout">
-
-    <!-- LEFT PANEL -->
-    <div class="applications-sidebar">
-
-      <div class="applications-toolbar">
-        <input 
-          type="text" 
-          id="applicationSearch"
-          placeholder="Search applicants..."
-        />
-      </div>
-
-      <div id="applicationsList" class="applications-list"></div>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="application-details-panel">
-
-      <div id="emptyApplicationState" class="empty-details-state">
-        <h3>Select an Application</h3>
-        <p>Choose an applicant from the left panel to view full details.</p>
-      </div>
-
-      <div id="selectedApplicationDetails"></div>
-
-    </div>
-  </div>
-</div>
     </main>
   </div>
 

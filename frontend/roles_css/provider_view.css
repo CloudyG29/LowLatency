@@ -30,16 +30,15 @@ body {
     margin: 2% 0% 5% 2%;
 }
 
-.sidebar>hr {
+.sidebar > hr {
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin: 20px 0;
 }
 
-.sidebar>h2 {
+.sidebar > h2 {
     padding-top: 35px;
     padding-bottom: 12px;
-    /* padding-left: 30px; */
     text-align: center;
 }
 
@@ -48,20 +47,20 @@ body {
     padding: 20px;
 }
 
-.nav-links>li {
+.nav-links > li {
     margin-bottom: 15px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.nav-links>li:hover {
+.nav-links > li:hover {
     transition-duration: 0.5s;
     background: linear-gradient(90deg, #38ef7d, #11998e);
     border-radius: 10px;
     transform: scale(1.05);
 }
 
-.nav-links>li>a {
+.nav-links > li > a {
     color: #a0aec0;
     text-decoration: none;
     font-weight: bold;
@@ -70,7 +69,7 @@ body {
     border-radius: 8px;
 }
 
-.nav-links>li>a:hover {
+.nav-links > li > a:hover {
     color: black;
     transition-duration: 0.5s;
 }
@@ -173,6 +172,22 @@ h2 {
     color: #68d391;
 }
 
+/* ADDED: shortlisted badge */
+.status-shortlisted {
+    background: rgba(99, 179, 237, 0.15);
+    color: #63b3ed;
+}
+
+.status-hired {
+    background: rgba(104, 211, 145, 0.15);
+    color: #68d391;
+}
+
+.status-rejected {
+    background: rgba(252, 129, 129, 0.15);
+    color: #fc8181;
+}
+
 input,
 textarea {
     width: 100%;
@@ -203,19 +218,6 @@ textarea {
     cursor: pointer;
 }
 
-.btn-hire {
-    background: #38ef7d;
-    border: none;
-    padding: 5px 10px;
-    margin-right: 5px;
-}
-
-.btn-reject {
-    background: #f5576c;
-    border: none;
-    padding: 5px 10px;
-}
-
 .back-link {
     display: inline-block;
     margin-top: 30px;
@@ -239,7 +241,6 @@ textarea {
     right: 0;
     bottom: 0;
     background: rgba(15, 52, 96, 0.7);
-    /* matches your theme */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -248,13 +249,11 @@ textarea {
     transition: opacity 0.3s ease;
 }
 
-/* Hide by default */
 .loader-overlay.hidden {
     opacity: 0;
     pointer-events: none;
 }
 
-/* From Uiverse.io by PriyanshuGupta28 */
 .spinner {
     position: relative;
     width: 20px;
@@ -266,7 +265,8 @@ textarea {
     width: 50%;
     height: 150%;
     background: #000000;
-    transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    transform: rotate(calc(var(--rotation) * 1deg))
+        translate(0, calc(var(--translation) * 1%));
     animation: spinner-fzua35 1s calc(var(--delay) * 1s) infinite ease;
 }
 
@@ -331,7 +331,6 @@ textarea {
 }
 
 @keyframes spinner-fzua35 {
-
     0%,
     10%,
     20%,
@@ -342,202 +341,16 @@ textarea {
     80%,
     90%,
     100% {
-        transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+        transform: rotate(calc(var(--rotation) * 1deg))
+            translate(0, calc(var(--translation) * 1%));
     }
 
     50% {
-        transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+        transform: rotate(calc(var(--rotation) * 1deg))
+            translate(0, calc(var(--translation) * 1.5%));
     }
 }
 
-/* ================================
-   Provider Applications Detail View
-================================ */
-
-.application-preview-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 18px;
-    padding: 22px;
-    margin-bottom: 18px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
-    transition: all 0.3s ease;
-}
-
-.application-preview-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(56, 239, 125, 0.45);
-    box-shadow: 0 16px 35px rgba(56, 239, 125, 0.12);
-}
-
-.application-preview-main {
-    display: grid;
-    grid-template-columns: 1.5fr 1.5fr auto;
-    gap: 20px;
-    align-items: center;
-}
-
-.application-label {
-    color: #68d391;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 1.8px;
-    margin-bottom: 6px;
-    font-weight: bold;
-}
-
-.application-preview-main h3 {
-    color: #ffffff;
-    font-size: 1.15rem;
-    margin-bottom: 4px;
-}
-
-.application-job {
-    color: #e2e8f0;
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-.application-subtext {
-    color: #a0aec0;
-    font-size: 0.85rem;
-}
-
-.application-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 18px;
-}
-
-.view-details-btn,
-.btn-hire,
-.btn-reject {
-    border: none;
-    padding: 9px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
-}
-
-.view-details-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.view-details-btn:hover {
-    background: rgba(255, 255, 255, 0.18);
-}
-
-.btn-hire {
-    background: linear-gradient(90deg, #38ef7d, #11998e);
-    color: white;
-}
-
-.btn-reject {
-    background: linear-gradient(90deg, #f5576c, #f093fb);
-    color: white;
-}
-
-.btn-hire:hover,
-.btn-reject:hover,
-.view-details-btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.application-details {
-    margin-top: 22px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    animation: fadeInDetails 0.25s ease;
-}
-
-.hidden {
-    display: none;
-}
-
-.details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.details-section {
-    background: rgba(255, 255, 255, 0.045);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 14px;
-    padding: 18px;
-}
-
-.details-section h4 {
-    color: #68d391;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.details-section p {
-    color: #a0aec0;
-    font-size: 0.88rem;
-    line-height: 1.6;
-    margin-bottom: 7px;
-}
-
-.details-section p strong {
-    color: #e2e8f0;
-}
-
-.details-section.full-width {
-    margin-top: 20px;
-}
-
-.status-hired {
-    background: rgba(104, 211, 145, 0.15);
-    color: #68d391;
-}
-
-.status-rejected {
-    background: rgba(252, 129, 129, 0.15);
-    color: #fc8181;
-}
-
-@keyframes fadeInDetails {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 850px) {
-    .application-preview-main {
-        grid-template-columns: 1fr;
-    }
-
-    .details-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .application-actions {
-        flex-direction: column;
-    }
-
-    .view-details-btn,
-    .btn-hire,
-    .btn-reject {
-        width: 100%;
-    }
-}  
 /* ========================================
    APPLICATIONS DASHBOARD REDESIGN
 ======================================== */
@@ -741,6 +554,43 @@ textarea {
     font-weight: bold;
     border: none;
     cursor: pointer;
+}
+
+/* ADDED: shortlist button */
+.btn-shortlist {
+    background: linear-gradient(90deg, #63b3ed, #3182ce);
+    color: white;
+}
+
+.btn-hire {
+    background: linear-gradient(90deg, #38ef7d, #11998e);
+    color: white;
+}
+
+.btn-reject {
+    background: linear-gradient(90deg, #f5576c, #f093fb);
+    color: white;
+}
+
+.view-details-btn,
+.btn-shortlist,
+.btn-hire,
+.btn-reject {
+    border: none;
+    padding: 9px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-shortlist:hover,
+.btn-hire:hover,
+.btn-reject:hover,
+.view-details-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 @media (max-width: 1200px) {
