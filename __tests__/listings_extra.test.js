@@ -227,4 +227,32 @@ describe('POST /api/listings/post - extra', () => {
 
     expect(res.status).toBe(201);
   });
+});  
+
+test('should save null values when optional application fields are missing', async () => {
+  prisma.user.findUnique.mockResolvedValue({ user_id: 1 });
+  prisma.listing.findUnique.mockResolvedValue({ listings_id: 1, provider_id: 7 });
+  prisma.application.findFirst.mockResolvedValue(null);
+  prisma.application.create.mockResolvedValue({
+    application_id: 1,
+    status: 'pending'
+  });
+
+  const res = await request(app)
+    .post('/api/listings/apply')
+    .send({ listing_id: 1, email: 'applicant@test.com' });
+
+  expect(res.status).toBe(201);
+
+  expect(prisma.application.create).toHaveBeenCalledWith({
+    data: {
+      user_id: 1,
+      listing_id: 1,
+      provider_id: 7,
+      motivation: null,
+      availability: null,
+      cv_name: null,
+      status: 'pending'
+    }
+  });
 });
