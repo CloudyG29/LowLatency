@@ -755,7 +755,8 @@ if (typeof module !== 'undefined' && module.exports) {
     openModal,
     closeModal,
     guardApplicantPage,
-    getCompetition
+    getCompetition,
+    renderNotifications
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
