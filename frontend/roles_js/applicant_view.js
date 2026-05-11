@@ -1,5 +1,7 @@
 let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 
+const db = firebase.firestore();
+
 async function guardApplicantPage() {
   return new Promise((resolve) => {
     firebase.auth().onAuthStateChanged(async (user) => {
@@ -161,40 +163,6 @@ function renderNotifications(notifications) {
     container.appendChild(card);
   });
 }
-
-
-
-
-const mockNotifications = [
-  {
-    id: 1,
-    type: "Status Update",
-    message: "Great news! Your application for 'Data Science Internship' has been moved to Hired.",
-    time: "Just now",
-    isRead: false
-  },
-  {
-    id: 2,
-    type: "Interview Invite",
-    message: "The provider for 'Web Development Learnership' has requested an interview.",
-    time: "2 hours ago",
-    isRead: false
-  },
-  {
-    id: 3,
-    type: "Status Update",
-    message: "Your application for 'Marketing Apprenticeship' is currently Under Review.",
-    time: "1 day ago",
-    isRead: true
-  },
-  {
-    id: 4,
-    type: "System Welcome",
-    message: "Welcome to the platform! Complete your profile to get matched with better opportunities.",
-    time: "3 days ago",
-    isRead: true
-  }
-];
 
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
@@ -548,7 +516,7 @@ async function loadDataOnStartup() {
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
-    renderNotifications(mockNotifications || []);
+    startNotificationListener(firebaseUid);
 
   } catch (error) {
     console.error("Error loading profile:", error);
@@ -742,6 +710,59 @@ async function applyForListing(listingId) {
   }
 }
 
+function startNotificationListener(userFirebaseUid) {
+  db.collection("notifications")
+    .where("userId", "==", userFirebaseUid)
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      const liveNotifications = [];
+      let unreadCount = 0;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        
+        const timeString = data.createdAt ? data.createdAt.toDate().toLocaleString() : "Just now";
+        
+        liveNotifications.push({
+          id: doc.id,
+          type: data.type || "Status Update",
+          message: data.message,
+          time: timeString,
+          isRead: data.isRead
+        });
+
+        if (!data.isRead) unreadCount++;
+      });
+
+      renderNotifications(liveNotifications);
+      updateNotificationBadge(unreadCount);
+    });
+}
+
+function updateNotificationBadge(count) {
+  const badge = document.getElementById("notificationBadge");
+  if (!badge) return;
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove("hidden");
+  } else {
+    badge.classList.add("hidden");
+  }
+}
+
+// --- MARK AS READ  ---
+async function markAsRead(notificationId) {
+  try {
+    await db.collection("notifications").doc(notificationId).update({
+      isRead: true
+    });
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
+}
+
+
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
   // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
@@ -756,7 +777,8 @@ if (typeof module !== 'undefined' && module.exports) {
     closeModal,
     guardApplicantPage,
     getCompetition,
-    renderNotifications
+    renderNotifications,
+    startNotificationListener
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
