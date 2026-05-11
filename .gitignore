@@ -6,3 +6,4 @@
 coverage/
 generated/
 backend/generated/
+serviceAccountKey.json

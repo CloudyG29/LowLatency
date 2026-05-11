@@ -14,17 +14,29 @@ describe("role guardrails", () => {
   let consoleErrorSpy;
 
   const setupFirebase = (user, signOutMock = jest.fn().mockResolvedValue()) => {
-    global.firebase = {
-      auth: () => ({
-        onAuthStateChanged: (cb) => {
-          setTimeout(() => cb(user), 0);
-          return () => { };
-        },
-        signOut: signOutMock
-      })
-    };
-  };
+    if (!global.firebase) {
+      global.firebase = {};
+    }
 
+    if (!global.firebase.firestore) {
+      global.firebase.firestore = jest.fn(() => ({
+        collection: jest.fn(() => ({
+          where: jest.fn().mockReturnThis(),
+          orderBy: jest.fn().mockReturnThis(),
+          onSnapshot: jest.fn(),
+          add: jest.fn()
+        }))
+      }));
+    }
+    
+    global.firebase.auth = () => ({
+      onAuthStateChanged: (cb) => {
+        setTimeout(() => cb(user), 0);
+        return () => { };
+      },
+      signOut: signOutMock
+    });
+  };
   const setupFetchOk = (role) => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,

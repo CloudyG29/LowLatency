@@ -381,10 +381,56 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    guardProviderPage,
-    displayOpportunities,
-    displayApplications,
-    updateApplicationStatus,
-  };
+    module.exports = { 
+      guardProviderPage,
+      displayOpportunities,
+      displayApplications
+    };
 }
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    displayOpportunities();
+  } else {
+    window.location.href = "/login";
+  }
+});
+
+document.addEventListener("click", async (event) => {
+  
+  // IF the user clicked a HIRE button
+  if (event.target.closest(".btn-hire")) {
+    const btn = event.target.closest(".btn-hire"); // Gets the button even if they click an icon inside it
+    showLoader();
+    try {
+      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "hired" }),
+      });
+      displayApplications(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // IF the user clicked a REJECT button
+  if (event.target.closest(".btn-reject")) {
+    const btn = event.target.closest(".btn-reject");
+    showLoader();
+    try {
+      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected" }),
+      });
+      displayApplications(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      hideLoader();
+    }
+  }
+});
