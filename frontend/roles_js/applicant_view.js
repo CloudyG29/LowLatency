@@ -1,5 +1,25 @@
 let currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
 
+function showLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "block";
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "none";
+}
+
+function toggleProfileMode(mode) {
+  // Stub: implement as needed
+  console.log("Toggling profile mode to:", mode);
+}
+
+function fetchOpportunities(filter) {
+  // Stub: implement as needed
+  console.log("Fetching opportunities with filter:", filter);
+}
+
 async function guardApplicantPage() {
   return new Promise((resolve) => {
     firebase.auth().onAuthStateChanged(async (user) => {
@@ -348,11 +368,11 @@ function renderEducationDisplay() {
       </div>
       <div class="data-group">
           <span class="data-label">Degree / Qualification</span>
-          <span class="data-value" id="displayDegree">${edu.degree || "NQF Level " + edu.nqfLevel}</span>
+          <span class="data-value" id="displayDegree">NQF Level ${edu.nqf_level}</span>
       </div>
       <div class="data-group">
           <span class="data-label">Graduation Year</span>
-          <span class="data-value" id="displayGradYear">${edu.graduationYear}</span>
+          <span class="data-value" id="displayGradYear">${edu.year_completed}</span>
       </div>
   </div>
   <br/>
@@ -432,22 +452,24 @@ async function saveProfileChanges(fieldsToUpdate) {
 }
 
 // RIGHT: This is how our code is structured
+// =========================
+// STARTUP FUNCTION
+// =========================
 async function loadDataOnStartup() {
   const firebaseUid = localStorage.getItem("firebase_uid");
 
   try {
-    // 1. JS hits 'await' and PAUSES this function.
-    // It waits here until the Express server sends the data back.
     const response = await fetch(`/api/profile/${firebaseUid}`);
     const profileData = await response.json();
 
-    // 2. We save the fresh data locally
+    // Save fresh profile data
     localStorage.setItem("userData", JSON.stringify(profileData));
 
-    // 3. FINALLY, we render.
+    // Auth guard
     const allowed = await guardApplicantPage();
     if (!allowed) return;
 
+    // Render UI
     renderProfile();
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
@@ -455,121 +477,280 @@ async function loadDataOnStartup() {
   } catch (error) {
     console.error("Error loading profile:", error);
   }
+}
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const profileForm = document.getElementById("profileForm");
-    if (profileForm) {
-      profileForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const firstName = document.getElementById("firstName").value;
-        const lastName = document.getElementById("lastName").value;
-        const email = document.getElementById("email").value;
-        const cvFileInput = document.getElementById("cvFile");
-        let userData = JSON.parse(localStorage.getItem("userData") || "{}");
-        userData.firstName = firstName.trim();
-        userData.lastName = lastName.trim();
-        userData.email = email.trim();
-        if (cvFileInput && cvFileInput.files.length > 0) {
-          userData.cvName = cvFileInput.files[0].name;
-        }
-        localStorage.setItem("userData", JSON.stringify(userData));
-        renderProfile();
-        const msgBox = document.getElementById("displayMsg");
-        if (msgBox) {
-          msgBox.innerHTML = "Profile updated successfully!";
-          msgBox.style.color = "#38ef7d";
-        }
-      });
+// =========================
+// DOM CONTENT LOADED
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+  const profileForm = document.getElementById("profileForm");
+
+  if (profileForm) {
+    profileForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
+      const email = document.getElementById("email").value;
+      const cvFileInput = document.getElementById("cvFile");
+
+      let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+      userData.firstName = firstName.trim();
+      userData.lastName = lastName.trim();
+      userData.email = email.trim();
+
+      if (cvFileInput && cvFileInput.files.length > 0) {
+        userData.cvName = cvFileInput.files[0].name;
+      }
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      renderProfile();
+
+      const msgBox = document.getElementById("displayMsg");
+
+      if (msgBox) {
+        msgBox.innerHTML = "Profile updated successfully!";
+        msgBox.style.color = "#38ef7d";
+      }
+    });
+  }
+});
+
+// =========================
+// APPLICATION MODAL STATE
+// =========================
+let pendingListingId = null;
+
+// =========================
+// OPEN APPLY MODAL
+// =========================
+function openApplyModal(listingId, listingName) {
+  pendingListingId = listingId;
+
+  document.getElementById("modalListingName").textContent = listingName;
+
+  document.getElementById("cvFileInput").value = "";
+  document.getElementById("cvUploadMsg").textContent = "";
+
+  openModal("cvUploadModal");
+}
+
+// =========================
+// SUBMIT APPLICATION
+// =========================
+async function submitApplication() {
+  const msg = document.getElementById("cvUploadMsg");
+  const fileInput = document.getElementById("cvFileInput");
+
+  if (!fileInput.files.length) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "Please attach your CV before submitting.";
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  if (file.size > 5 * 1024 * 1024) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "File is too large. Max size is 5MB.";
+    return;
+  }
+
+  msg.style.color = "#888";
+  msg.textContent = "Submitting...";
+
+  try {
+    // STEP 1: CREATE APPLICATION
+    const applyRes = await fetch("/api/listings/apply", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listing_id: pendingListingId,
+        email: currentUser.email,
+      }),
+    });
+
+    const applyData = await applyRes.json();
+
+    if (!applyRes.ok) {
+      throw new Error(applyData.error);
     }
-  });
 
-  // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
-  if (typeof module !== "undefined" && module.exports) {
-    // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
-    module.exports = {
-      renderProfile,
-      saveProfileChanges,
-      uploadCV,
-      renderApplications,
-      fetchOpportunities,
-      showTab,
-      openModal,
-      closeModal,
-      guardApplicantPage,
-    };
-  } else {
-    // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
+    const applicationId = applyData.application.application_id;
 
-    // Move your loose function calls inside here:
-    renderEducationDisplay();
-    loadDataOnStartup();
+    // STEP 2: UPLOAD CV
+    const formData = new FormData();
+
+    formData.append("cv", file);
+    formData.append("email", currentUser.email);
+
+    const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const cvData = await cvRes.json();
+
+    if (!cvRes.ok) {
+      throw new Error(cvData.error);
+    }
+
+    msg.style.color = "#68d391";
+    msg.textContent = "✅ Application submitted successfully!";
+
+    setTimeout(() => {
+      closeModal("cvUploadModal");
+      renderOpportunities();
+    }, 1500);
+  } catch (error) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "❌ " + error.message;
   }
-  let pendingListingId = null;
+}
 
-  function openApplyModal(listingId, listingName) {
-    pendingListingId = listingId;
-    document.getElementById("modalListingName").textContent = listingName;
-    document.getElementById("cvFileInput").value = "";
-    document.getElementById("cvUploadMsg").textContent = "";
-    openModal("cvUploadModal");
+// --- 1. Fix the showTab function to correctly handle the profile ---
+function showTab(tabName) {
+  // Hide all tabs and contents
+  document
+    .querySelectorAll(".tab")
+    .forEach((t) => t.classList.remove("active"));
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((c) => c.classList.remove("active"));
+
+  // Show the selected tab and its content
+  if (tabName === "opportunities") {
+    // Fallback to querySelector if you don't have IDs on your tab buttons
+    const tabBtn =
+      document.getElementById("tab-opps") ||
+      document.querySelectorAll(".tab")[0];
+    if (tabBtn) tabBtn.classList.add("active");
+
+    document.getElementById("opportunitiesTab").classList.add("active");
+    fetchOpportunities(this.document.getElementById("listTypeFilter").value);
+  } else if (tabName === "applications") {
+    const tabBtn =
+      document.getElementById("tab-apps") ||
+      document.querySelectorAll(".tab")[1];
+    if (tabBtn) tabBtn.classList.add("active");
+
+    document.getElementById("applicationsTab").classList.add("active");
+    renderApplications();
+  } else if (tabName === "profile") {
+    const tabBtn =
+      document.getElementById("tab-profile") ||
+      document.querySelectorAll(".tab")[2];
+    if (tabBtn) tabBtn.classList.add("active");
+
+    document.getElementById("profileTab").classList.add("active");
+    renderProfile(); // Load saved data when tab is opened
+  } else if (tabName === "notifications") {
+    const tabBtn =
+      document.getElementById("tab-notifications") ||
+      document.querySelectorAll(".tab")[3];
+    if (tabBtn) tabBtn.classList.add("active");
+
+    document.getElementById("notificationsTab").classList.add("active");
   }
+}
+async function fetchOpportunities(type = "") {
+  const container = document.getElementById("opportunitiesList");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
+  // Show loading state while fetching
+  if (typeof window.showLoader === "function") window.showLoader();
+  container.innerHTML =
+    '<div class="empty-state">Loading opportunities...</div>';
 
-  async function submitApplication() {
-    const msg = document.getElementById("cvUploadMsg");
-    const fileInput = document.getElementById("cvFileInput");
+  try {
+    // Build the URL with the type filter and userEmail to check application status [cite: 3]
+    let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
+    if (type && type !== "") {
+      url += `&type=${encodeURIComponent(type)}`;
+    }
 
-    if (!fileInput.files.length) {
-      msg.style.color = "#fc8181";
-      msg.textContent = "Please attach your CV before submitting.";
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Failed to fetch opportunities");
+    }
+
+    const listings = await response.json();
+    container.innerHTML = ""; // Clear current list
+
+    if (listings.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state">No available opportunities found for this category.</div>';
       return;
     }
 
-    const file = fileInput.files[0];
-    if (file.size > 5 * 1024 * 1024) {
-      msg.style.color = "#fc8181";
-      msg.textContent = "File is too large. Max size is 5MB.";
-      return;
-    }
+    // Render each card using classes defined in your CSS [cite: 2]
+    listings.forEach((listing) => {
+      const card = document.createElement("div");
+      card.className = "opportunity-card";
 
-    msg.style.color = "#888";
-    msg.textContent = "Submitting...";
+      // Logic to check if the user has already applied (requires backend support) [cite: 3]
+      const hasApplied =
+        listing.hasApplied ||
+        (listing.applications && listing.applications.length > 0);
 
-    try {
-      // Step 1 — create the application
-      const applyRes = await fetch("/api/listings/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          listing_id: pendingListingId,
-          email: currentUser.email,
-        }),
-      });
-      const applyData = await applyRes.json();
-      if (!applyRes.ok) throw new Error(applyData.error);
+      const actionUI = hasApplied
+        ? `<div class="already-applied">✅ Already Applied</div>`
+        : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
 
-      const applicationId = applyData.application.application_id;
+      const applicantCount =
+        listing.applicantCount ?? listing.applications?.length ?? 0;
+      const competition = getCompetition(applicantCount);
 
-      // Step 2 — upload the CV
-      const formData = new FormData();
-      formData.append("cv", file);
-      formData.append("email", currentUser.email);
-
-      const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
-        method: "POST",
-        body: formData,
-      });
-      const cvData = await cvRes.json();
-      if (!cvRes.ok) throw new Error(cvData.error);
-
-      msg.style.color = "#68d391";
-      msg.textContent = "✅ Application submitted successfully!";
-      setTimeout(() => {
-        closeModal("cvUploadModal");
-        renderOpportunities();
-      }, 1500);
-    } catch (error) {
-      msg.style.color = "#fc8181";
-      msg.textContent = "❌ " + error.message;
-    }
+      card.innerHTML = `
+                <header class="opportunity-header">
+                <h3 class="opportunity-title">${listing.listname}</h3>
+                <div class="competition-badge competition-badge--${competition.level}" role="status"
+                aria-label="${competition.label} — ${competition.text}">
+                ${competition.label}
+                </div>
+                </header>
+                <div class="opportunity-details">
+                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+                    <p><strong>Type:</strong> ${listing.list_type}</p>
+                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+                </div>
+                ${actionUI}
+            `;
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+  } finally {
+    if (typeof window.hideLoader === "function") window.hideLoader();
   }
+}
+// =========================
+// JEST EXPORTS / BROWSER STARTUP
+// =========================
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    renderProfile,
+    saveProfileChanges,
+    renderApplications,
+    fetchOpportunities,
+    showTab,
+    openModal,
+    closeModal,
+    guardApplicantPage,
+    openApplyModal,
+    submitApplication,
+  };
+} else {
+  loadDataOnStartup();
 }
