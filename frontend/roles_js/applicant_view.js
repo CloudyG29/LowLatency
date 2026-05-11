@@ -609,14 +609,8 @@ async function fetchOpportunities(type = "") {
 
   const container = document.getElementById("opportunitiesList");
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-<<<<<<< HEAD
-  const userEmail = userData.email || "";
-  showLoader();
-=======
-  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
-  // Show loading state while fetching
+const userEmail = userData.email || "";
   if (typeof window.showLoader === "function") window.showLoader();
->>>>>>> main
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
   try {
@@ -642,23 +636,6 @@ async function fetchOpportunities(type = "") {
       const card = document.createElement("div");
       card.className = "opportunity-card";
 
-<<<<<<< HEAD
-      card.innerHTML = `
-        <div class="opportunity-info">
-          <h3 class="opportunity-title">${listing.listname}</h3>
-          <p class="opportunity-provider">Provided by: ${listing.provider?.provider_name || 'Unknown'}</p>
-        </div>
-        <button class="view-details-btn" data-id="${listing.listings_id}">View Details</button>
-      `;
-
-=======
-      // Logic to check if the user has already applied (requires backend support) [cite: 3]
-      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
-
-      const actionUI = hasApplied
-        ? `<div class="already-applied">✅ Already Applied</div>`
-        : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
-
       const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
       const competition = getCompetition(applicantCount);
 
@@ -680,9 +657,14 @@ async function fetchOpportunities(type = "") {
           <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
           <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
         </div>
+        ${(listing.hasApplied || (listing.applications && listing.applications.length > 0))
+          ? `<div class="already-applied">✅ Already Applied</div>`
+          : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`
+        }
         <button class="view-details-btn" data-id="${listing.listings_id}">View Details</button>
-      `;
->>>>>>> main
+        `;
+       
+
       container.appendChild(card);
     });
 

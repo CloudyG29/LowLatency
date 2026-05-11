@@ -447,3 +447,6 @@ window.displayUsers = displayUsers;
 
 // Start the app
 loadDataOnStartup();
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { guardAdminPage };
+}
