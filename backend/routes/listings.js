@@ -67,6 +67,9 @@ router.get("/approved", async (req, res) => {
       where: whereClause,
       include: { 
         provider: true,
+        _count: {
+          select: { applications: true }
+        },
         applications: {
           where: {
             user: { email: userEmail || "" }
@@ -78,7 +81,8 @@ router.get("/approved", async (req, res) => {
     // Map the results to include an 'hasApplied' boolean
     const results = listings.map(listing => ({
       ...listing,
-      hasApplied: listing.applications.length > 0
+      hasApplied: listing.applications.length > 0,
+      applicantCount: listing._count.applications
     }));
 
     res.status(200).json(results);

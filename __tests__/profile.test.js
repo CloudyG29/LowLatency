@@ -57,6 +57,7 @@ describe('Applicant Profile Dashboard Tests', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         localStorage.clear();
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         
         // We also ensure the standard DOM is fresh for tests 1-5
         document.body.innerHTML = `
