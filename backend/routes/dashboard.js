@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
 
+function normaliseOpportunityName(name) {
+  const cleanedName = (name || "Untitled Opportunity").trim().toLowerCase();
+
+  const nameMap = {
+    ds: "Data Science",
+  };
+
+  if (nameMap[cleanedName]) {
+    return nameMap[cleanedName];
+  }
+
+  return cleanedName
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 router.get("/summary", async (req, res) => {
   try {
     const totalListings = await prisma.listing.count();
@@ -37,31 +55,46 @@ router.get("/summary", async (req, res) => {
         },
         applications: true,
       },
-      orderBy: {
-        applications: {
-          _count: "desc",
-        },
-      },
     });
 
-    const applicationsPerOpportunity = opportunitiesRaw.map((listing) => ({
-      listingId: listing.listings_id,
-      opportunity: listing.listname,
-      sector: listing.sector || "Unspecified",
-      count: listing._count.applications,
-      shortlisted: listing.applications.filter((app) => app.status === "shortlisted").length,
-      placements: listing.applications.filter((app) => app.status === "hired").length,
-      successRate:
-        listing._count.applications === 0
-          ? 0
-          : Number(
-              (
-                (listing.applications.filter((app) => app.status === "hired").length /
-                  listing._count.applications) *
-                100
-              ).toFixed(1),
-            ),
-    }));
+    const opportunityMap = {};
+
+    opportunitiesRaw.forEach((listing) => {
+      const opportunity = normaliseOpportunityName(listing.listname);
+      const sector = listing.sector || "Unspecified";
+      const applicationCount = listing._count.applications;
+      const shortlistedCount = listing.applications.filter(
+        (app) => app.status === "shortlisted",
+      ).length;
+      const placementCount = listing.applications.filter(
+        (app) => app.status === "hired",
+      ).length;
+
+      if (!opportunityMap[opportunity]) {
+        opportunityMap[opportunity] = {
+          listingId: listing.listings_id,
+          opportunity,
+          sector,
+          count: 0,
+          shortlisted: 0,
+          placements: 0,
+        };
+      }
+
+      opportunityMap[opportunity].count += applicationCount;
+      opportunityMap[opportunity].shortlisted += shortlistedCount;
+      opportunityMap[opportunity].placements += placementCount;
+    });
+
+    const applicationsPerOpportunity = Object.values(opportunityMap)
+      .map((item) => ({
+        ...item,
+        successRate:
+          item.count === 0
+            ? 0
+            : Number(((item.placements / item.count) * 100).toFixed(1)),
+      }))
+      .sort((a, b) => b.count - a.count);
 
     const sectorMap = {};
 

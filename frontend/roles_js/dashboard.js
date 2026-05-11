@@ -49,17 +49,22 @@ function getFilteredStatusData() {
     return dashboardData.statusBreakdown;
   }
 
-  return dashboardData.statusBreakdown.filter((item) => item.status === selectedStatus);
+  return dashboardData.statusBreakdown.filter(
+    (item) => item.status === selectedStatus
+  );
 }
 
 function getFilteredOpportunityData() {
-  const selectedOpportunityFilter = document.getElementById("opportunityFilter").value;
+  const selectedOpportunityFilter =
+    document.getElementById("opportunityFilter").value;
 
-  if (selectedOpportunityFilter === "nonZero") {
-    return dashboardData.applicationsPerOpportunity.filter((item) => item.count > 0);
+  if (selectedOpportunityFilter === "all") {
+    return dashboardData.applicationsPerOpportunity;
   }
 
-  return dashboardData.applicationsPerOpportunity;
+  return dashboardData.applicationsPerOpportunity.filter(
+    (item) => item.count > 0
+  );
 }
 
 function destroyExistingCharts() {
@@ -76,26 +81,33 @@ function renderCharts() {
   const filteredStatusData = getFilteredStatusData();
   const filteredOpportunityData = getFilteredOpportunityData();
 
-  opportunityChart = new Chart(document.getElementById("opportunityChart"), {
-    type: "bar",
-    data: {
-      labels: filteredOpportunityData.map((item) => item.opportunity),
-      datasets: [
-        {
-          label: "Applications",
-          data: filteredOpportunityData.map((item) => item.count),
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false,
+  opportunityChart = new Chart(
+    document.getElementById("opportunityChart"),
+    {
+      type: "bar",
+      data: {
+        labels: filteredOpportunityData.map(
+          (item) => item.opportunity
+        ),
+        datasets: [
+          {
+            label: "Applications",
+            data: filteredOpportunityData.map(
+              (item) => item.count
+            ),
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
         },
       },
-    },
-  });
+    }
+  );
 
   statusChart = new Chart(document.getElementById("statusChart"), {
     type: "doughnut",
@@ -115,11 +127,15 @@ function renderCharts() {
   sectorChart = new Chart(document.getElementById("sectorChart"), {
     type: "bar",
     data: {
-      labels: dashboardData.sectorAnalysis.map((item) => item.sector),
+      labels: dashboardData.sectorAnalysis.map(
+        (item) => item.sector
+      ),
       datasets: [
         {
           label: "Success Rate (%)",
-          data: dashboardData.sectorAnalysis.map((item) => item.successRate),
+          data: dashboardData.sectorAnalysis.map(
+            (item) => item.successRate
+          ),
         },
       ],
     },
@@ -141,7 +157,9 @@ function renderCharts() {
 }
 
 function renderTopOpportunitiesTable(topOpportunities) {
-  const tableBody = document.getElementById("topOpportunitiesTable");
+  const tableBody = document.getElementById(
+    "topOpportunitiesTable"
+  );
 
   tableBody.innerHTML = "";
 
@@ -179,10 +197,16 @@ function exportDashboardToCSV() {
     ["Total Applications", dashboardData.totalApplications],
     ["Shortlisted Applicants", dashboardData.shortlistedApplicants],
     ["Successful Placements", dashboardData.successfulPlacements],
-    ["Average Placement Rate", `${dashboardData.averagePlacementRate}%`],
+    [
+      "Average Placement Rate",
+      `${dashboardData.averagePlacementRate}%`,
+    ],
     [],
     ["Status", "Count"],
-    ...dashboardData.statusBreakdown.map((item) => [item.status, item.count]),
+    ...dashboardData.statusBreakdown.map((item) => [
+      item.status,
+      item.count,
+    ]),
     [],
     ["Sector", "Applications", "Placements", "Success Rate"],
     ...dashboardData.sectorAnalysis.map((item) => [
@@ -192,7 +216,14 @@ function exportDashboardToCSV() {
       `${item.successRate}%`,
     ]),
     [],
-    ["Opportunity", "Sector", "Applications", "Shortlisted", "Placements", "Success Rate"],
+    [
+      "Opportunity",
+      "Sector",
+      "Applications",
+      "Shortlisted",
+      "Placements",
+      "Success Rate",
+    ],
     ...dashboardData.applicationsPerOpportunity.map((item) => [
       item.opportunity,
       item.sector,
@@ -204,7 +235,11 @@ function exportDashboardToCSV() {
   ];
 
   const csvContent = rows.map((row) => row.join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv" });
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv",
+  });
+
   const downloadLink = document.createElement("a");
 
   downloadLink.href = URL.createObjectURL(blob);
@@ -212,15 +247,24 @@ function exportDashboardToCSV() {
   downloadLink.click();
 }
 
-document.getElementById("statusFilter").addEventListener("change", renderCharts);
-document.getElementById("opportunityFilter").addEventListener("change", renderCharts);
+document
+  .getElementById("statusFilter")
+  .addEventListener("change", renderCharts);
 
-document.getElementById("resetFiltersBtn").addEventListener("click", () => {
-  document.getElementById("statusFilter").value = "all";
-  document.getElementById("opportunityFilter").value = "all";
-  renderCharts();
-});
+document
+  .getElementById("opportunityFilter")
+  .addEventListener("change", renderCharts);
 
-document.getElementById("exportCsvBtn").addEventListener("click", exportDashboardToCSV);
+document
+  .getElementById("resetFiltersBtn")
+  .addEventListener("click", () => {
+    document.getElementById("statusFilter").value = "all";
+    document.getElementById("opportunityFilter").value = "nonZero";
+    renderCharts();
+  });
+
+document
+  .getElementById("exportCsvBtn")
+  .addEventListener("click", exportDashboardToCSV);
 
 loadDashboard();
