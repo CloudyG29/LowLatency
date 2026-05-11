@@ -425,12 +425,36 @@ function hideLoader() {
   document.getElementById('loader').classList.add('hidden');
 }
 
+
+function getCompetition(count) {
+  let level, text;
+
+  if (count <= 10) {
+      level = "low";
+      text = "Low competition";
+  } else if (count <= 30) {
+      level = "moderate";
+      text = "Moderate";
+  } else if (count <= 75) {
+      level = "high";
+      text = "High competition";
+  } else {
+      level = "very-high";
+      text = "Very high";
+  }
+
+  const label = count === 1 ? "1 applicant" : `${count} applicants`;
+
+  return { label, level, text };
+}
+
+// Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
   const container = document.getElementById("opportunitiesList");
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const userEmail = userData.email || "";
-
-  showLoader();
+  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
+  // Show loading state while fetching
+  if (typeof window.showLoader === "function") window.showLoader();
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
   try {
@@ -440,14 +464,15 @@ async function fetchOpportunities(type = "") {
     }
 
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to fetch opportunities");
+    if (!response.ok) {
+      throw new Error("Failed to fetch opportunities");
+    } 
 
     const listings = await response.json();
     container.innerHTML = "";
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
-      hideLoader();
       return;
     }
 
@@ -461,29 +486,38 @@ async function fetchOpportunities(type = "") {
         ? `<div class="already-applied">✅ Already Applied</div>`
         : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id}, ${listing.nqf_level || 0})">Apply Now</button>`
 
+      const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
+      const competition = getCompetition(applicantCount);
+
       card.innerHTML = `
-        <h3 class="opportunity-title">${listing.listname}</h3>
-        <div class="opportunity-details">
-          <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
-          <p><strong>Type:</strong> ${listing.list_type}</p>
-          <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
-          <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-          <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-          <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
-          <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-          <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
-        </div>
-        ${actionUI}
-      `;
+                <header class="opportunity-header">
+                <h3 class="opportunity-title">${listing.listname}</h3>
+                <div class="competition-badge competition-badge--${competition.level}" role="status"
+                aria-label="${competition.label} — ${competition.text}">
+                ${competition.label}
+                </div>
+                </header>
+                <div class="opportunity-details">
+                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+                    <p><strong>Type:</strong> ${listing.list_type}</p>
+                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+                </div>
+                ${actionUI}
+            `;
       container.appendChild(card);
     });
 
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+  } finally {
+    if (typeof window.hideLoader === "function") window.hideLoader();
   }
-
-  hideLoader();
 }
 
 async function applyForListing(listingId, requiredNqf) {
@@ -539,7 +573,8 @@ if (typeof module !== 'undefined' && module.exports) {
     showTab,
     openModal,
     closeModal,
-    guardApplicantPage
+    guardApplicantPage,
+    getCompetition
   };
 } else {
   renderEducationDisplay();

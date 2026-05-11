@@ -35,6 +35,7 @@ prisma.$transaction = jest.fn().mockImplementation(async (arg) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 describe('registerUser', () => {
