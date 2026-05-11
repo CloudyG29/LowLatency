@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.7.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 Prisma.prismaVersion = {
-  client: "7.7.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -123,11 +123,11 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   user_id: 'user_id',
-  firebase_uid: 'firebase_uid',
-  email: 'email',
   name: 'name',
   surname: 'surname',
-  role: 'role'
+  role: 'role',
+  email: 'email',
+  firebase_uid: 'firebase_uid'
 };
 
 exports.Prisma.ApplicantProfileScalarFieldEnum = {
@@ -148,33 +148,42 @@ exports.Prisma.ProviderScalarFieldEnum = {
 
 exports.Prisma.ListingScalarFieldEnum = {
   listings_id: 'listings_id',
-  provider_id: 'provider_id',
   listname: 'listname',
   list_type: 'list_type',
   nqf_level: 'nqf_level',
   description: 'description',
-  stipend: 'stipend',
-  location: 'location',
-  duration: 'duration',
-  requirements: 'requirements',
+  provider_id: 'provider_id',
+  status: 'status',
   closing_date: 'closing_date',
-  status: 'status'
+  duration: 'duration',
+  location: 'location',
+  requirements: 'requirements',
+  stipend: 'stipend',
+  sector: 'sector',
+  cvUploadedAt: 'cvUploadedAt'
 };
 
 exports.Prisma.ApplicationScalarFieldEnum = {
   application_id: 'application_id',
   user_id: 'user_id',
-  listing_id: 'listing_id',
   provider_id: 'provider_id',
   status: 'status',
+  listing_id: 'listing_id',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  availability: 'availability',
+  motivation: 'motivation',
+  cvFilePath: 'cvFilePath',
+  cvOriginalFilename: 'cvOriginalFilename',
+  cvUploadedAt: 'cvUploadedAt'
 };
 
 exports.Prisma.SkillScalarFieldEnum = {
   skill_id: 'skill_id',
   name: 'name',
-  nqf_level: 'nqf_level'
+  nqf_level: 'nqf_level',
+  saqa_id: 'saqa_id',
+  sector: 'sector'
 };
 
 exports.Prisma.ApplicantSkillScalarFieldEnum = {
@@ -186,7 +195,10 @@ exports.Prisma.ApplicantSkillScalarFieldEnum = {
 exports.Prisma.QualificationScalarFieldEnum = {
   qualification_id: 'qualification_id',
   name: 'name',
-  nqf_level: 'nqf_level'
+  nqf_level: 'nqf_level',
+  originator: 'originator',
+  saqa_id: 'saqa_id',
+  sector: 'sector'
 };
 
 exports.Prisma.ApplicantQualificationScalarFieldEnum = {
@@ -195,6 +207,16 @@ exports.Prisma.ApplicantQualificationScalarFieldEnum = {
   qualification_id: 'qualification_id',
   institution: 'institution',
   year_completed: 'year_completed'
+};
+
+exports.Prisma.ReportScalarFieldEnum = {
+  report_id: 'report_id',
+  listing_id: 'listing_id',
+  reason: 'reason',
+  details: 'details',
+  reported_by: 'reported_by',
+  status: 'status',
+  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -217,7 +239,8 @@ exports.Prisma.ModelName = {
   Skill: 'Skill',
   ApplicantSkill: 'ApplicantSkill',
   Qualification: 'Qualification',
-  ApplicantQualification: 'ApplicantQualification'
+  ApplicantQualification: 'ApplicantQualification',
+  Report: 'Report'
 };
 
 /**

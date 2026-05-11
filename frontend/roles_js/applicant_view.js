@@ -1,4 +1,5 @@
-let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+let currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
+let pendingListingId = null;
 
 async function guardApplicantPage() {
   return new Promise((resolve) => {
@@ -11,15 +12,21 @@ async function guardApplicantPage() {
 
         const token = await user.getIdToken();
 
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `/api/user/role?email=${encodeURIComponent(user.email)}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
-          await firebase.auth().signOut().catch(() => { });
+          await firebase
+            .auth()
+            .signOut()
+            .catch(() => {});
           window.location.assign("/login");
           return resolve(false);
         }
@@ -45,18 +52,21 @@ async function guardApplicantPage() {
 
 // DATABASE FUNCTIONS
 async function renderApplications() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const container = document.getElementById("applicationsList");
   if (!container) return;
 
   container.innerHTML = '<div class="empty-state"> Loading...</div>';
   try {
     showLoader();
-    const response = await fetch(`/api/listings/my-applications?email=${userData.email}`);
+    const response = await fetch(
+      `/api/listings/my-applications?email=${userData.email}`,
+    );
     const applications = await response.json();
 
     if (applications.length === 0) {
-      container.innerHTML = '<div class="empty-state"> You have not applied to any opportunities yet.</div>';
+      container.innerHTML =
+        '<div class="empty-state"> You have not applied to any opportunities yet.</div>';
       hideLoader();
       return;
     }
@@ -77,47 +87,52 @@ async function renderApplications() {
     });
     hideLoader();
   } catch (error) {
-    container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
     hideLoader();
   }
-
 }
 
 function renderProfile() {
   showLoader();
-  let userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  // 1. View Mode 
-  document.getElementById('displayFirstName').textContent = userData.name || 'Not set';
-  document.getElementById('displayLastName').textContent = userData.surname || 'Not set';
-  document.getElementById('displayEmail').textContent = userData.email || 'Not set';
+  let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  // 1. View Mode
+  document.getElementById("displayFirstName").textContent =
+    userData.name || "Not set";
+  document.getElementById("displayLastName").textContent =
+    userData.surname || "Not set";
+  document.getElementById("displayEmail").textContent =
+    userData.email || "Not set";
 
-  const fullName = `${userData.name || ''} ${userData.surname || ''}`.trim();
-  document.getElementById('topName').textContent = fullName !== '' ? fullName : 'Not set';
+  const fullName = `${userData.name || ""} ${userData.surname || ""}`.trim();
+  document.getElementById("topName").textContent =
+    fullName !== "" ? fullName : "Not set";
 
-  document.getElementById('topRole').textContent = userData.role || 'Applicant';
+  document.getElementById("topRole").textContent = userData.role || "Applicant";
 
   // 2. Safe Bio Check - Protects against "applicant: null"
   // We check IF applicant exists FIRST before trying to read .bio
   const applicantData = userData.applicant || {};
-  const bioText = (applicantData && applicantData.bio) ? applicantData.bio : '';
+  const bioText = applicantData && applicantData.bio ? applicantData.bio : "";
 
-  if (bioText.trim() !== '') {
-    document.getElementById('displayBio').textContent = bioText;
+  if (bioText.trim() !== "") {
+    document.getElementById("displayBio").textContent = bioText;
   } else {
-    document.getElementById('displayBio').textContent = 'No professional summary added yet.';
+    document.getElementById("displayBio").textContent =
+      "No professional summary added yet.";
   }
 
   // 3. Edit Mode Inputs - UPDATED to use .name and .surname
-  const firstNameInput = document.getElementById('editFirstName');
-  const lastNameInput = document.getElementById('editLastName');
-  const emailInput = document.getElementById('editEmail');
+  const firstNameInput = document.getElementById("editFirstName");
+  const lastNameInput = document.getElementById("editLastName");
+  const emailInput = document.getElementById("editEmail");
 
-  if (firstNameInput) firstNameInput.value = userData.name || '';
-  if (lastNameInput) lastNameInput.value = userData.surname || '';
-  if (emailInput) emailInput.value = userData.email || '';
+  if (firstNameInput) firstNameInput.value = userData.name || "";
+  if (lastNameInput) lastNameInput.value = userData.surname || "";
+  if (emailInput) emailInput.value = userData.email || "";
 
   // 4. CV Display
-  const currentCvDisplay = document.getElementById('currentCvDisplay');
+  const currentCvDisplay = document.getElementById("currentCvDisplay");
   if (currentCvDisplay) {
     if (userData.cvName) {
       currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
@@ -135,71 +150,87 @@ function renderProfile() {
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
   // Hide all tabs and contents
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document
+    .querySelectorAll(".tab")
+    .forEach((t) => t.classList.remove("active"));
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((c) => c.classList.remove("active"));
 
   // Show the selected tab and its content
-  if (tabName === 'opportunities') {
+  if (tabName === "opportunities") {
     // Fallback to querySelector if you don't have IDs on your tab buttons
-    const tabBtn = document.getElementById('tab-opps') || document.querySelectorAll('.tab')[0];
-    if (tabBtn) tabBtn.classList.add('active');
+    const tabBtn =
+      document.getElementById("tab-opps") ||
+      document.querySelectorAll(".tab")[0];
+    if (tabBtn) tabBtn.classList.add("active");
 
-    document.getElementById('opportunitiesTab').classList.add('active');
+    document.getElementById("opportunitiesTab").classList.add("active");
     fetchOpportunities(this.document.getElementById("listTypeFilter").value);
+  } else if (tabName === "applications") {
+    const tabBtn =
+      document.getElementById("tab-apps") ||
+      document.querySelectorAll(".tab")[1];
+    if (tabBtn) tabBtn.classList.add("active");
 
-  } else if (tabName === 'applications') {
-    const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[1];
-    if (tabBtn) tabBtn.classList.add('active');
-
-    document.getElementById('applicationsTab').classList.add('active');
+    document.getElementById("applicationsTab").classList.add("active");
     renderApplications();
+  } else if (tabName === "profile") {
+    const tabBtn =
+      document.getElementById("tab-profile") ||
+      document.querySelectorAll(".tab")[2];
+    if (tabBtn) tabBtn.classList.add("active");
 
-  } else if (tabName === 'profile') {
-    const tabBtn = document.getElementById('tab-profile') || document.querySelectorAll('.tab')[2];
-    if (tabBtn) tabBtn.classList.add('active');
-
-    document.getElementById('profileTab').classList.add('active');
+    document.getElementById("profileTab").classList.add("active");
     renderProfile(); // Load saved data when tab is opened
   }
 }
 
-
 // --- Modal Controls ---
 function openModal(modalId) {
-  document.getElementById(modalId).classList.add('active');
+  document.getElementById(modalId).classList.add("active");
 }
 
 function closeModal(modalId) {
-  document.getElementById(modalId).classList.remove('active');
+  document.getElementById(modalId).classList.remove("active");
 }
 
 const nqfData = [
   { level: 1, description: "Grade 9 / General Certificate" },
-  { level: 2, description: "Grade 10 / National Certificate (Vocational) Level 2" },
-  { level: 3, description: "Grade 11 / National Certificate (Vocational) Level 3" },
+  {
+    level: 2,
+    description: "Grade 10 / National Certificate (Vocational) Level 2",
+  },
+  {
+    level: 3,
+    description: "Grade 11 / National Certificate (Vocational) Level 3",
+  },
   { level: 4, description: "Grade 12 (Matric) / National Senior Certificate" },
-  { level: 5, description: "Higher Certificate / Advanced National (Vocational) Cert." },
+  {
+    level: 5,
+    description: "Higher Certificate / Advanced National (Vocational) Cert.",
+  },
   { level: 6, description: "Diploma / Advanced Certificate" },
   { level: 7, description: "Bachelor's Degree / Advanced Diploma" },
   { level: 8, description: "Honours Degree / Post Graduate Diploma" },
   { level: 9, description: "Master's Degree" },
-  { level: 10, description: "Doctoral Degree" }
+  { level: 10, description: "Doctoral Degree" },
 ];
 
 let educationCounter = 0;
 
 function addEducationRow() {
   educationCounter++;
-  const container = document.getElementById('educationListContainer');
+  const container = document.getElementById("educationListContainer");
 
   // Create the HTML for a single qualification entry
-  const entryDiv = document.createElement('div');
-  entryDiv.className = 'education-entry';
+  const entryDiv = document.createElement("div");
+  entryDiv.className = "education-entry";
   entryDiv.id = `edu_entry_${educationCounter}`;
 
   // Generate the NQF Dropdown Options from our SAQA data
   let nqfOptions = `<option value="">Select NQF Level & Qualification...</option>`;
-  nqfData.forEach(nqf => {
+  nqfData.forEach((nqf) => {
     nqfOptions += `<option value="${nqf.level}">NQF Level ${nqf.level} - ${nqf.description}</option>`;
   });
 
@@ -230,66 +261,66 @@ function removeEducationRow(rowId) {
 }
 
 function prepEducationInfoModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const container = document.getElementById('educationListContainer');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const container = document.getElementById("educationListContainer");
   const applicantData = userData.applicant || {};
   const educationList = applicantData.formattedQualifications || [];
 
   // Clear existing rows
-  container.innerHTML = '';
+  container.innerHTML = "";
   educationCounter = 0;
 
   // If user has saved education → rebuild rows
   if (educationList && educationList.length > 0) {
-    educationList.forEach(edu => {
+    educationList.forEach((edu) => {
       addEducationRow();
 
       const lastEntry = container.lastElementChild;
 
-      lastEntry.querySelector('.edu-institution').value = edu.institution;
-      lastEntry.querySelector('.edu-nqf').value = edu.nqf_level;
-      lastEntry.querySelector('.edu-year').value = edu.year_completed;
+      lastEntry.querySelector(".edu-institution").value = edu.institution;
+      lastEntry.querySelector(".edu-nqf").value = edu.nqf_level;
+      lastEntry.querySelector(".edu-year").value = edu.year_completed;
     });
   } else {
     // If no data, start with one empty row
     addEducationRow();
   }
 
-  openModal('educationInfoModal');
+  openModal("educationInfoModal");
 }
 
 function prepPersonalInfoModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {}; // Defensively unpack!
 
-  document.getElementById('editFirstName').value = userData.name || '';
-  document.getElementById('editLastName').value = userData.surname || '';
-  document.getElementById('editEmail').value = userData.email || '';
+  document.getElementById("editFirstName").value = userData.name || "";
+  document.getElementById("editLastName").value = userData.surname || "";
+  document.getElementById("editEmail").value = userData.email || "";
 
   // Safely grab from the nested applicant table
-  document.getElementById('editPhone').value = applicantData.phone || '';
+  document.getElementById("editPhone").value = applicantData.phone || "";
 
   // Clean up Prisma's Date format for the HTML input (YYYY-MM-DD)
-  const dob = applicantData.dob ? applicantData.dob.split('T')[0] : '';
-  document.getElementById('editDob').value = dob;
+  const dob = applicantData.dob ? applicantData.dob.split("T")[0] : "";
+  document.getElementById("editDob").value = dob;
 
-  openModal('personalInfoModal');
+  openModal("personalInfoModal");
 }
 
 async function savePersonalInfo() {
   // Just build a payload of what changed!
   const updatedFields = {
-    name: document.getElementById('editFirstName').value,
-    surname: document.getElementById('editLastName').value,
-    phone: document.getElementById('editPhone').value,
-    dob: document.getElementById('editDob').value
+    name: document.getElementById("editFirstName").value,
+    surname: document.getElementById("editLastName").value,
+    phone: document.getElementById("editPhone").value,
+    dob: document.getElementById("editDob").value,
   };
 
   const success = await saveProfileChanges(updatedFields);
 
   if (success) {
-    closeModal('personalInfoModal');
-    alert('Profile updated successfully!');
+    closeModal("personalInfoModal");
+    alert("Profile updated successfully!");
   } else {
     alert("Failed to save Personal Info. Please try again.");
   }
@@ -297,34 +328,34 @@ async function savePersonalInfo() {
 
 // --- Save Education Info from Modal ---
 async function saveEducationInfo() {
-  const educationEntries = document.getElementsByClassName('education-entry');
+  const educationEntries = document.getElementsByClassName("education-entry");
   let educationData = [];
 
   // Gather education entries
   for (let entry of educationEntries) {
-    const institution = entry.querySelector('.edu-institution').value;
-    const nqfLevel = entry.querySelector('.edu-nqf').value;
-    const graduationYear = entry.querySelector('.edu-year').value;
+    const institution = entry.querySelector(".edu-institution").value;
+    const nqfLevel = entry.querySelector(".edu-nqf").value;
+    const graduationYear = entry.querySelector(".edu-year").value;
 
     if (institution && nqfLevel && graduationYear) {
       educationData.push({
         institution: institution.trim(),
         // Convert strings from the HTML inputs into integers for Prisma!
         nqf_level: parseInt(nqfLevel, 10),
-        year_completed: parseInt(graduationYear, 10)
+        year_completed: parseInt(graduationYear, 10),
       });
     }
   }
 
-  // Pass the payload strictly using the key 'qualifications' 
+  // Pass the payload strictly using the key 'qualifications'
   const success = await saveProfileChanges({
-    qualifications: educationData
+    qualifications: educationData,
   });
 
   if (success) {
-    closeModal('educationInfoModal');
-    // renderProfile() is already called in saveProfileChanges, 
-    alert('Education information updated successfully!');
+    closeModal("educationInfoModal");
+    // renderProfile() is already called in saveProfileChanges,
+    alert("Education information updated successfully!");
     renderEducationDisplay();
   } else {
     // Always good to have a fallback error message just in case
@@ -333,8 +364,8 @@ async function saveEducationInfo() {
 }
 
 function renderEducationDisplay() {
-  const container = document.getElementById('educationDisplayContainer');
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const container = document.getElementById("educationDisplayContainer");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {};
   const educationList = applicantData.formattedQualifications || [];
 
@@ -359,12 +390,12 @@ function renderEducationDisplay() {
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   // Loop through each education entry and create a block for it
-  educationList.forEach(edu => {
-    const block = document.createElement('div');
-    block.className = 'education-block';
+  educationList.forEach((edu) => {
+    const block = document.createElement("div");
+    block.className = "education-block";
 
     block.innerHTML = `
           <div class="card-grid">
@@ -374,7 +405,7 @@ function renderEducationDisplay() {
       </div>
       <div class="data-group">
           <span class="data-label">Degree / Qualification</span>
-          <span class="data-value" id="displayDegree">${edu.degree || 'NQF Level ' + edu.nqfLevel}</span>
+          <span class="data-value" id="displayDegree">${edu.degree || "NQF Level " + edu.nqfLevel}</span>
       </div>
       <div class="data-group">
           <span class="data-label">Graduation Year</span>
@@ -391,24 +422,24 @@ function renderEducationDisplay() {
 }
 
 function prepBioModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {}; // Defensively unpack!
 
-  document.getElementById('editBioText').value = applicantData.bio || '';
-  openModal('bioModal');
+  document.getElementById("editBioText").value = applicantData.bio || "";
+  openModal("bioModal");
 }
 
 async function saveBio() {
-  const newBio = document.getElementById('editBioText').value;
+  const newBio = document.getElementById("editBioText").value;
 
   // Send ONLY what needs updating to the master function
   const success = await saveProfileChanges({ bio: newBio });
 
   if (success) {
-    closeModal('bioModal');
-    // No need to manually update the UI text here, 
+    closeModal("bioModal");
+    // No need to manually update the UI text here,
     // because saveProfileChanges() calls renderProfile() for you automatically!
-    alert('Bio updated successfully!');
+    alert("Bio updated successfully!");
   } else {
     alert("Failed to save bio. Please try again.");
   }
@@ -417,7 +448,7 @@ async function saveBio() {
 // The Master Save Function
 async function saveProfileChanges(fieldsToUpdate) {
   showLoader();
-  const firebaseUid = localStorage.getItem('firebase_uid');
+  const firebaseUid = localStorage.getItem("firebase_uid");
 
   if (!firebaseUid) {
     alert("User not logged in!");
@@ -425,11 +456,11 @@ async function saveProfileChanges(fieldsToUpdate) {
   }
 
   try {
-    // 1. SEND TO DATABASE 
+    // 1. SEND TO DATABASE
     const response = await fetch(`/api/profile/${firebaseUid}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fieldsToUpdate) // Pass whatever fields we are updating!
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fieldsToUpdate), // Pass whatever fields we are updating!
     });
 
     if (!response.ok) {
@@ -439,8 +470,11 @@ async function saveProfileChanges(fieldsToUpdate) {
 
     // 2. UPDATE LOCAL STORAGE
     const freshProfileData = await response.json();
-    localStorage.setItem('userData', JSON.stringify(freshProfileData));
-    console.log("Successfully saved and synced to Local Storage!", freshProfileData);
+    localStorage.setItem("userData", JSON.stringify(freshProfileData));
+    console.log(
+      "Successfully saved and synced to Local Storage!",
+      freshProfileData,
+    );
     hideLoader();
 
     // 3. UPDATE THE UI
@@ -448,7 +482,6 @@ async function saveProfileChanges(fieldsToUpdate) {
 
     // Return true so whatever button called this knows it worked!
     return true;
-
   } catch (error) {
     console.error("Error saving profile changes:", error);
     return false;
@@ -457,7 +490,7 @@ async function saveProfileChanges(fieldsToUpdate) {
 
 // RIGHT: This is how our code is structured
 async function loadDataOnStartup() {
-  const firebaseUid = localStorage.getItem('firebase_uid');
+  const firebaseUid = localStorage.getItem("firebase_uid");
 
   try {
     // 1. JS hits 'await' and PAUSES this function.
@@ -466,9 +499,9 @@ async function loadDataOnStartup() {
     const profileData = await response.json();
 
     // 2. We save the fresh data locally
-    localStorage.setItem('userData', JSON.stringify(profileData));
+    localStorage.setItem("userData", JSON.stringify(profileData));
 
-    // 3. FINALLY, we render. 
+    // 3. FINALLY, we render.
     const allowed = await guardApplicantPage();
     if (!allowed) return;
 
@@ -476,19 +509,19 @@ async function loadDataOnStartup() {
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
-
   } catch (error) {
     console.error("Error loading profile:", error);
   }
 }
 
 async function uploadCV() {
-  const fileInput = document.getElementById('cvFile');
-  const msgBox = document.getElementById('cvUploadMsg');
+  const fileInput = document.getElementById("cvFile");
+  const msgBox = document.getElementById("cvUploadMsg");
 
   // 1. Check if the user actually selected a file
   if (fileInput.files.length === 0) {
-    msgBox.innerHTML = "<span style='color: red;'>Please select a file first.</span>";
+    msgBox.innerHTML =
+      "<span style='color: red;'>Please select a file first.</span>";
     return;
   }
 
@@ -497,7 +530,8 @@ async function uploadCV() {
   // Optional: Add a file size limit check on the frontend (e.g., max 5MB)
   const maxSizeInBytes = 5 * 1024 * 1024;
   if (file.size > maxSizeInBytes) {
-    msgBox.innerHTML = "<span style='color: red;'>File is too large. Max size is 5MB.</span>";
+    msgBox.innerHTML =
+      "<span style='color: red;'>File is too large. Max size is 5MB.</span>";
     return;
   }
 
@@ -507,50 +541,48 @@ async function uploadCV() {
   // 2. Simulate a fake network delay so it feels like a real upload
   setTimeout(() => {
     // 3. Show success message
-    msgBox.innerHTML = "<span style='color: green;'>CV Uploaded Successfully!</span>";
+    msgBox.innerHTML =
+      "<span style='color: green;'>CV Uploaded Successfully!</span>";
 
     // 4. Update local storage with just the file name so our UI can display it
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    let userData = JSON.parse(localStorage.getItem("userData") || "{}");
     userData.cvName = file.name; // Save just the name, not the actual file!
-    localStorage.setItem('userData', JSON.stringify(userData));
+    localStorage.setItem("userData", JSON.stringify(userData));
 
     // Re-render the profile to show the new CV text
-    if (typeof renderProfile === 'function') {
+    if (typeof renderProfile === "function") {
       renderProfile();
     }
 
     // Optional: clear the file input after successful "upload"
-    fileInput.value = '';
+    fileInput.value = "";
 
     // Optional: fade out the success message after 3 seconds
     setTimeout(() => {
-      msgBox.innerHTML = '';
+      msgBox.innerHTML = "";
     }, 3000);
-
   }, 1500); // 1.5 second fake delay
 }
 
-
 // --- Loader Controls ---
 function showLoader() {
-  document.getElementById('loader').classList.remove('hidden');
+  document.getElementById("loader").classList.remove("hidden");
 }
 
 function hideLoader() {
-  document.getElementById('loader').classList.add('hidden');
+  document.getElementById("loader").classList.add("hidden");
 }
-
 
 // Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
-
   const container = document.getElementById("opportunitiesList");
   // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
   // Show loading state while fetching
   showLoader();
-  container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
+  container.innerHTML =
+    '<div class="empty-state">Loading opportunities...</div>';
 
   try {
     // Build the URL with the type filter and userEmail to check application status [cite: 3]
@@ -566,7 +598,8 @@ async function fetchOpportunities(type = "") {
     container.innerHTML = ""; // Clear current list
 
     if (listings.length === 0) {
-      container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
+      container.innerHTML =
+        '<div class="empty-state">No available opportunities found for this category.</div>';
       hideLoader();
       return;
     }
@@ -577,7 +610,9 @@ async function fetchOpportunities(type = "") {
       card.className = "opportunity-card";
 
       // Logic to check if the user has already applied (requires backend support) [cite: 3]
-      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
+      const hasApplied =
+        listing.hasApplied ||
+        (listing.applications && listing.applications.length > 0);
 
       const actionUI = hasApplied
         ? `<div class="already-applied">✅ Already Applied</div>`
@@ -599,28 +634,28 @@ async function fetchOpportunities(type = "") {
             `;
       container.appendChild(card);
     });
-
   } catch (error) {
     console.error("Error fetching opportunities:", error);
-    container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
   }
 
   hideLoader();
 }
 
 async function applyForListing(listingId) {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   try {
     const response = await fetch("/api/listings/apply", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         listing_id: listingId,
-        email: userData.email
-      })
+        email: userData.email,
+      }),
     });
 
     const data = await response.json();
@@ -631,7 +666,6 @@ async function applyForListing(listingId) {
 
     alert("Applied successfully!");
     fetchOpportunities(); // refresh UI
-
   } catch (error) {
     console.error(error);
     alert(error.message);
@@ -639,7 +673,7 @@ async function applyForListing(listingId) {
 }
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
   module.exports = {
     renderProfile,
@@ -650,7 +684,7 @@ if (typeof module !== 'undefined' && module.exports) {
     showTab,
     openModal,
     closeModal,
-    guardApplicantPage
+    guardApplicantPage,
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
@@ -658,4 +692,161 @@ if (typeof module !== 'undefined' && module.exports) {
   // Move your loose function calls inside here:
   renderEducationDisplay();
   loadDataOnStartup();
+}
+
+function openApplyModal(listingId, listingName) {
+  pendingListingId = listingId;
+  document.getElementById("modalListingName").textContent = listingName;
+  document.getElementById("cvFileInput").value = "";
+  document.getElementById("cvUploadMsg").textContent = "";
+  openModal("cvUploadModal");
+}
+
+async function submitApplication() {
+  const msg = document.getElementById("cvUploadMsg");
+  const fileInput = document.getElementById("cvFileInput");
+
+  if (!fileInput.files.length) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "Please attach your CV before submitting.";
+    return;
+  }
+
+  const file = fileInput.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "File is too large. Max size is 5MB.";
+    return;
+  }
+
+  msg.style.color = "#888";
+  msg.textContent = "Submitting...";
+
+  try {
+    // Step 1 — create the application
+    const applyRes = await fetch("/api/listings/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        listing_id: pendingListingId,
+        email: currentUser.email,
+      }),
+    });
+    const applyData = await applyRes.json();
+    if (!applyRes.ok) throw new Error(applyData.error);
+
+    const applicationId = applyData.application.application_id;
+
+    // Step 2 — upload the CV
+    const formData = new FormData();
+    formData.append("cv", file);
+    formData.append("email", currentUser.email);
+
+    const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
+      method: "POST",
+      body: formData,
+    });
+    const cvData = await cvRes.json();
+    if (!cvRes.ok) throw new Error(cvData.error);
+
+    msg.style.color = "#68d391";
+    msg.textContent = "✅ Application submitted successfully!";
+    setTimeout(() => {
+      closeModal("cvUploadModal");
+      fetchOpportunities(document.getElementById("listTypeFilter").value);
+    }, 1500);
+  } catch (error) {
+    msg.style.color = "#fc8181";
+    msg.textContent = "❌ " + error.message;
+  }
+}
+async function fetchOpportunities(type = "") {
+  const container = document.getElementById("opportunitiesList");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
+  // Show loading state while fetching
+  if (typeof window.showLoader === "function") window.showLoader();
+  container.innerHTML =
+    '<div class="empty-state">Loading opportunities...</div>';
+
+  try {
+    // Build the URL with the type filter and userEmail to check application status [cite: 3]
+    let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
+    if (type && type !== "") {
+      url += `&type=${encodeURIComponent(type)}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Failed to fetch opportunities");
+    }
+
+    const listings = await response.json();
+    container.innerHTML = ""; // Clear current list
+
+    if (listings.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state">No available opportunities found for this category.</div>';
+      return;
+    }
+
+    // Render each card using classes defined in your CSS [cite: 2]
+    listings.forEach((listing) => {
+      const card = document.createElement("div");
+      card.className = "opportunity-card";
+
+      // Logic to check if the user has already applied (requires backend support) [cite: 3]
+      const hasApplied =
+        listing.hasApplied ||
+        (listing.applications && listing.applications.length > 0);
+
+      const actionUI = hasApplied
+        ? `<div class="already-applied">✅ Already Applied</div>`
+        : `<button class="apply-btn" data-id="${listings_id}" data-name="${listname}">Apply Now</button>`;
+      const applicantCount =
+        listing.applicantCount ?? listing.applications?.length ?? 0;
+      const competition = getCompetition(applicantCount);
+
+      card.innerHTML = `
+                <header class="opportunity-header">
+                <h3 class="opportunity-title">${listing.listname}</h3>
+                <div class="competition-badge competition-badge--${competition.level}" role="status"
+                aria-label="${competition.label} — ${competition.text}">
+                ${competition.label}
+                </div>
+                </header>
+                <div class="opportunity-details">
+                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+                    <p><strong>Type:</strong> ${listing.list_type}</p>
+                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+                </div>
+                ${actionUI}
+            `;
+      const applyBtn = card.querySelector(".apply-btn");
+      if (applyBtn) {
+        applyBtn.addEventListener("click", () => {
+          openApplyModal(listing.listings_id, listing.listname);
+        });
+      }
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+  } finally {
+    if (typeof window.hideLoader === "function") window.hideLoader();
+  }
+}
+function getCompetition(count) {
+  if (count === 0)
+    return { level: "low", label: "🟢 Low", text: "Be the first to apply" };
+  if (count < 5)
+    return { level: "medium", label: "🟡 Medium", text: "A few applicants" };
+  return { level: "high", label: "🔴 High", text: "Many applicants" };
 }
