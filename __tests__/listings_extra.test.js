@@ -1,3 +1,16 @@
+// Mock the Firebase Admin SDK
+jest.mock('../backend/firebaseAdmin', () => ({
+  db: {
+    collection: jest.fn().mockReturnThis(),
+    add: jest.fn().mockResolvedValue({ id: 'mock-notification-id' })
+  }
+}));
+
+// Mock the Email Service
+jest.mock('../backend/emailService', () => ({
+  sendStatusEmail: jest.fn().mockResolvedValue(true)
+}));
+
 jest.mock('../DB_connect/prisma', () => ({
   user: {
     findUnique: jest.fn(),
@@ -117,12 +130,23 @@ describe('GET /api/listings/provider-applications', () => {
 describe('PUT /api/listings/applications/:id/status', () => {
   test('should update application status to hired', async () => {
     prisma.application.update.mockResolvedValue({
-      application_id: 1, status: 'hired'
+      application_id: 1,
+      status: 'hired',
+      user: { 
+        firebase_uid: 'mockUid123', 
+        email: 'applicant@test.com', 
+        name: 'John Doe' 
+      },
+      listing: { 
+        listname: 'Software Engineer' 
+      }
     });
 
     const res = await request(app)
       .put('/api/listings/applications/1/status')
       .send({ status: 'hired' });
+
+      console.log("SERVER CRASH LOG:", res.error, res.text);
 
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('hired');
@@ -130,7 +154,16 @@ describe('PUT /api/listings/applications/:id/status', () => {
 
   test('should update application status to rejected', async () => {
     prisma.application.update.mockResolvedValue({
-      application_id: 1, status: 'rejected'
+      application_id: 1,
+      status: 'rejected',
+      user: { 
+        firebase_uid: 'mockUid123', 
+        email: 'applicant@test.com', 
+        name: 'John Doe' 
+      },
+      listing: { 
+        listname: 'Software Engineer' 
+      }
     });
 
     const res = await request(app)

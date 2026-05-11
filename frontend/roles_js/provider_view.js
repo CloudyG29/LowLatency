@@ -166,31 +166,6 @@ async function displayApplications() {
     });
     hideLoader();
 
-    document.querySelectorAll(".btn-hire").forEach((btn) => {
-      showLoader();
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "hired" }),
-        });
-        displayApplications();
-      });
-      hideLoader();
-    });
-
-    document.querySelectorAll(".btn-reject").forEach((btn) => {
-      showLoader();
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "rejected" }),
-        });
-        displayApplications();
-      });
-    });
-    hideLoader();
   } catch (error) {
     hideLoader();
     container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
@@ -239,5 +214,44 @@ firebase.auth().onAuthStateChanged((user) => {
     displayOpportunities();
   } else {
     window.location.href = "/login";
+  }
+});
+
+document.addEventListener("click", async (event) => {
+  
+  // IF the user clicked a HIRE button
+  if (event.target.closest(".btn-hire")) {
+    const btn = event.target.closest(".btn-hire"); // Gets the button even if they click an icon inside it
+    showLoader();
+    try {
+      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "hired" }),
+      });
+      displayApplications(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  // IF the user clicked a REJECT button
+  if (event.target.closest(".btn-reject")) {
+    const btn = event.target.closest(".btn-reject");
+    showLoader();
+    try {
+      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected" }),
+      });
+      displayApplications(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      hideLoader();
+    }
   }
 });
