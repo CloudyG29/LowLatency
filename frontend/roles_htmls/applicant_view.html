@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -6,6 +7,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Dashboard - SkillBridge</title>
     <link rel="stylesheet" href="../roles_css/applicant_view.css" />
+    <style>
+        .qual-search-wrapper {
+            position: relative;
+        }
+        .qual-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fff;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .qual-dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .qual-dropdown-item:hover {
+            background: #f0f0f0;
+        }
+        .qual-dropdown-item small {
+            color: #888;
+            display: block;
+        }
+        .education-row {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .remove-btn {
+            color: red;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 
 <body>
@@ -49,12 +97,12 @@
     
     <div class="filter-controls" style="margin-bottom: 20px;">
         <label for="listTypeFilter"><strong>Filter by Type:</strong> </label>
-<select id="listTypeFilter" onchange="fetchOpportunities(this.value)">
-    <option value="">All Opportunities</option>
-    <option value="Internship">Internship</option>
-    <option value="Learnership">Learnership</option>
-    <option value="Apprenticeship">Apprenticeship</option>
-</select>
+        <select id="listTypeFilter" onchange="fetchOpportunities(this.value)">
+            <option value="">All Opportunities</option>
+            <option value="Internship">Internship</option>
+            <option value="Learnership">Learnership</option>
+            <option value="Apprenticeship">Apprenticeship</option>
+        </select>
     </div>
     <div id="opportunitiesList" class="opportunities-grid">
         <div class="empty-state">Loading...</div>
@@ -183,7 +231,6 @@
                                         <div id="cvUploadMsg"></div>
                                     </div>
                                 </div>
-
                             </div>
                             <button type="button" class="btn-save" onclick="savePersonalInfo()">Save Changes</button>
                         </form>
@@ -199,8 +246,7 @@
                         </div>
                         <form id="editEducationForm">
                             <div id="educationListContainer"></div>
-                            <button type="button" class="btn-add-outline" onclick="addEducationRow()">+ Add Another
-                                Qualification</button>
+                            <button type="button" class="btn-add-outline" onclick="addEducationRow()">+ Add Another Qualification</button>
                             <button type="button" class="btn-save" onclick="saveEducationInfo()">Save Changes</button>
                         </form>
                     </div>
@@ -229,5 +275,91 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="../public/firebase.js"></script>
     <script src="../roles_js/applicant_view.js"></script>
+
+    <!-- SAQA Qualification Search -->
+    <script>
+        async function searchQualifications(query) {
+            if (query.length < 2) return [];
+            const res = await fetch(`/api/qualifications?search=${encodeURIComponent(query)}&limit=10`);
+            return await res.json();
+        }
+
+        function addEducationRow(prefill = {}) {
+            const container = document.getElementById('educationListContainer');
+            const row = document.createElement('div');
+            row.className = 'education-row';
+            row.innerHTML = `
+                <div class="form-group qual-search-wrapper">
+                    <label>Qualification (SAQA)</label>
+                    <input
+                        type="text"
+                        class="qual-search"
+                        placeholder="Search SAQA qualifications (e.g. Bachelor, Certificate)..."
+                        oninput="handleQualSearch(this)"
+                        autocomplete="off"
+                        value="${prefill.name || ''}"
+                    />
+                    <div class="qual-dropdown"></div>
+                    <input type="hidden" class="qual-id" value="${prefill.qualification_id || ''}" />
+                    <input type="hidden" class="qual-name" value="${prefill.name || ''}" />
+                    <input type="hidden" class="qual-nqf" value="${prefill.nqf_level || ''}" />
+                </div>
+                <div class="form-group">
+                    <label>Institution</label>
+                    <input type="text" class="qual-institution" placeholder="e.g. University of Johannesburg" value="${prefill.institution || ''}" />
+                </div>
+                <div class="form-group">
+                    <label>Year Completed</label>
+                    <input type="number" class="qual-year" placeholder="e.g. 2022" value="${prefill.year_completed || ''}" />
+                </div>
+                <button type="button" class="remove-btn" onclick="this.closest('.education-row').remove()">✕ Remove</button>
+            `;
+            container.appendChild(row);
+        }
+
+        async function handleQualSearch(input) {
+            const query = input.value.trim();
+            const wrapper = input.closest('.qual-search-wrapper');
+            const dropdown = wrapper.querySelector('.qual-dropdown');
+
+            if (query.length < 2) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            const results = await searchQualifications(query);
+            dropdown.innerHTML = '';
+
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="qual-dropdown-item">No results found</div>';
+            } else {
+                results.forEach(q => {
+                    const item = document.createElement('div');
+                    item.className = 'qual-dropdown-item';
+                    item.innerHTML = `
+                        <strong>${q.name}</strong>
+                        <small>NQF Level ${q.nqf_level || 'N/A'} • ${q.sector || ''} • ${q.originator || ''}</small>
+                    `;
+                    item.onclick = () => {
+                        input.value = q.name;
+                        wrapper.querySelector('.qual-id').value = q.qualification_id;
+                        wrapper.querySelector('.qual-name').value = q.name;
+                        wrapper.querySelector('.qual-nqf').value = q.nqf_level;
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(item);
+                });
+            }
+
+            dropdown.style.display = 'block';
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('qual-search')) {
+                document.querySelectorAll('.qual-dropdown').forEach(d => d.style.display = 'none');
+            }
+        });
+    </script>
 </body>
 </html>

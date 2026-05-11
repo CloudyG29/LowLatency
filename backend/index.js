@@ -15,10 +15,14 @@ const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
 const profileRoutes = require('./routes/profile');
+const qualificationsRouter = require('./routes/qualifications');
 
 app.use("/api/listings", listingRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+
+app.use('/api/qualifications', qualificationsRouter);
 // Fix COOP header to allow Firebase popups
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");

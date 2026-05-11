@@ -3,7 +3,6 @@ const router = express.Router();
 const prisma = require('../../DB_connect/prisma');
 
 // GET: /api/profile/:firebase_uid
-// Fetches the user and all nested profile data (skills, qualifications)
 async function getUserProfile(req, res) {
     const { firebase_uid } = req.params;
 
@@ -14,11 +13,9 @@ async function getUserProfile(req, res) {
                 provider: true,
                 applicant: {
                     include: {
-                        // Fetch the joining table AND the actual Skill data
                         skills: {
                             include: { skill: true }
                         },
-                        // Fetch the joining table AND the actual Qualification data
                         qualifications: {
                             include: { qualification: true }
                         }
@@ -31,18 +28,21 @@ async function getUserProfile(req, res) {
             return res.status(404).json({ error: "User profile not found." });
         }
 
-        // Clean up the response payload so the frontend has an easier time reading it
         const responseData = { ...user };
-        console.log("Fetched user profile data:", responseData);
 
-        // Flatten qualifications and skills for easier frontend mapping
         if (responseData.applicant) {
             responseData.applicant.formattedQualifications = responseData.applicant.qualifications.map(q => ({
                 id: q.id,
+                qualification_id: q.qualification.qualification_id,
                 name: q.qualification.name,
+                degree: q.qualification.name,
                 nqf_level: q.qualification.nqf_level,
+                nqfLevel: q.qualification.nqf_level,
+                sector: q.qualification.sector,
+                originator: q.qualification.originator,
                 institution: q.institution,
-                year_completed: q.year_completed
+                year_completed: q.year_completed,
+                graduationYear: q.year_completed
             }));
 
             responseData.applicant.formattedSkills = responseData.applicant.skills.map(s => ({
@@ -66,15 +66,14 @@ async function getUserProfile(req, res) {
 async function updateUserProfile(req, res) {
     const { firebase_uid } = req.params;
 
-    // Extracting all possible fields from the frontend payload
     const {
         name,
         surname,
         phone,
         dob,
         bio,
-        qualifications, // Array of education objects
-        skills          // Array of skill objects (optional, if you have this section)
+        qualifications,
+        skills
     } = req.body;
 
     try {
@@ -100,7 +99,6 @@ async function updateUserProfile(req, res) {
         if (existingUser.role === 'Applicant') {
             const parsedDob = dob ? new Date(dob) : undefined;
 
-            // Upsert creates the profile if it doesn't exist, or updates it if it does
             const updatedApplicantProfile = await prisma.applicantProfile.upsert({
                 where: { user_id: existingUser.user_id },
                 update: {
@@ -124,30 +122,38 @@ async function updateUserProfile(req, res) {
                     where: { applicant_id: updatedApplicantProfile.applicant_id }
                 });
 
-                // Insert new ones
                 for (let edu of qualifications) {
-                    // Find or create the base Qualification
-                    let baseQual = await prisma.qualification.findFirst({
-                        where: {
-                            name: edu.name || "Unknown Qualification",
-                            nqf_level: edu.nqf_level
-                        }
-                    });
+                    let qualificationId;
 
-                    if (!baseQual) {
-                        baseQual = await prisma.qualification.create({
-                            data: {
-                                name: edu.name || "Unknown Qualification",
+                    if (edu.qualification_id) {
+                        // User picked from SAQA dropdown — use ID directly
+                        qualificationId = edu.qualification_id;
+                    } else {
+                        // User typed manually — find or create
+                        let baseQual = await prisma.qualification.findFirst({
+                            where: {
+                                name: edu.qualification_name || "Unknown Qualification",
                                 nqf_level: edu.nqf_level
                             }
                         });
+
+                        if (!baseQual) {
+                            baseQual = await prisma.qualification.create({
+                                data: {
+                                    name: edu.qualification_name || "Unknown Qualification",
+                                    nqf_level: edu.nqf_level
+                                }
+                            });
+                        }
+
+                        qualificationId = baseQual.qualification_id;
                     }
 
                     // Link it to the applicant
                     await prisma.applicantQualification.create({
                         data: {
                             applicant_id: updatedApplicantProfile.applicant_id,
-                            qualification_id: baseQual.qualification_id,
+                            qualification_id: qualificationId,
                             institution: edu.institution,
                             year_completed: edu.year_completed
                         }
@@ -158,18 +164,13 @@ async function updateUserProfile(req, res) {
             // --- 5. Handle Skills (Wipe and Replace) ---
             if (skills && Array.isArray(skills)) {
 
-                // Wipe old joining records
                 await prisma.applicantSkill.deleteMany({
                     where: { applicant_id: updatedApplicantProfile.applicant_id }
                 });
 
-                // Insert new ones
                 for (let skillData of skills) {
-                    // Find or create the base Skill
                     let baseSkill = await prisma.skill.findFirst({
-                        where: {
-                            name: skillData.name
-                        }
+                        where: { name: skillData.name }
                     });
 
                     if (!baseSkill) {
@@ -181,7 +182,6 @@ async function updateUserProfile(req, res) {
                         });
                     }
 
-                    // Link it to the applicant
                     await prisma.applicantSkill.create({
                         data: {
                             applicant_id: updatedApplicantProfile.applicant_id,
@@ -192,7 +192,7 @@ async function updateUserProfile(req, res) {
             }
         }
 
-        // 6. Fetch the completely refreshed profile to send back to the frontend
+        // 6. Fetch fully refreshed profile
         const fullyRefreshedUser = await prisma.user.findUnique({
             where: { firebase_uid: firebase_uid },
             include: {
@@ -205,28 +205,32 @@ async function updateUserProfile(req, res) {
             }
         });
 
-        // 7. Format the deeply nested Prisma arrays into flat, frontend-friendly arrays
+        // 7. Format response
         if (fullyRefreshedUser.applicant) {
             fullyRefreshedUser.applicant.formattedQualifications = fullyRefreshedUser.applicant.qualifications.map(q => ({
-                id: q.id, // the unique ID of the applicantQualification joining record
+                id: q.id,
+                qualification_id: q.qualification.qualification_id,
                 name: q.qualification.name,
+                degree: q.qualification.name,
                 nqf_level: q.qualification.nqf_level,
+                nqfLevel: q.qualification.nqf_level,
+                sector: q.qualification.sector,
+                originator: q.qualification.originator,
                 institution: q.institution,
-                year_completed: q.year_completed
+                year_completed: q.year_completed,
+                graduationYear: q.year_completed
             }));
 
             fullyRefreshedUser.applicant.formattedSkills = fullyRefreshedUser.applicant.skills.map(s => ({
-                id: s.id, // the unique ID of the applicantSkill joining record
+                id: s.id,
                 name: s.skill.name,
                 nqf_level: s.skill.nqf_level
             }));
 
-            // Remove the raw Prisma relational data to keep the payload clean
             delete fullyRefreshedUser.applicant.qualifications;
             delete fullyRefreshedUser.applicant.skills;
         }
 
-        // Send it back!
         res.status(200).json(fullyRefreshedUser);
 
     } catch (error) {

@@ -8,113 +8,122 @@ datasource db {
 }
 
 model User {
-  user_id      Int    @id @default(autoincrement())
-  firebase_uid String @unique
-  email        String @unique
+  user_id      Int               @id @default(autoincrement())
   name         String
   surname      String
-  role         String // "Admin" or "Applicant"
-
-  // Relations
+  role         String
+  email        String            @unique
+  firebase_uid String            @unique
+  applicant    ApplicantProfile?
   applications Application[]
   provider     Provider?
-  applicant    ApplicantProfile?
 }
 
 model ApplicantProfile {
-  applicant_id Int @id @default(autoincrement())
-  user_id      Int @unique
-
-  phone String?
-  dob   DateTime?
-  bio   String?
-
-  user User @relation(fields: [user_id], references: [user_id])
-
-  skills         ApplicantSkill[]
+  applicant_id   Int                      @id @default(autoincrement())
+  user_id        Int                      @unique
+  phone          String?
+  dob            DateTime?
+  bio            String?
+  user           User                     @relation(fields: [user_id], references: [user_id])
   qualifications ApplicantQualification[]
+  skills         ApplicantSkill[]
 }
 
 model Provider {
-  provider_id   Int     @id @default(autoincrement())
+  provider_id   Int           @id @default(autoincrement())
   provider_name String
   profile       String?
-  user_id       Int     @unique
-  onboarded     Boolean @default(false)
-
-  user         User          @relation(fields: [user_id], references: [user_id])
-  listings     Listing[]
-  applications Application[]
+  user_id       Int           @unique
+  onboarded     Boolean       @default(false)
+  applications  Application[]
+  listings      Listing[]
+  user          User          @relation(fields: [user_id], references: [user_id])
 }
 
 model Listing {
-  listings_id Int @id @default(autoincrement())
-  provider_id Int
-
-  listname  String
-  list_type String // Learnership, Internship, Apprenticeship
-
-  nqf_level   Int?
-  description String?
-
-  stipend      Float?
-  location     String?
-  duration     String?
-  requirements String?
+  listings_id  Int           @id @default(autoincrement())
+  listname     String
+  list_type    String
+  nqf_level    Int?
+  description  String?
+  provider_id  Int
+  status       String        @default("pending")
   closing_date DateTime?
-
-  status String @default("pending")
-
-  provider     Provider      @relation(fields: [provider_id], references: [provider_id])
+  duration     String?
+  location     String?
+  requirements String?
+  stipend      Float?
+  sector       String?
+  cvUploadedAt DateTime?
   applications Application[]
+  provider     Provider      @relation(fields: [provider_id], references: [provider_id])
+  Report       Report[]
 }
 
 model Application {
-  application_id Int    @id @default(autoincrement())
-  user_id        Int
-  listing_id     Int
-  provider_id    Int
-  status         String @default("pending")
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
-  listing  Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)
-  provider Provider @relation(fields: [provider_id], references: [provider_id], onDelete: NoAction, onUpdate: NoAction)
+  application_id     Int       @id @default(autoincrement())
+  user_id            Int
+  provider_id        Int
+  status             String    @default("pending")
+  listing_id         Int
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  availability       String?
+  motivation         String?
+  cvFilePath         String?
+  cvOriginalFilename String?
+  cvUploadedAt       DateTime?
+  listing            Listing   @relation(fields: [listing_id], references: [listings_id], onUpdate: NoAction)
+  provider           Provider  @relation(fields: [provider_id], references: [provider_id], onUpdate: NoAction)
+  user               User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
 
 model Skill {
   skill_id        Int              @id @default(autoincrement())
   name            String
   nqf_level       Int?
+  saqa_id         String?          @unique
+  sector          String?
   applicantSkills ApplicantSkill[]
 }
 
 model ApplicantSkill {
-  id           Int @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   applicant_id Int
   skill_id     Int
-
-  applicant ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
-  skill     Skill            @relation(fields: [skill_id], references: [skill_id])
+  applicant    ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
+  skill        Skill            @relation(fields: [skill_id], references: [skill_id])
 }
 
 model Qualification {
-  qualification_id Int    @id @default(autoincrement())
+  qualification_id Int     @id @default(autoincrement())
   name             String
   nqf_level        Int
+  saqa_id          String? @unique
+  sector           String?
+  originator       String?
 
   applicantQualifications ApplicantQualification[]
 }
 
 model ApplicantQualification {
-  id               Int     @id @default(autoincrement())
+  id               Int              @id @default(autoincrement())
   applicant_id     Int
   qualification_id Int
   institution      String?
   year_completed   Int?
+  applicant        ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
+  qualification    Qualification    @relation(fields: [qualification_id], references: [qualification_id])
+}
 
-  applicant     ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
-  qualification Qualification    @relation(fields: [qualification_id], references: [qualification_id])
+model Report {
+  report_id   Int      @id @default(autoincrement())
+  listing_id  Int
+  reason      String
+  details     String?
+  reported_by String
+  status      String   @default("pending")
+  created_at  DateTime @default(now())
+  Listing     Listing  @relation(fields: [listing_id], references: [listings_id], onUpdate: NoAction)
 }
