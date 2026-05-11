@@ -9,5 +9,6 @@ module.exports = {
     "frontend/script.js",
     "frontend/roles_js/applicant_view.js"
   ],
+  setupFiles: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jsdom",
 };

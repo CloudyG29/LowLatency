@@ -53,6 +53,7 @@ describe('Backend: Profile Routes API Tests', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     // --- TEST 1: Getting a Profile (GET /api/profile/:uid) ---

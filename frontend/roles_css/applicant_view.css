@@ -147,6 +147,70 @@ h2 {
     color: #e2e8f0;
 }
 
+.opportunity-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* ─── BASE BADGE STYLING ─── */
+.competition-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    width: fit-content;
+    letter-spacing: 0.3px;
+  }
+  
+  /* ─── DYNAMIC COLORS BASED ON LEVEL ─── */
+  
+  /* Low: 1-10 applicants (Soft Green) */
+  .competition-badge--low {
+    background-color: #e6f4ea;
+    color: #1e8e3e;
+    border: 1px solid #ceead6;
+  }
+  
+  /* Moderate: 11-30 applicants (Soft Yellow/Orange) */
+  .competition-badge--moderate {
+    background-color: #fff8e1;
+    color: #f57f17;
+    border: 1px solid #ffecb3;
+  }
+  
+  /* High: 31-75 applicants (Soft Red/Orange) */
+  .competition-badge--high {
+    background-color: #fbe9e7;
+    color: #d84315;
+    border: 1px solid #ffccbc;
+  }
+  
+  /* Very High: 76+ applicants (Bold Red) */
+  .competition-badge--very-high {
+    background-color: #fce8e6;
+    color: #c5221f;
+    border: 1px solid #fad2cf;
+  }
+  
+  /* ─── EXTRA STYLING FOR BUTTON & APPLIED STATE ─── */
+  .already-applied {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
 .apply-btn {
     background: linear-gradient(90deg, #38ef7d, #11998e);
     color: white;
@@ -909,6 +973,7 @@ h2 {
     .cv-upload-section {
         max-width: 100%;
     }
+<<<<<<< HEAD
 
     /* View Details Button Styles */
 .view-details-btn {
@@ -971,3 +1036,56 @@ h2 {
 
 
 }
+=======
+}
+
+/* Notification Card */
+
+.notification-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    margin-bottom: 15px;
+  }
+  
+  .notification-card:hover {
+    border-color: #4a5568;
+    transform: translateY(-2px);
+  }
+  
+  .notification-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+  }
+  
+  .notification-info p {
+    margin: 0;
+    color: #cbd5e0;
+  }
+  
+ 
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .status-unread {
+    background-color: #fbd38d; 
+    color: #7b341e;
+  }
+  
+  .status-read {
+    background-color: #4a5568; 
+    color: #a0aec0;
+  }
+>>>>>>> main

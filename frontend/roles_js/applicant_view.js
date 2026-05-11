@@ -1,5 +1,7 @@
 let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 
+const db = firebase.firestore();
+
 async function guardApplicantPage() {
   return new Promise((resolve) => {
     firebase.auth().onAuthStateChanged(async (user) => {
@@ -132,6 +134,36 @@ function renderProfile() {
   hideLoader();
 }
 
+function renderNotifications(notifications) {
+  const container = document.getElementById("notificationsList");
+  container.innerHTML = ""; // Clear out old data
+
+  if (notifications.length === 0) {
+    container.innerHTML = '<p class="empty-state">No new notifications.</p>';
+    return;
+  }
+
+  notifications.forEach(notif => {
+    const card = document.createElement("div");
+    card.className = "notification-card";
+
+    card.innerHTML = `
+      <div class="notification-info">
+        <h3>${notif.type || "Status Update"}</h3>
+        <p><strong>Message:</strong> ${notif.message}</p>
+        <p style="font-size: 12px; color: #a0aec0; margin-top: 8px;">${notif.time || "Just now"}</p>
+      </div>
+      <span class="status-badge ${notif.isRead ? 'status-read' : 'status-unread'}">
+        ${notif.isRead ? 'read' : 'unread'}
+      </span>
+    `;
+
+    card.onclick = () => markAsRead(notif.id);
+
+    container.appendChild(card);
+  });
+}
+
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
   // Hide all tabs and contents
@@ -160,6 +192,14 @@ function showTab(tabName) {
 
     document.getElementById('profileTab').classList.add('active');
     renderProfile(); // Load saved data when tab is opened
+  }
+
+  else if(tabName === 'notifications') {
+    const tabBtn = document.getElementById('tab-notifications') || document.querySelectorAll('.tab')[3];
+    if (tabBtn) tabBtn.classList.add('active');
+
+    document.getElementById('notificationsTab').classList.add('active');
+    
   }
 }
 
@@ -476,6 +516,7 @@ async function loadDataOnStartup() {
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
+    startNotificationListener(firebaseUid);
 
   } catch (error) {
     console.error("Error loading profile:", error);
@@ -541,13 +582,41 @@ function hideLoader() {
 }
 
 
+function getCompetition(count) {
+  let level, text;
+
+  if (count <= 10) {
+      level = "low";
+      text = "Low competition";
+  } else if (count <= 30) {
+      level = "moderate";
+      text = "Moderate";
+  } else if (count <= 75) {
+      level = "high";
+      text = "High competition";
+  } else {
+      level = "very-high";
+      text = "Very high";
+  }
+
+  const label = count === 1 ? "1 applicant" : `${count} applicants`;
+
+  return { label, level, text };
+}
+
 // Function to fetch and render opportunities based on type
 async function fetchOpportunities(type = "") {
 
   const container = document.getElementById("opportunitiesList");
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+<<<<<<< HEAD
   const userEmail = userData.email || "";
   showLoader();
+=======
+  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
+  // Show loading state while fetching
+  if (typeof window.showLoader === "function") window.showLoader();
+>>>>>>> main
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
   try {
@@ -557,14 +626,15 @@ async function fetchOpportunities(type = "") {
     }
 
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to fetch opportunities");
+    if (!response.ok) {
+      throw new Error("Failed to fetch opportunities");
+    } 
 
     const listings = await response.json();
     container.innerHTML = "";
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
-      hideLoader();
       return;
     }
 
@@ -572,6 +642,7 @@ async function fetchOpportunities(type = "") {
       const card = document.createElement("div");
       card.className = "opportunity-card";
 
+<<<<<<< HEAD
       card.innerHTML = `
         <div class="opportunity-info">
           <h3 class="opportunity-title">${listing.listname}</h3>
@@ -580,6 +651,38 @@ async function fetchOpportunities(type = "") {
         <button class="view-details-btn" data-id="${listing.listings_id}">View Details</button>
       `;
 
+=======
+      // Logic to check if the user has already applied (requires backend support) [cite: 3]
+      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
+
+      const actionUI = hasApplied
+        ? `<div class="already-applied">✅ Already Applied</div>`
+        : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
+
+      const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
+      const competition = getCompetition(applicantCount);
+
+      card.innerHTML = `
+        <header class="opportunity-header">
+          <h3 class="opportunity-title">${listing.listname}</h3>
+          <div class="competition-badge competition-badge--${competition.level}" role="status"
+            aria-label="${competition.label} — ${competition.text}">
+            ${competition.label}
+          </div>
+        </header>
+        <div class="opportunity-details">
+          <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
+          <p><strong>Type:</strong> ${listing.list_type}</p>
+          <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+          <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+          <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+          <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
+          <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+          <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+        </div>
+        <button class="view-details-btn" data-id="${listing.listings_id}">View Details</button>
+      `;
+>>>>>>> main
       container.appendChild(card);
     });
 
@@ -593,9 +696,9 @@ async function fetchOpportunities(type = "") {
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+  } finally {
+    if (typeof window.hideLoader === "function") window.hideLoader();
   }
-
-  hideLoader();
 }
 
 async function applyForListing(listingId) {
@@ -628,6 +731,59 @@ async function applyForListing(listingId) {
   }
 }
 
+function startNotificationListener(userFirebaseUid) {
+  db.collection("notifications")
+    .where("userId", "==", userFirebaseUid)
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      const liveNotifications = [];
+      let unreadCount = 0;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        
+        const timeString = data.createdAt ? data.createdAt.toDate().toLocaleString() : "Just now";
+        
+        liveNotifications.push({
+          id: doc.id,
+          type: data.type || "Status Update",
+          message: data.message,
+          time: timeString,
+          isRead: data.isRead
+        });
+
+        if (!data.isRead) unreadCount++;
+      });
+
+      renderNotifications(liveNotifications);
+      updateNotificationBadge(unreadCount);
+    });
+}
+
+function updateNotificationBadge(count) {
+  const badge = document.getElementById("notificationBadge");
+  if (!badge) return;
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove("hidden");
+  } else {
+    badge.classList.add("hidden");
+  }
+}
+
+// --- MARK AS READ  ---
+async function markAsRead(notificationId) {
+  try {
+    await db.collection("notifications").doc(notificationId).update({
+      isRead: true
+    });
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
+}
+
+
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
   // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
@@ -640,7 +796,10 @@ if (typeof module !== 'undefined' && module.exports) {
     showTab,
     openModal,
     closeModal,
-    guardApplicantPage
+    guardApplicantPage,
+    getCompetition,
+    renderNotifications,
+    startNotificationListener
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!

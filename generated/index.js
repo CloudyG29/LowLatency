@@ -39,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.7.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 Prisma.prismaVersion = {
-  client: "7.7.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -212,8 +212,8 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "previewFeatures": [],
-  "clientVersion": "7.7.0",
-  "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
+  "clientVersion": "7.8.0",
+  "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
   "activeProvider": "sqlserver",
   "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated\"\n}\n\ndatasource db {\n  provider = \"sqlserver\"\n}\n\nmodel User {\n  user_id      Int    @id @default(autoincrement())\n  firebase_uid String @unique\n  email        String @unique\n  name         String\n  surname      String\n  role         String // \"Admin\" or \"Applicant\"\n\n  // Relations\n  applications Application[]\n  provider     Provider?\n  applicant    ApplicantProfile?\n}\n\nmodel ApplicantProfile {\n  applicant_id Int @id @default(autoincrement())\n  user_id      Int @unique\n\n  phone String?\n  dob   DateTime?\n  bio   String?\n\n  user User @relation(fields: [user_id], references: [user_id])\n\n  skills         ApplicantSkill[]\n  qualifications ApplicantQualification[]\n}\n\nmodel Provider {\n  provider_id   Int     @id @default(autoincrement())\n  provider_name String\n  profile       String?\n  user_id       Int     @unique\n  onboarded     Boolean @default(false)\n\n  user         User          @relation(fields: [user_id], references: [user_id])\n  listings     Listing[]\n  applications Application[]\n}\n\nmodel Listing {\n  listings_id Int @id @default(autoincrement())\n  provider_id Int\n\n  listname  String\n  list_type String // Learnership, Internship, Apprenticeship\n\n  nqf_level   Int?\n  description String?\n\n  stipend      Float?\n  location     String?\n  duration     String?\n  requirements String?\n  closing_date DateTime?\n  cvUploadedAt DateTime?\n  sector       String?\n\n  status String @default(\"pending\")\n\n  provider     Provider      @relation(fields: [provider_id], references: [provider_id])\n  applications Application[]\n  reports      Report[]\n}\n\nmodel Application {\n  application_id Int     @id @default(autoincrement())\n  user_id        Int\n  listing_id     Int\n  provider_id    Int\n  availability   String?\n  motivation     String?\n  status         String  @default(\"pending\")\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  user     User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)\n  listing  Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)\n  provider Provider @relation(fields: [provider_id], references: [provider_id], onDelete: NoAction, onUpdate: NoAction)\n}\n\nmodel Skill {\n  skill_id        Int              @id @default(autoincrement())\n  name            String\n  nqf_level       Int?\n  applicantSkills ApplicantSkill[]\n}\n\nmodel ApplicantSkill {\n  id           Int @id @default(autoincrement())\n  applicant_id Int\n  skill_id     Int\n\n  applicant ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])\n  skill     Skill            @relation(fields: [skill_id], references: [skill_id])\n}\n\nmodel Qualification {\n  qualification_id Int    @id @default(autoincrement())\n  name             String\n  nqf_level        Int\n\n  applicantQualifications ApplicantQualification[]\n}\n\nmodel ApplicantQualification {\n  id               Int     @id @default(autoincrement())\n  applicant_id     Int\n  qualification_id Int\n  institution      String?\n  year_completed   Int?\n\n  applicant     ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])\n  qualification Qualification    @relation(fields: [qualification_id], references: [qualification_id])\n}\n\nmodel Report {\n  report_id   Int      @id @default(autoincrement())\n  listing_id  Int\n  reason      String\n  details     String?\n  reported_by String\n  status      String   @default(\"pending\")\n  created_at  DateTime @default(now())\n  listing     Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)\n}\n"
 }
