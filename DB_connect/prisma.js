@@ -5,8 +5,8 @@ const config = {
   server: "lowlatency2.database.windows.net",
   port: 1433,
   database: "SkillBridge",
-  user: "CloudSAca3de46",
-  password: "lowlatency5",
+  user: "CloudSAca3dae46",
+  password: "LowLatency5",
   options: {
     encrypt: true,
     trustServerCertificate: true,

@@ -1,3 +1,4 @@
+const prisma = require("../../DB_connect/prisma");
 const express = require("express");
 const router = express.Router();
 const {
