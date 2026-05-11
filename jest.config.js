@@ -1,5 +1,4 @@
 module.exports = {
-  testEnvironment: "node",
   moduleNameMapper: {
     "^@supabase/supabase-js$": "<rootDir>/__mocks__/@supabase/supabase-js.js",
   },
@@ -13,4 +12,5 @@ module.exports = {
     "frontend/roles_js/applicant_view.js",
   ],
   testEnvironment: "jsdom",
+  setupFiles: ["<rootDir>/jest.setup.js"],
 };
