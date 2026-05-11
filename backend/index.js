@@ -2,22 +2,26 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
-const cors = require('cors');
-
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.use(cors());
 app.use(express.json());
+
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
 const profileRoutes = require('./routes/profile');
 const qualificationsRouter = require('./routes/qualifications');
+const profileRoutes = require("./routes/profile");
+const dashboardRoutes = require("./routes/dashboard"); // ADDED: dashboard analytics API routes
 
 app.use("/api/listings", listingRoutes);
+app.use("/api/dashboard", dashboardRoutes); // ADDED: makes /api/dashboard/summary work
 
 app.use("/api/admin", adminRoutes);
 
@@ -30,8 +34,8 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api/user', userRoutes);
-app.use('/api/profile', profileRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/profile", profileRoutes);
 
 // Serve HTML files for different routes
 app.get("/", (req, res) => {
@@ -76,8 +80,16 @@ app.get("/provider", (req, res) => {
   );
 });
 
+app.get("/dashboard", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../frontend/roles_htmls", "dashboard.html"),
+  );
+}); // ADDED: allows browser route http://localhost:3000/dashboard
+
 app.get("/provider-onboarding", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/views", "provider-onboarding.html"));
+  res.sendFile(
+    path.join(__dirname, "../frontend/views", "provider-onboarding.html"),
+  );
 });
 
 app.get("/forgot-password", (req, res) => {

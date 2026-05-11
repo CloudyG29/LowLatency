@@ -236,4 +236,43 @@ describe('GET /api/listings/my-applications', () => {
 
     expect(res.status).toBe(404);
   });
+}); 
+
+test('should submit application with motivation, availability and cv_name', async () => {
+  prisma.user.findUnique.mockResolvedValue({ user_id: 1 });
+  prisma.listing.findUnique.mockResolvedValue({ listings_id: 1, provider_id: 7 });
+  prisma.application.findFirst.mockResolvedValue(null);
+  prisma.application.create.mockResolvedValue({
+    application_id: 1,
+    user_id: 1,
+    listing_id: 1,
+    provider_id: 7,
+    motivation: 'I am interested',
+    availability: 'Immediately',
+    cv_name: 'cv.pdf',
+    status: 'pending'
+  });
+
+  const res = await request(app).post('/api/listings/apply').send({
+    listing_id: 1,
+    email: 'applicant@test.com',
+    motivation: 'I am interested',
+    availability: 'Immediately',
+    cv_name: 'cv.pdf'
+  });
+
+  expect(res.status).toBe(201);
+  expect(res.body.message).toBe('Application submitted!');
+
+  expect(prisma.application.create).toHaveBeenCalledWith({
+    data: {
+      user_id: 1,
+      listing_id: 1,
+      provider_id: 7,
+      motivation: 'I am interested',
+      availability: 'Immediately',
+      cv_name: 'cv.pdf',
+      status: 'pending'
+    }
+  });
 });

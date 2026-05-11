@@ -271,6 +271,71 @@
         </main>
     </div>
 
+
+    <!-- ========================= -->
+
+<!-- NEW: APPLICATION MODAL -->
+
+<!-- Added below main layout -->
+
+<!-- ========================= -->
+
+<!-- Application Form Modal -->
+
+<div id="applicationModal" class="modal-overlay">
+    <div class="modal-content application-modal-content">
+
+
+    <div class="modal-header">
+        <h3>Submit Application</h3>
+
+        <!-- NEW: close button -->
+        <button class="btn-close" onclick="closeModal('applicationModal')">✕</button>
+    </div>
+
+    <!-- NEW: hidden listing id -->
+    <input type="hidden" id="applicationListingId" />
+
+    <!-- NEW: motivation input -->
+    <div class="form-group">
+        <label>Why are you interested in this opportunity?</label>
+
+        <textarea
+            id="applicationMotivation"
+            rows="5"
+            placeholder="Write a short motivation..."
+        ></textarea>
+    </div>
+
+    <!-- NEW: availability input -->
+    <div class="form-group">
+        <label>When are you available to start?</label>
+
+        <input
+            id="applicationAvailability"
+            placeholder="e.g. Immediately, after exams, January 2026"
+        />
+    </div>
+
+    <!-- NEW: CV display -->
+    <div class="application-cv-note">
+        <strong>CV:</strong>
+        <span id="applicationCvName">No CV uploaded yet</span>
+    </div>
+
+    <!-- NEW: submit button -->
+    <button
+        class="btn-save application-submit-btn"
+        onclick="submitApplicationFromModal()"
+    >
+        Submit Application
+    </button>
+
+</div>
+
+
+</div>
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="../public/firebase.js"></script>

@@ -478,7 +478,9 @@ async function fetchOpportunities(type = "") {
 
     listings.forEach((listing) => {
       const card = document.createElement("div");
-      card.className = "opportunity-card";
+
+      // CHANGE: new cleaner card class
+      card.className = "opportunity-preview-card";
 
       const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
 
@@ -490,37 +492,75 @@ async function fetchOpportunities(type = "") {
       const competition = getCompetition(applicantCount);
 
       card.innerHTML = `
-                <header class="opportunity-header">
-                <h3 class="opportunity-title">${listing.listname}</h3>
-                <div class="competition-badge competition-badge--${competition.level}" role="status"
-                aria-label="${competition.label} — ${competition.text}">
-                ${competition.label}
-                </div>
-                </header>
-                <div class="opportunity-details">
-                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
-                    <p><strong>Type:</strong> ${listing.list_type}</p>
-                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
-                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
-                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
-                </div>
-                ${actionUI}
-            `;
+        <div class="opportunity-preview-main">
+          <div>
+            <p class="opportunity-label">Opportunity</p>
+            <h3>${listing.listname}</h3>
+            <p class="opportunity-subtext">${listing.provider?.provider_name || "Provider not listed"}</p>
+          </div>
+
+          <div>
+            <p class="opportunity-label">Details</p>
+            <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
+            <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+          </div>
+
+          <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
+        </div>
+
+        <div class="opportunity-actions">
+          <button class="view-opportunity-details-btn" type="button">View Details</button>
+          ${actionUI}
+        </div>
+
+      `;
+
       container.appendChild(card);
+
+      // CHANGE: expandable details functionality
+      const detailsBtn = card.querySelector(".view-opportunity-details-btn");
+      const detailsSection = card.querySelector(".opportunity-expanded-details");
+
+      detailsBtn.addEventListener("click", () => {
+        detailsSection.classList.toggle("hidden");
+        detailsBtn.textContent = detailsSection.classList.contains("hidden")
+          ? "View Details"
+          : "Hide Details";
+      });
     });
 
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
-  } finally {
+  }finally {
     if (typeof window.hideLoader === "function") window.hideLoader();
   }
 }
 
 async function applyForListing(listingId, requiredNqf) {
+
+  hideLoader();
+}
+
+
+
+
+function applyForListing(listingId) {
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const cvName = userData.cvName || "No CV uploaded yet";
+
+  document.getElementById("applicationListingId").value = listingId;
+  document.getElementById("applicationMotivation").value = "";
+  document.getElementById("applicationAvailability").value = "";
+  document.getElementById("applicationCvName").textContent = cvName;
+
+  openModal("applicationModal"); 
+}
+
+async function submitApplicationFromModal() {
+  const listingId = document.getElementById("applicationListingId").value;
+  const motivation = document.getElementById("applicationMotivation").value.trim();
+  const availability = document.getElementById("applicationAvailability").value.trim();
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const applicantData = userData.applicant || {};
   const qualifications = applicantData.formattedQualifications || [];
@@ -539,14 +579,37 @@ async function applyForListing(listingId, requiredNqf) {
     );
     if (!proceed) return;
   }
+  const cvName = userData.cvName || null;
+
+  if (!motivation) {
+    alert("Please add a short motivation before applying.");
+    return;
+  }
+
+  if (!availability) {
+    alert("Please add your availability before applying.");
+    return;
+  }
+
+  await submitApplication(listingId, motivation, availability, cvName);
+  closeModal("applicationModal");
+}
+
+async function submitApplication(listingId, motivation, availability, cvName) {
+  const email = currentUser?.email || JSON.parse(localStorage.getItem('userData') || '{}').email;
 
   try {
+    showLoader();
+
     const response = await fetch("/api/listings/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         listing_id: listingId,
-        email: userData.email
+        email: email,
+        motivation: motivation.trim(),
+        availability: availability.trim(),
+        cv_name: cvName || null
       })
     });
 
@@ -559,6 +622,8 @@ async function applyForListing(listingId, requiredNqf) {
   } catch (error) {
     console.error(error);
     alert(error.message);
+  } finally {
+    hideLoader();
   }
 }
 
