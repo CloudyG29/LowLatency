@@ -628,30 +628,6 @@ async function fetchOpportunities(type = "") {
           ${actionUI}
         </div>
 
-        <div class="opportunity-expanded-details hidden">
-          <div class="opportunity-details-grid">
-            <div class="opportunity-details-section">
-              <h4>Opportunity Details</h4>
-              <p><strong>Type:</strong> ${listing.list_type || "N/A"}</p>
-              <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
-              <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-              <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-              <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
-              <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-            </div>
-
-            <div class="opportunity-details-section">
-              <h4>Provider</h4>
-              <p><strong>Name:</strong> ${listing.provider?.provider_name || "N/A"}</p>
-              <p><strong>Requirements:</strong> ${listing.requirements || "N/A"}</p>
-            </div>
-          </div>
-
-          <div class="opportunity-details-section full-width">
-            <h4>Description</h4>
-            <p>${listing.description || "No description provided."}</p>
-          </div>
-        </div>
       `;
 
       container.appendChild(card);
