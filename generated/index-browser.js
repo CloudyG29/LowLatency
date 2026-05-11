@@ -158,6 +158,8 @@ exports.Prisma.ListingScalarFieldEnum = {
   duration: 'duration',
   requirements: 'requirements',
   closing_date: 'closing_date',
+  cvUploadedAt: 'cvUploadedAt',
+  sector: 'sector',
   status: 'status'
 };
 
@@ -166,6 +168,8 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   user_id: 'user_id',
   listing_id: 'listing_id',
   provider_id: 'provider_id',
+  availability: 'availability',
+  motivation: 'motivation',
   status: 'status',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -197,6 +201,16 @@ exports.Prisma.ApplicantQualificationScalarFieldEnum = {
   year_completed: 'year_completed'
 };
 
+exports.Prisma.ReportScalarFieldEnum = {
+  report_id: 'report_id',
+  listing_id: 'listing_id',
+  reason: 'reason',
+  details: 'details',
+  reported_by: 'reported_by',
+  status: 'status',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -217,7 +231,8 @@ exports.Prisma.ModelName = {
   Skill: 'Skill',
   ApplicantSkill: 'ApplicantSkill',
   Qualification: 'Qualification',
-  ApplicantQualification: 'ApplicantQualification'
+  ApplicantQualification: 'ApplicantQualification',
+  Report: 'Report'
 };
 
 /**

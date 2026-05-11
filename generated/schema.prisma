@@ -62,19 +62,24 @@ model Listing {
   duration     String?
   requirements String?
   closing_date DateTime?
+  cvUploadedAt DateTime?
+  sector       String?
 
   status String @default("pending")
 
   provider     Provider      @relation(fields: [provider_id], references: [provider_id])
   applications Application[]
+  reports      Report[]
 }
 
 model Application {
-  application_id Int    @id @default(autoincrement())
+  application_id Int     @id @default(autoincrement())
   user_id        Int
   listing_id     Int
   provider_id    Int
-  status         String @default("pending")
+  availability   String?
+  motivation     String?
+  status         String  @default("pending")
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -117,4 +122,15 @@ model ApplicantQualification {
 
   applicant     ApplicantProfile @relation(fields: [applicant_id], references: [applicant_id])
   qualification Qualification    @relation(fields: [qualification_id], references: [qualification_id])
+}
+
+model Report {
+  report_id   Int      @id @default(autoincrement())
+  listing_id  Int
+  reason      String
+  details     String?
+  reported_by String
+  status      String   @default("pending")
+  created_at  DateTime @default(now())
+  listing     Listing  @relation(fields: [listing_id], references: [listings_id], onDelete: NoAction, onUpdate: NoAction)
 }

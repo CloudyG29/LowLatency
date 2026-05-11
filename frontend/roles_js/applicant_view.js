@@ -145,7 +145,7 @@ function showTab(tabName) {
     if (tabBtn) tabBtn.classList.add('active');
 
     document.getElementById('opportunitiesTab').classList.add('active');
-    fetchOpportunities(this.document.getElementById("listTypeFilter").value);
+    fetchOpportunities(document.getElementById("listTypeFilter").value);
 
   } else if (tabName === 'applications') {
     const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[1];
@@ -545,15 +545,12 @@ function hideLoader() {
 async function fetchOpportunities(type = "") {
 
   const container = document.getElementById("opportunitiesList");
-  // const userEmail = localStorage.getItem("userEmail"); // Get current user's email from login context [cite: 3]
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
-  // Show loading state while fetching
+  const userEmail = userData.email || "";
   showLoader();
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
   try {
-    // Build the URL with the type filter and userEmail to check application status [cite: 3]
     let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
     if (type && type !== "") {
       url += `&type=${encodeURIComponent(type)}`;
@@ -563,7 +560,7 @@ async function fetchOpportunities(type = "") {
     if (!response.ok) throw new Error("Failed to fetch opportunities");
 
     const listings = await response.json();
-    container.innerHTML = ""; // Clear current list
+    container.innerHTML = "";
 
     if (listings.length === 0) {
       container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
@@ -571,33 +568,26 @@ async function fetchOpportunities(type = "") {
       return;
     }
 
-    // Render each card using classes defined in your CSS [cite: 2]
     listings.forEach((listing) => {
       const card = document.createElement("div");
       card.className = "opportunity-card";
 
-      // Logic to check if the user has already applied (requires backend support) [cite: 3]
-      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
-
-      const actionUI = hasApplied
-        ? `<div class="already-applied">✅ Already Applied</div>`
-        : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id})">Apply Now</button>`;
-
       card.innerHTML = `
-                <h3 class="opportunity-title">${listing.listname}</h3>
-                <div class="opportunity-details">
-                    <p><strong>Provider:</strong> ${listing.provider?.provider_name || "N/A"}</p>
-                    <p><strong>Type:</strong> ${listing.list_type}</p>
-                    <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
-                    <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-                    <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-                    <p><strong>NQF Level:</strong> ${listing.nqf_level || "N/A"}</p>
-                    <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-                    <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
-                </div>
-                ${actionUI}
-            `;
+        <div class="opportunity-info">
+          <h3 class="opportunity-title">${listing.listname}</h3>
+          <p class="opportunity-provider">Provided by: ${listing.provider?.provider_name || 'Unknown'}</p>
+        </div>
+        <button class="view-details-btn" data-id="${listing.listings_id}">View Details</button>
+      `;
+
       container.appendChild(card);
+    });
+
+    document.querySelectorAll('.view-details-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const listingId = btn.getAttribute('data-id');
+        window.location.href = `/opportunity/${listingId}`;
+      });
     });
 
   } catch (error) {
@@ -610,7 +600,7 @@ async function fetchOpportunities(type = "") {
 
 async function applyForListing(listingId) {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-
+  console.log("Applying with userData:", userData);
   try {
     const response = await fetch("/api/listings/apply", {
       method: "POST",
