@@ -32,6 +32,7 @@ app.use('/api/listings', listingsRouter);
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 describe('GET /api/listings/provider', () => {
