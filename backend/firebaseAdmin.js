@@ -1,37 +1,44 @@
 const admin = require("firebase-admin");
 
-let serviceAccount;
+let db;
 
-// 1. LIVE APP: Check if the credentials are in an Environment Variable first
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  try {
-    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  } catch (error) {
-    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable");
-  }
+// 1. TESTING ENVIRONMENT (PRs / Local Tests)
+// If Jest is running, skip initialization and provide a dummy database
+if (process.env.JEST_WORKER_ID !== undefined) {
+  
+  db = {
+    collection: () => ({
+      add: () => Promise.resolve({ id: 'mock-notification-id' }),
+      // Add any other firestore methods you chain here if needed
+    })
+  };
+
 } 
-// 2. LOCAL DEV & TESTING: If no Env Var, try the file or use dummy keys
+// 2. LIVE APP & LOCAL DEV
 else {
-  try {
-    // Works on your local machine
+  let serviceAccount;
+
+  // Check for Live App Environment Variable first
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    } catch (error) {
+      console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable");
+    }
+  } 
+  // Fall back to the physical file for Local Dev
+  else {
     serviceAccount = require("./serviceAccountKey.json");
-  } catch (error) {
-    // Works in your PR tests / GitHub Actions
-    serviceAccount = {
-      project_id: "test-project",
-      private_key: "-----BEGIN PRIVATE KEY-----\nFAKE_KEY_FOR_TESTING\n-----END PRIVATE KEY-----\n",
-      client_email: "test@test.com",
-    };
   }
-}
 
-// Initialize Firebase
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-}
+  // Initialize real Firebase
+  if (!admin.apps.length && serviceAccount) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+  }
 
-const db = admin.firestore();
+  db = admin.firestore();
+}
 
 module.exports = { admin, db };
