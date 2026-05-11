@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
-const { sendStatusEmail } = require('../emailService');
-
-const { db } = require('../firebaseAdmin');
 
 async function postListing(req, res) {
   const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
@@ -223,29 +220,9 @@ router.put("/applications/:id/status", async (req, res) => {
     const application = await prisma.application.update({
       where: { application_id: parseInt(id) },
       data: { status },
-      include: { user: true, listing: true }
     });
-    
-      await db.collection("notifications").add({
-        userId: application.user.firebase_uid || "MISSING_UID", 
-        type: "Application Update",
-        message: `Your application for '${application.listing.listname}' has been marked as: ${status}.`,
-        isRead: false,
-        createdAt: new Date() 
-      });
-
-      if (application.user && application.user.email) {
-        await sendStatusEmail(
-          application.user.email, 
-          application.user.name || "Applicant", 
-          application.listing.listname, 
-          status
-        );
-      }
-      
     res.status(200).json(application);
   } catch (error) {
-    console.error("BACKEND CRASH:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });

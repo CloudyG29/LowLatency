@@ -1,7 +1,5 @@
 let currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
 
-const db = firebase.firestore();
-
 async function guardApplicantPage() {
   return new Promise((resolve) => {
     firebase.auth().onAuthStateChanged(async (user) => {
@@ -134,36 +132,6 @@ function renderProfile() {
   hideLoader();
 }
 
-function renderNotifications(notifications) {
-  const container = document.getElementById("notificationsList");
-  container.innerHTML = ""; // Clear out old data
-
-  if (notifications.length === 0) {
-    container.innerHTML = '<p class="empty-state">No new notifications.</p>';
-    return;
-  }
-
-  notifications.forEach(notif => {
-    const card = document.createElement("div");
-    card.className = "notification-card";
-
-    card.innerHTML = `
-      <div class="notification-info">
-        <h3>${notif.type || "Status Update"}</h3>
-        <p><strong>Message:</strong> ${notif.message}</p>
-        <p style="font-size: 12px; color: #a0aec0; margin-top: 8px;">${notif.time || "Just now"}</p>
-      </div>
-      <span class="status-badge ${notif.isRead ? 'status-read' : 'status-unread'}">
-        ${notif.isRead ? 'read' : 'unread'}
-      </span>
-    `;
-
-    card.onclick = () => markAsRead(notif.id);
-
-    container.appendChild(card);
-  });
-}
-
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
   // Hide all tabs and contents
@@ -192,14 +160,6 @@ function showTab(tabName) {
 
     document.getElementById('profileTab').classList.add('active');
     renderProfile(); // Load saved data when tab is opened
-  }
-
-  else if(tabName === 'notifications') {
-    const tabBtn = document.getElementById('tab-notifications') || document.querySelectorAll('.tab')[3];
-    if (tabBtn) tabBtn.classList.add('active');
-
-    document.getElementById('notificationsTab').classList.add('active');
-    
   }
 }
 
@@ -516,7 +476,6 @@ async function loadDataOnStartup() {
     renderEducationDisplay();
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
-    startNotificationListener(firebaseUid);
 
   } catch (error) {
     console.error("Error loading profile:", error);
@@ -710,59 +669,6 @@ async function applyForListing(listingId) {
   }
 }
 
-function startNotificationListener(userFirebaseUid) {
-  db.collection("notifications")
-    .where("userId", "==", userFirebaseUid)
-    .orderBy("createdAt", "desc")
-    .onSnapshot((snapshot) => {
-      const liveNotifications = [];
-      let unreadCount = 0;
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        
-        const timeString = data.createdAt ? data.createdAt.toDate().toLocaleString() : "Just now";
-        
-        liveNotifications.push({
-          id: doc.id,
-          type: data.type || "Status Update",
-          message: data.message,
-          time: timeString,
-          isRead: data.isRead
-        });
-
-        if (!data.isRead) unreadCount++;
-      });
-
-      renderNotifications(liveNotifications);
-      updateNotificationBadge(unreadCount);
-    });
-}
-
-function updateNotificationBadge(count) {
-  const badge = document.getElementById("notificationBadge");
-  if (!badge) return;
-
-  if (count > 0) {
-    badge.textContent = count;
-    badge.classList.remove("hidden");
-  } else {
-    badge.classList.add("hidden");
-  }
-}
-
-// --- MARK AS READ  ---
-async function markAsRead(notificationId) {
-  try {
-    await db.collection("notifications").doc(notificationId).update({
-      isRead: true
-    });
-  } catch (error) {
-    console.error("Error marking notification as read:", error);
-  }
-}
-
-
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
   // 🛑 WE ARE IN JEST: Just export the functions, do NOT run them yet.
@@ -776,9 +682,7 @@ if (typeof module !== 'undefined' && module.exports) {
     openModal,
     closeModal,
     guardApplicantPage,
-    getCompetition,
-    renderNotifications,
-    startNotificationListener
+    getCompetition
   };
 } else {
   // 🌐 WE ARE IN THE BROWSER: Safe to run startup scripts and manipulate the DOM!
