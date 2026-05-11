@@ -1,12 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
-const { sendStatusEmail } = require('../emailService');
-
-const { db } = require('../firebaseAdmin');
 
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
+  const {
+    listname,
+    list_type,
+    nqf_level,
+    description,
+    email,
+    stipend,
+    location,
+    duration,
+    requirements,
+    closing_date,
+  } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -27,74 +35,89 @@ async function postListing(req, res) {
         stipend: stipend ? parseFloat(stipend) : null,
         location: location || null,
         duration: duration || null,
-        closing_date: closing_date && !isNaN(new Date(closing_date)) ? new Date(closing_date) : null,
-        requirements: requirements && typeof requirements === "string" ? requirements : null,
+        closing_date:
+          closing_date && !isNaN(new Date(closing_date))
+            ? new Date(closing_date)
+            : null,
+        requirements:
+          requirements && typeof requirements === "string"
+            ? requirements
+            : null,
         provider_id: user.provider.provider_id,
       },
     });
 
-    res.status(201).json({ message: "Listing created successfully", listing });
+    res.status(201).json({
+      message: "Listing created successfully",
+      listing,
+    });
   } catch (error) {
     console.error("Error creating listing:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 }
 
+/* =========================
+   PROVIDER LISTINGS
+========================= */
 
-// SPECIFIC ROUTES FIRST (no :id parameters)
+router.get("/provider", async (req, res) => {
+  const { email } = req.query;
 
-
-router.get("/all", async (req, res) => {
   try {
-    const listings = await prisma.listing.findMany({
+    const user = await prisma.user.findUnique({
+      where: { email },
       include: { provider: true },
     });
+
+    if (!user || !user.provider) {
+      return res.status(404).json({ error: "Provider not found." });
+    }
+
+    const listings = await prisma.listing.findMany({
+      where: { provider_id: user.provider.provider_id },
+    });
+
     res.status(200).json(listings);
   } catch (error) {
-    console.error("Error in /all:", error);
+    console.error("Error in /provider:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-router.get("/pending", async (req, res) => {
-  try {
-    const listings = await prisma.listing.findMany({
-      where: { status: "pending" },
-      include: { provider: true },
-    });
-    res.status(200).json(listings);
-  } catch (error) {
-    console.error("Error in /pending:", error);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
+/* =========================
+   APPROVED LISTINGS
+========================= */
 
 router.get("/approved", async (req, res) => {
   const { type, userEmail } = req.query;
 
   try {
     const whereClause = { status: "approved" };
-    if (type) whereClause.list_type = type;
+
+    if (type) {
+      whereClause.list_type = type;
+    }
 
     const listings = await prisma.listing.findMany({
       where: whereClause,
-      include: { 
+      include: {
         provider: true,
+        applications: {
+          include: { user: true }
+        },
         _count: {
           select: { applications: true }
         },
-        applications: {
-          where: {
-            user: { email: userEmail || "" }
-          }
-        }
       },
     });
 
-    const results = listings.map(listing => ({
+    const results = listings.map((listing) => ({
       ...listing,
-      hasApplied: listing.applications.length > 0,
-      applicantCount: listing._count.applications
+      hasApplied: userEmail
+        ? listing.applications.some(a => a.user?.email === userEmail)
+        : false,
+      applicantCount: listing._count?.applications ?? listing.applications.length,
     }));
 
     res.status(200).json(results);
@@ -104,125 +127,171 @@ router.get("/approved", async (req, res) => {
   }
 });
 
-router.get("/provider", async (req, res) => {
-  const { email } = req.query;
+/* =========================
+   ALL LISTINGS
+========================= */
+
+router.get("/all", async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const listings = await prisma.listing.findMany({
       include: { provider: true },
     });
-    if (!user || !user.provider) {
-      return res.status(404).json({ error: "Provider not found." });
-    }
-    const listings = await prisma.listing.findMany({
-      where: { provider_id: user.provider.provider_id },
-    });
+
     res.status(200).json(listings);
   } catch (error) {
+    console.error("Error in /all:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-router.get("/my-applications", async (req, res) => {
-  const { email } = req.query;
-  try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(404).json({ error: "User not found." });
+/* =========================
+   PENDING LISTINGS
+========================= */
 
-    const applications = await prisma.application.findMany({
-      where: { user_id: user.user_id },
-      include: { listing: true },
-    });
-    res.status(200).json(applications);
-  } catch (error) {
-    console.error("MY-APPLICATIONS ERROR:", error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-router.get("/provider-applications", async (req, res) => {
-  const { email } = req.query;
+router.get("/pending", async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const listings = await prisma.listing.findMany({
+      where: { status: "pending" },
       include: { provider: true },
     });
-    if (!user || !user.provider) {
-      return res.status(404).json({ error: "Provider not found." });
-    }
 
-    const applications = await prisma.application.findMany({
-      where: { provider_id: user.provider.provider_id },
-      include: { user: true, listing: true },
-    });
-    res.status(200).json(applications);
+    res.status(200).json(listings);
   } catch (error) {
+    console.error("Error in /pending:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
+/* =========================
+   APPLY TO LISTING
+========================= */
 
 router.post("/apply", async (req, res) => {
   const { listing_id, email } = req.body;
+
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(404).json({ error: "User not found." });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
 
     const listing = await prisma.listing.findUnique({
-      where: { listings_id: Number(listing_id) },
+      where: { listings_id: parseInt(listing_id) },
     });
-    if (!listing) return res.status(404).json({ error: "Listing not found." });
+
+    if (!listing) {
+      return res.status(404).json({ error: "Listing not found." });
+    }
 
     const existing = await prisma.application.findFirst({
-      where: { user_id: user.user_id, listing_id: Number(listing_id) },
+      where: {
+        user_id: user.user_id,
+        listing_id: parseInt(listing_id),
+      },
     });
-    if (existing) return res.status(400).json({ error: "Already applied." });
+
+    if (existing) {
+      return res.status(400).json({ error: "Already applied." });
+    }
 
     const application = await prisma.application.create({
       data: {
         user_id: user.user_id,
-        listing_id: Number(listing_id),
+        listing_id: parseInt(listing_id),
         provider_id: listing.provider_id,
         status: "pending",
       },
     });
 
-    res.status(201).json({ message: "Application submitted!", application });
+    res.status(201).json({
+      message: "Application submitted!",
+      application,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Apply error:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
-router.post("/post", postListing);
+/* =========================
+   MY APPLICATIONS
+========================= */
 
+router.get("/my-applications", async (req, res) => {
+  const { email } = req.query;
 
-// DYNAMIC/WILDCARD ROUTES LAST (with :id parameter)
-
-
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
   try {
-    const listing = await prisma.listing.findFirst({
-      where: { listings_id: Number(id) }
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
-    if (!listing) {
-      return res.status(404).json({ error: "Listing not found" });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
     }
-    res.json(listing);
+
+    const applications = await prisma.application.findMany({
+      where: { user_id: user.user_id },
+      include: { listing: true },
+    });
+
+    res.status(200).json(applications);
   } catch (error) {
-    console.error("Error in /:id:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("MY-APPLICATIONS ERROR:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 });
+
+/* =========================
+   PROVIDER APPLICATIONS
+========================= */
+
+router.get("/provider-applications", async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { provider: true },
+    });
+
+    if (!user || !user.provider) {
+      return res.status(404).json({ error: "Provider not found." });
+    }
+
+    const applications = await prisma.application.findMany({
+      where: {
+        provider_id: user.provider.provider_id,
+      },
+      include: {
+        user: true,
+        listing: true,
+      },
+    });
+
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error("Provider applications error:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+/* =========================
+   UPDATE LISTING STATUS
+========================= */
 
 router.patch("/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+
   try {
     const listing = await prisma.listing.update({
-      where: { listings_id: Number(id) },
+      where: { listings_id: parseInt(id) },
       data: { status },
     });
+
     res.status(200).json(listing);
   } catch (error) {
     console.error("Error in PATCH /:id/status:", error);
@@ -230,68 +299,118 @@ router.patch("/:id/status", async (req, res) => {
   }
 });
 
+/* =========================
+   DELETE LISTING
+========================= */
+
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
+
   try {
-    const listingId = Number(id);
-    
-    // Delete applications first
-    await prisma.application.deleteMany({
-      where: { listing_id: listingId }
+    // 1. Snapshot listing name before deleting
+    const listing = await prisma.listing.findUnique({
+      where: { listings_id: parseInt(id) },
+      select: { listname: true }
     });
-    
-    // FIRST: Update reports to remove the foreign key reference
-    await prisma.report.updateMany({
-      where: { listing_id: listingId },
-      data: { 
-        listing_id: null,  // Set to null to break the foreign key constraint
-        status: 'resolved' 
-      }
-    });
-    
-    // THEN delete the listing
+
+    const listingName = listing?.listname || "Unknown";
+
+    // 2. Preserve reports — nullify listing_id so they survive for archive
+    try {
+      await prisma.report.updateMany({
+        where: { listing_id: parseInt(id) },
+        data: {
+          status: "resolved",
+          listing_id: null,
+          details: `[Listing "${listingName}" was deleted by admin]`
+        },
+      });
+    } catch (_) {}
+
+    // 3. Delete applications
+    try {
+      await prisma.application.deleteMany({
+        where: { listing_id: parseInt(id) },
+      });
+    } catch (_) {}
+
+    // 4. Delete listing
     await prisma.listing.delete({
-      where: { listings_id: listingId },
+      where: { listings_id: parseInt(id) },
     });
-    
+
     res.status(200).json({ message: "Listing deleted." });
   } catch (error) {
     console.error("Error in DELETE /:id:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error.", details: error.message });
   }
 });
+
+/* =========================
+   UPDATE APPLICATION STATUS
+========================= */
+
 router.put("/applications/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+
   try {
     const application = await prisma.application.update({
-      where: { application_id: Number(id) },
+      where: {
+        application_id: parseInt(id),
+      },
       data: { status },
-      include: { user: true, listing: true }
     });
-    
-      await db.collection("notifications").add({
-        userId: application.user.firebase_uid || "MISSING_UID", 
-        type: "Application Update",
-        message: `Your application for '${application.listing.listname}' has been marked as: ${status}.`,
-        isRead: false,
-        createdAt: new Date() 
-      });
 
-      if (application.user && application.user.email) {
-        await sendStatusEmail(
-          application.user.email, 
-          application.user.name || "Applicant", 
-          application.listing.listname, 
-          status
-        );
-      }
-      
     res.status(200).json(application);
   } catch (error) {
-    console.error("BACKEND CRASH:", error);
+    console.error("Application status update error:", error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
+/* =========================
+   GET SINGLE LISTING
+   MUST BE LAST GET ROUTE
+========================= */
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { userEmail } = req.query;
+
+  try {
+    const listing = await prisma.listing.findUnique({
+      where: { listings_id: parseInt(id) },
+      include: {
+        provider: true,
+        applications: userEmail
+          ? { where: { user: { email: userEmail } } }
+          : false,
+      },
+    });
+
+    if (!listing) {
+      return res.status(404).json({
+        error: "Listing not found",
+      });
+    }
+
+    const result = {
+      ...listing,
+      hasApplied: listing.applications ? listing.applications.length > 0 : false,
+    };
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error in /:id:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/* =========================
+   CREATE LISTING
+========================= */
+
+router.post("/post", postListing);
 
 module.exports = router;
