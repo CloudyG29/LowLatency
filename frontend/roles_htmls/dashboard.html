@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="../roles_css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="dashboard-layout">
     <aside class="sidebar">
@@ -15,14 +17,12 @@
 
       <nav>
         <a href="/dashboard" class="active">Dashboard</a>
-        <a href="/provider">Opportunities</a>
-        <a href="/provider">Applications</a>
-        <a href="/provider">Placements</a>
+        <a href="/provider?tab=post">Post Opportunities</a>
+        <a href="/provider?tab=manage">My Opportunities</a>
+        <a href="/provider?tab=applications">Applications</a>
+        <a href="/login">Logout</a>
       </nav>
-
-      <button class="post-btn" onclick="window.location.href='/provider'">
-        Post Opportunity
-      </button>
+      
     </aside>
 
     <main class="main-content">
@@ -114,4 +114,5 @@
 
   <script src="../roles_js/dashboard.js"></script>
 </body>
+
 </html>

@@ -119,7 +119,7 @@ async function loginAndRedirect(email, password) {
             if (onboardResponse.ok) {
                 const onboardData = await onboardResponse.json();
                 if (onboardData.onboarded) {
-                    window.location.href = '/provider';
+                    window.location.href = '/dashboard';
                 } else {
                     window.location.href = '/provider-onboarding';
                 }

@@ -430,17 +430,17 @@ function getCompetition(count) {
   let level, text;
 
   if (count <= 10) {
-      level = "low";
-      text = "Low competition";
+    level = "low";
+    text = "Low competition";
   } else if (count <= 30) {
-      level = "moderate";
-      text = "Moderate";
+    level = "moderate";
+    text = "Moderate";
   } else if (count <= 75) {
-      level = "high";
-      text = "High competition";
+    level = "high";
+    text = "High competition";
   } else {
-      level = "very-high";
-      text = "Very high";
+    level = "very-high";
+    text = "Very high";
   }
 
   const label = count === 1 ? "1 applicant" : `${count} applicants`;
@@ -452,8 +452,8 @@ function getCompetition(count) {
 async function fetchOpportunities(type = "") {
   const container = document.getElementById("opportunitiesList");
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const userEmail = userData.email || ""; // Fallback if email is not set in localStorage
-  // Show loading state while fetching
+  const userEmail = userData.email || "";
+
   if (typeof window.showLoader === "function") window.showLoader();
   container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
 
@@ -466,7 +466,7 @@ async function fetchOpportunities(type = "") {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Failed to fetch opportunities");
-    } 
+    }
 
     const listings = await response.json();
     container.innerHTML = "";
@@ -479,45 +479,51 @@ async function fetchOpportunities(type = "") {
     listings.forEach((listing) => {
       const card = document.createElement("div");
 
-      // CHANGE: new cleaner card class
+
       card.className = "opportunity-preview-card";
 
       const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
 
       const actionUI = hasApplied
-        ? `<div class="already-applied">✅ Already Applied</div>`
+        ? `<div class="already-applied">Already Applied</div>`
         : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id}, ${listing.nqf_level || 0})">Apply Now</button>`
 
       const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
       const competition = getCompetition(applicantCount);
 
       card.innerHTML = `
-        <div class="opportunity-preview-main">
-          <div>
-            <p class="opportunity-label">Opportunity</p>
-            <h3>${listing.listname}</h3>
-            <p class="opportunity-subtext">${listing.provider?.provider_name || "Provider not listed"}</p>
-          </div>
+      <div class="opportunity-preview-main">
+      <div>
+        <p class="opportunity-label">Opportunity</p>
+        <h3>${listing.listname}</h3>
+        <p class="opportunity-subtext">${listing.provider?.provider_name || "Provider not listed"}</p>
+      </div>
 
-          <div>
-            <p class="opportunity-label">Details</p>
-            <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
-            <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
-          </div>
+      <div>
+        <p class="opportunity-label">Details</p>
+        <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
+        <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+      </div>
 
-          <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
-        </div>
+      <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
+      
+      <div class="opportunity-expanded-details hidden" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; width: 100%;">
+         <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+         <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+         <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+      </div>
+    </div>
 
-        <div class="opportunity-actions">
-          <button class="view-opportunity-details-btn" type="button">View Details</button>
-          ${actionUI}
-        </div>
+    <div class="opportunity-actions">
+      <button class="view-opportunity-details-btn" type="button">View Details</button>
+      ${actionUI}
+    </div>
 
       `;
 
       container.appendChild(card);
 
-      // CHANGE: expandable details functionality
+
       const detailsBtn = card.querySelector(".view-opportunity-details-btn");
       const detailsSection = card.querySelector(".opportunity-expanded-details");
 
@@ -532,17 +538,10 @@ async function fetchOpportunities(type = "") {
   } catch (error) {
     console.error("Error fetching opportunities:", error);
     container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
-  }finally {
+  } finally {
     if (typeof window.hideLoader === "function") window.hideLoader();
   }
 }
-
-async function applyForListing(listingId, requiredNqf) {
-
-  hideLoader();
-}
-
-
 
 
 function applyForListing(listingId) {
@@ -554,7 +553,7 @@ function applyForListing(listingId) {
   document.getElementById("applicationAvailability").value = "";
   document.getElementById("applicationCvName").textContent = cvName;
 
-  openModal("applicationModal"); 
+  openModal("applicationModal");
 }
 
 async function submitApplicationFromModal() {
@@ -573,7 +572,7 @@ async function submitApplicationFromModal() {
   // Warn if they don't meet the requirement
   if (requiredNqf && highestNqf < requiredNqf) {
     const proceed = confirm(
-      `⚠️ This opportunity requires NQF Level ${requiredNqf}.\n` +
+      `This opportunity requires NQF Level ${requiredNqf}.\n` +
       `Your highest qualification is NQF Level ${highestNqf || 'unknown'}.\n\n` +
       `You may not meet the requirements. Apply anyway?`
     );

@@ -55,10 +55,10 @@
       <h2>SkillBridge</h2>
       <hr />
       <ul class="nav-links">
+        <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="#" onclick="showTab('post')">Post Opportunity</a></li>
         <li><a href="#" onclick="showTab('manage')">My Opportunities</a></li>
         <li><a href="#" onclick="showTab('applications')">Applications</a></li>
-        <li><a href="/dashboard">Analytics Dashboard</a></li>
         <li><a href="/login">Logout</a></li>
       </ul>
     </nav>
@@ -70,7 +70,7 @@
       </div>
 
       <!-- POST TAB -->
-      <div id="postTab" class="tab-content active">
+      <div id="postTab" class="tab-content active" style="display: none;">
         <h2>Post a New Opportunity</h2>
         <div class="card">
           <input id="listname" placeholder="Title *" required />
@@ -95,13 +95,13 @@
       </div>
 
       <!-- MANAGE TAB -->
-      <div id="manageTab" class="tab-content">
+      <div id="manageTab" class="tab-content" style="display: none;">
         <h2>My Opportunities</h2>
         <div id="myOpportunities"></div>
       </div>
 
       <!-- APPLICATIONS TAB -->
-      <div id="applicationsTab" class="tab-content">
+      <div id="applicationsTab" class="tab-content" style="display: none;">
 
         <div class="applications-dashboard-header">
           <div>

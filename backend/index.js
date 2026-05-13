@@ -15,13 +15,12 @@ app.use(express.json());
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
-const profileRoutes = require('./routes/profile');
 const qualificationsRouter = require('./routes/qualifications');
 const profileRoutes = require("./routes/profile");
-const dashboardRoutes = require("./routes/dashboard"); // ADDED: dashboard analytics API routes
+const dashboardRoutes = require("./routes/dashboard"); 
 
 app.use("/api/listings", listingRoutes);
-app.use("/api/dashboard", dashboardRoutes); // ADDED: makes /api/dashboard/summary work
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/admin", adminRoutes);
 

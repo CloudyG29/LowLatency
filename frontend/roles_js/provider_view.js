@@ -85,12 +85,12 @@ async function postOpportunity() {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error);
 
-    msg.innerText = "✅ Posted! Waiting for admin approval.";
+    msg.innerText = "Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
     document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
     displayOpportunities();
   } catch (error) {
-    msg.innerText = "❌ " + error.message;
+    msg.innerText = error.message;
     msg.style.color = "#fc8181";
   }
 }
@@ -331,26 +331,53 @@ function hideLoader() {
 }
 
 function showTab(tab) {
-  document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach((c) => {
+    c.classList.remove("active");
+    c.style.display = "none";
+  });
 
-  if (tab === "post") document.getElementById("postTab").classList.add("active");
+  if (tab === "post") {
+    const postTab = document.getElementById("postTab");
+    if (postTab) {
+      postTab.classList.add("active");
+      postTab.style.display = "block";
+    }
+  }
 
   if (tab === "manage") {
-    document.getElementById("manageTab").classList.add("active");
-    displayOpportunities();
+    const manageTab = document.getElementById("manageTab");
+    if (manageTab) {
+      manageTab.classList.add("active");
+      manageTab.style.display = "block"; 
+      displayOpportunities();
+    }
   }
 
   if (tab === "applications") {
-    document.getElementById("applicationsTab").classList.add("active");
-    displayApplications();
+    const appsTab = document.getElementById("applicationsTab");
+    if (appsTab) {
+      appsTab.classList.add("active");
+      appsTab.style.display = "block"; 
+      displayApplications(); 
+    }
   }
+
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  showLoader();
   const allowed = await guardProviderPage();
   if (!allowed) return;
+  hideLoader();
 
-  displayOpportunities();
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedTab = urlParams.get('tab'); 
+
+  if (requestedTab) {
+    showTab(requestedTab);
+  } else {
+    showTab("manage"); 
+  }
 });
 
 if (typeof module !== "undefined" && module.exports) {
@@ -361,12 +388,3 @@ if (typeof module !== "undefined" && module.exports) {
     updateApplicationStatus,
   };
 }
-
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user;
-    displayOpportunities();
-  } else {
-    window.location.href = "/login";
-  }
-});
