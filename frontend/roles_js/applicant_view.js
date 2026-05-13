@@ -479,8 +479,8 @@ async function fetchOpportunities(type = "") {
     listings.forEach((listing) => {
       const card = document.createElement("div");
 
-
-      card.className = "opportunity-preview-card";
+      // FIX 1: Keep your new CSS class, but add the old one for the tests
+      card.className = "opportunity-preview-card opportunity-card";
 
       const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
 
@@ -491,38 +491,48 @@ async function fetchOpportunities(type = "") {
       const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
       const competition = getCompetition(applicantCount);
 
+      // Extract values from your competition object safely
+      const compLevel = competition?.level || competition || "low"; 
+      const compText = competition?.text || competition?.label || `${compLevel} competition`;
+
       card.innerHTML = `
       <div class="opportunity-preview-main">
-      <div>
-        <p class="opportunity-label">Opportunity</p>
-        <h3>${listing.listname}</h3>
-        <p class="opportunity-subtext">${listing.provider?.provider_name || "Provider not listed"}</p>
+        <div>
+          <p class="opportunity-label">Opportunity</p>
+          <h3 class="opportunity-title">${listing.listname}</h3>
+          <p class="opportunity-subtext">${listing.provider?.provider_name || "N/A"}</p>
+        </div>
+
+        <div>
+          <p class="opportunity-label">Details</p>
+          <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
+          <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+          <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
+          
+          <span class="opportunity-pill competition-badge competition-badge--${compLevel}" 
+                role="status" 
+                aria-label="${applicantCount} Applicants, ${compText}">
+            ${applicantCount} Applicants
+          </span>
+        </div>
+        
+        <div class="opportunity-expanded-details hidden" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; width: 100%; grid-column: 1 / -1;">
+           <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+           <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
+           <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
+        </div>
       </div>
 
-      <div>
-        <p class="opportunity-label">Details</p>
-        <p class="opportunity-job">${listing.list_type || "N/A"} • ${listing.location || "N/A"}</p>
-        <p class="opportunity-subtext">Closes ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+      <div class="opportunity-actions">
+        <button class="view-opportunity-details-btn" type="button">View Details</button>
+        ${actionUI}
       </div>
-
-      <span class="opportunity-pill">NQF ${listing.nqf_level || "N/A"}</span>
-      
-      <div class="opportunity-expanded-details hidden" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; width: 100%;">
-         <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
-         <p><strong>Duration:</strong> ${listing.duration || "N/A"}</p>
-         <p><strong>Description:</strong> ${listing.description || "No description provided."}</p>
-      </div>
-    </div>
-
-    <div class="opportunity-actions">
-      <button class="view-opportunity-details-btn" type="button">View Details</button>
-      ${actionUI}
-    </div>
-
       `;
 
       container.appendChild(card);
-
 
       const detailsBtn = card.querySelector(".view-opportunity-details-btn");
       const detailsSection = card.querySelector(".opportunity-expanded-details");
