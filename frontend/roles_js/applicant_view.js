@@ -157,26 +157,40 @@ function renderNotifications(notifications) {
 
 // --- 1. Fix the showTab function to correctly handle the profile ---
 function showTab(tabName) {
+  // Hide all tabs and contents
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
+  // Show the selected tab and its content
   if (tabName === 'opportunities') {
+    // Fallback to querySelector if you don't have IDs on your tab buttons
     const tabBtn = document.getElementById('tab-opps') || document.querySelectorAll('.tab')[0];
     if (tabBtn) tabBtn.classList.add('active');
+
     document.getElementById('opportunitiesTab').classList.add('active');
     fetchOpportunities(this.document.getElementById("listTypeFilter").value);
 
   } else if (tabName === 'applications') {
     const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[1];
     if (tabBtn) tabBtn.classList.add('active');
+
     document.getElementById('applicationsTab').classList.add('active');
     renderApplications();
 
   } else if (tabName === 'profile') {
     const tabBtn = document.getElementById('tab-profile') || document.querySelectorAll('.tab')[2];
     if (tabBtn) tabBtn.classList.add('active');
+
     document.getElementById('profileTab').classList.add('active');
-    renderProfile();
+    renderProfile(); // Load saved data when tab is opened
+  }
+
+  else if(tabName === 'notifications') {
+    const tabBtn = document.getElementById('tab-notifications') || document.querySelectorAll('.tab')[3];
+    if (tabBtn) tabBtn.classList.add('active');
+
+    document.getElementById('notificationsTab').classList.add('active');
+    
   }
 }
 
@@ -737,7 +751,9 @@ if (typeof module !== 'undefined' && module.exports) {
     guardApplicantPage,
     getCompetition,
     renderNotifications,
-    startNotificationListener
+    startNotificationListener,
+    // displayApplications,
+    // updateApplicationStatus,
   };
 } else {
   renderEducationDisplay();
