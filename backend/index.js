@@ -18,15 +18,15 @@ app.use((req, res, next) => {
 // Routes
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/get_user");
-const listingRoutes = require("./routes/listings");
-const profileRoutes = require('./routes/profile');
-const reportRoutes = require("./routes/reports");
+const listRoutes = require("./routes/listings");
+const profileRoutes = require("./routes/profile");
+const qualificationsRoute = require("./routes/qualifications");
+const reportRoutes = require("./routes/reports");  
 
-app.use("/api/listings", listingRoutes);
+app.use("/api/listings", listRoutes);
 app.use("/api/admin", adminRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/profile', profileRoutes);
-app.use("/api/reports", reportRoutes);
+app.use("/api/qualifications", qualificationsRoute);
+app.use("/api/reports", reportRoutes);  
 
 // Serve HTML files
 app.get("/", (req, res) => {
