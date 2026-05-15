@@ -193,3 +193,15 @@ async function loginWithGoogle() {
         throw error;
     }
 }
+
+// ADDED: Properly logs the user out of Firebase and clears stored login info.
+async function logoutUser() {
+    try {
+        await firebase.auth().signOut();
+        localStorage.removeItem('firebase_uid');
+        window.location.href = '/login';
+    } catch (error) {
+        console.error("Logout failed", error);
+        alert("Logout failed. Please try again.");
+    }
+}
