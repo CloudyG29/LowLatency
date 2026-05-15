@@ -10,6 +10,71 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// ADDED: Tell Firebase to keep the user signed in even after closing/reopening the browser.
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// ADDED: Shared redirect helper so email login, Google login, and auto-login all use the same role logic.
+async function redirectUserByRole(email) {
+    const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
+
+    if (!response.ok) {
+        await firebase.auth().signOut();
+        localStorage.removeItem('firebase_uid');
+        window.location.href = '/login';
+        return;
+    }
+
+    const data = await response.json();
+
+    if (data.role === 'Admin') {
+        window.location.href = '/admin';
+        return;
+    }
+
+    if (data.role === 'Provider') {
+        const onboardResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(email)}`);
+
+        if (onboardResponse.ok) {
+            const onboardData = await onboardResponse.json();
+
+            if (onboardData.onboarded) {
+                window.location.href = '/provider';
+            } else {
+                window.location.href = '/provider-onboarding';
+            }
+
+            return;
+        }
+
+        window.location.href = '/provider-onboarding';
+        return;
+    }
+
+    window.location.href = '/applicant';
+}
+
+// ADDED: Automatically redirect already-logged-in users away from auth pages.
+function keepUserLoggedIn() {
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (!user) {
+            localStorage.removeItem('firebase_uid');
+            return;
+        }
+
+        localStorage.setItem('firebase_uid', user.uid);
+
+        const currentPath = window.location.pathname;
+        const authPages = ['/login', '/signup', '/register'];
+
+        if (authPages.includes(currentPath)) {
+            await redirectUserByRole(user.email);
+        }
+    });
+}
+
+// ADDED: Start listening for Firebase's remembered login state.
+keepUserLoggedIn();
+
 // 2. Database Sync (Now includes the Firebase UID)
 async function registerUser(firstName, lastName, email, role, uid) {
     try {
@@ -101,33 +166,9 @@ async function loginAndRedirect(email, password) {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
         localStorage.setItem('firebase_uid', user.uid);
-        // Ask your backend: "What is the role of this email in the Prisma DB?"
 
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
-        
-        if (!response.ok) {
-            throw new Error("User not found in database");
-        }
-        
-        const data = await response.json();
-        
-        // Redirect based on the DB response, not localStorage
-        if (data.role === 'Admin') window.location.href = '/admin';
-        else if (data.role === 'Provider') {
-            // Check if provider is onboarded
-            const onboardResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(email)}`);
-            if (onboardResponse.ok) {
-                const onboardData = await onboardResponse.json();
-                if (onboardData.onboarded) {
-                    window.location.href = '/provider';
-                } else {
-                    window.location.href = '/provider-onboarding';
-                }
-            } else {
-                window.location.href = '/provider-onboarding'; // Default to onboarding if check fails
-            }
-        }
-        else window.location.href = '/applicant';
+        // CHANGED: Reuse the shared redirect helper instead of repeating role redirect logic here.
+        await redirectUserByRole(email);
         
     } catch (error) {
         console.error("Login failed", error);
@@ -144,36 +185,8 @@ async function loginWithGoogle() {
         localStorage.setItem('firebase_uid', user.uid);
         const email = user.email;
 
-        // 2. Fetch role from Prisma
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(email)}`);
-        if (!response.ok) {
-            await firebase.auth().signOut();
-            alert("User not found in database. Please sign up first.");
-            return; // Stop the function here
-        }
-
-        const data = await response.json();
-
-        // 3. Redirect
-        if (data.role === 'Admin') {
-            window.location.href = '/admin';
-        } else if (data.role === 'Applicant') {
-            window.location.href = '/applicant';
-        } else if (data.role === 'Provider') {
-            const onboardResponse = await fetch(`/api/user/provider-onboarded?email=${encodeURIComponent(email)}`);
-            if (onboardResponse.ok) {
-                const onboardData = await onboardResponse.json();
-                if (onboardData.onboarded) {
-                    window.location.href = '/provider';
-                } else {
-                    window.location.href = '/provider-onboarding';
-                }
-            } else {
-                window.location.href = '/provider-onboarding';
-            }
-        } else {
-            window.location.href = '/login';
-        }
+        // CHANGED: Reuse the shared redirect helper instead of repeating role redirect logic here.
+        await redirectUserByRole(email);
 
     } catch (error) {
         console.error("Google login error:", error);
