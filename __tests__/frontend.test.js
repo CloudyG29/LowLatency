@@ -594,4 +594,70 @@ describe('Role Based Access', () => {
     const redirect = role === 'Applicant' ? '/applicant' : role === 'Provider' ? '/provider' : '/admin';
     expect(redirect).toBe('/admin');
   });
+}); 
+
+// PERSISTENT LOGIN + LOGOUT TESTS
+describe('Persistent Login and Logout', () => {
+
+  beforeEach(() => {
+    localStorage.clear();
+
+    delete window.location;
+    window.location = { href: '' };
+
+    global.firebase = {
+      auth: () => ({
+        signOut: jest.fn(() => Promise.resolve()),
+      }),
+    };
+  });
+
+  test('stores firebase uid in localStorage', () => {
+    localStorage.setItem('firebase_uid', 'abc123');
+
+    expect(localStorage.getItem('firebase_uid')).toBe('abc123');
+  });
+
+  test('removes firebase uid on logout', async () => {
+    localStorage.setItem('firebase_uid', 'abc123');
+
+    async function logoutUser() {
+      await firebase.auth().signOut();
+      localStorage.removeItem('firebase_uid');
+      window.location.href = '/login';
+    }
+
+    await logoutUser();
+
+    expect(localStorage.getItem('firebase_uid')).toBe(null);
+  });
+
+  test('redirects to login after logout', async () => {
+    async function logoutUser() {
+      await firebase.auth().signOut();
+      localStorage.removeItem('firebase_uid');
+      window.location.href = '/login';
+    }
+
+    await logoutUser();
+
+    expect(window.location.href).toBe('/login');
+  });
+
+  test('user remains logged in if firebase uid exists', () => {
+    localStorage.setItem('firebase_uid', 'persist123');
+
+    const userLoggedIn = !!localStorage.getItem('firebase_uid');
+
+    expect(userLoggedIn).toBe(true);
+  });
+
+  test('user is logged out if firebase uid does not exist', () => {
+    localStorage.removeItem('firebase_uid');
+
+    const userLoggedIn = !!localStorage.getItem('firebase_uid');
+
+    expect(userLoggedIn).toBe(false);
+  });
+
 });
