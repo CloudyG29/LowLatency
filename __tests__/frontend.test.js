@@ -602,8 +602,12 @@ describe('Persistent Login and Logout', () => {
   beforeEach(() => {
     localStorage.clear();
 
-    delete window.location;
-    window.location = { href: '' };
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: {
+        assign: jest.fn(),
+      },
+    });
 
     global.firebase = {
       auth: () => ({
@@ -624,7 +628,7 @@ describe('Persistent Login and Logout', () => {
     async function logoutUser() {
       await firebase.auth().signOut();
       localStorage.removeItem('firebase_uid');
-      window.location.href = '/login';
+      window.location.assign('/login');
     }
 
     await logoutUser();
@@ -636,12 +640,12 @@ describe('Persistent Login and Logout', () => {
     async function logoutUser() {
       await firebase.auth().signOut();
       localStorage.removeItem('firebase_uid');
-      window.location.href = '/login';
+      window.location.assign('/login');
     }
 
     await logoutUser();
 
-    expect(window.location.href).toBe('/login');
+    expect(window.location.assign).toHaveBeenCalledWith('/login');
   });
 
   test('user remains logged in if firebase uid exists', () => {
