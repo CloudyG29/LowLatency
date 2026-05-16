@@ -97,12 +97,13 @@ model ApplicantSkill {
 }
 
 model Qualification {
-  qualification_id        Int                      @id @default(autoincrement())
-  name                    String
-  nqf_level               Int
-  originator              String?
-  saqa_id                 String?                  @unique
-  sector                  String?
+  qualification_id Int    @id @default(autoincrement())
+  name             String
+  nqf_level        Int
+  saqa_id          String? @unique
+  sector          String?
+  originator       String?
+
   applicantQualifications ApplicantQualification[]
 }
 

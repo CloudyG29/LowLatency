@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -6,6 +7,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Provider Dashboard - SkillBridge</title>
   <link rel="stylesheet" href="../roles_css/provider_view.css" />
+  <style>
+    .nqf-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .nqf-select:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+    .nqf-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
@@ -55,7 +78,13 @@
           <input id="location" placeholder="Location (e.g., Johannesburg, Cape Town)" />
           <input id="duration" placeholder="Duration (e.g., 12 months)" />
           <input id="requirements" placeholder="Requirements (e.g., Matric, NQF 4)" />
-          <input id="nqf_level" placeholder="NQF Level" type="number" />
+
+          <!-- NQF Level Dropdown (populated from SAQA data) -->
+          <label class="nqf-label">NQF Level Required</label>
+          <select id="nqf_level" class="nqf-select">
+            <option value="">Loading NQF levels...</option>
+          </select>
+
           <input id="closing_date" type="text" placeholder="Closing Date (YYYY-MM-DD)" onfocus="this.type='date'"
             onblur="if(!this.value)this.type='text'" />
           <textarea id="description" placeholder="Description *"></textarea>
@@ -82,6 +111,31 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="../public/firebase.js"></script>
   <script src="../roles_js/provider_view.js"></script>
+
+  <!-- SAQA NQF Level Dropdown -->
+  <script>
+    async function loadNQFLevels() {
+      const select = document.getElementById('nqf_level');
+      try {
+        const res = await fetch('/api/qualifications/nqf-levels');
+        const levels = await res.json();
+
+        select.innerHTML = '<option value="">Select NQF Level</option>';
+        levels.forEach(level => {
+          const opt = document.createElement('option');
+          opt.value = level;
+          opt.textContent = `NQF Level ${level}`;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Failed to load NQF levels:', err);
+        select.innerHTML = '<option value="">Could not load NQF levels</option>';
+      }
+    }
+
+    // Load NQF levels when page loads
+    loadNQFLevels();
+  </script>
 </body>
 
 </html>

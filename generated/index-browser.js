@@ -196,9 +196,9 @@ exports.Prisma.QualificationScalarFieldEnum = {
   qualification_id: 'qualification_id',
   name: 'name',
   nqf_level: 'nqf_level',
-  originator: 'originator',
   saqa_id: 'saqa_id',
-  sector: 'sector'
+  sector: 'sector',
+  originator: 'originator'
 };
 
 exports.Prisma.ApplicantQualificationScalarFieldEnum = {

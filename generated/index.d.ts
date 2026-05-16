@@ -9105,27 +9105,27 @@ export namespace Prisma {
     qualification_id: number | null
     name: string | null
     nqf_level: number | null
-    originator: string | null
     saqa_id: string | null
     sector: string | null
+    originator: string | null
   }
 
   export type QualificationMaxAggregateOutputType = {
     qualification_id: number | null
     name: string | null
     nqf_level: number | null
-    originator: string | null
     saqa_id: string | null
     sector: string | null
+    originator: string | null
   }
 
   export type QualificationCountAggregateOutputType = {
     qualification_id: number
     name: number
     nqf_level: number
-    originator: number
     saqa_id: number
     sector: number
+    originator: number
     _all: number
   }
 
@@ -9144,27 +9144,27 @@ export namespace Prisma {
     qualification_id?: true
     name?: true
     nqf_level?: true
-    originator?: true
     saqa_id?: true
     sector?: true
+    originator?: true
   }
 
   export type QualificationMaxAggregateInputType = {
     qualification_id?: true
     name?: true
     nqf_level?: true
-    originator?: true
     saqa_id?: true
     sector?: true
+    originator?: true
   }
 
   export type QualificationCountAggregateInputType = {
     qualification_id?: true
     name?: true
     nqf_level?: true
-    originator?: true
     saqa_id?: true
     sector?: true
+    originator?: true
     _all?: true
   }
 
@@ -9258,9 +9258,9 @@ export namespace Prisma {
     qualification_id: number
     name: string
     nqf_level: number
-    originator: string | null
     saqa_id: string | null
     sector: string | null
+    originator: string | null
     _count: QualificationCountAggregateOutputType | null
     _avg: QualificationAvgAggregateOutputType | null
     _sum: QualificationSumAggregateOutputType | null
@@ -9286,9 +9286,9 @@ export namespace Prisma {
     qualification_id?: boolean
     name?: boolean
     nqf_level?: boolean
-    originator?: boolean
     saqa_id?: boolean
     sector?: boolean
+    originator?: boolean
     applicantQualifications?: boolean | Qualification$applicantQualificationsArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qualification"]>
@@ -9299,12 +9299,12 @@ export namespace Prisma {
     qualification_id?: boolean
     name?: boolean
     nqf_level?: boolean
-    originator?: boolean
     saqa_id?: boolean
     sector?: boolean
+    originator?: boolean
   }
 
-  export type QualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"qualification_id" | "name" | "nqf_level" | "originator" | "saqa_id" | "sector", ExtArgs["result"]["qualification"]>
+  export type QualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"qualification_id" | "name" | "nqf_level" | "saqa_id" | "sector" | "originator", ExtArgs["result"]["qualification"]>
   export type QualificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicantQualifications?: boolean | Qualification$applicantQualificationsArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
@@ -9319,9 +9319,9 @@ export namespace Prisma {
       qualification_id: number
       name: string
       nqf_level: number
-      originator: string | null
       saqa_id: string | null
       sector: string | null
+      originator: string | null
     }, ExtArgs["result"]["qualification"]>
     composites: {}
   }
@@ -9695,9 +9695,9 @@ export namespace Prisma {
     readonly qualification_id: FieldRef<"Qualification", 'Int'>
     readonly name: FieldRef<"Qualification", 'String'>
     readonly nqf_level: FieldRef<"Qualification", 'Int'>
-    readonly originator: FieldRef<"Qualification", 'String'>
     readonly saqa_id: FieldRef<"Qualification", 'String'>
     readonly sector: FieldRef<"Qualification", 'String'>
+    readonly originator: FieldRef<"Qualification", 'String'>
   }
     
 
@@ -12174,9 +12174,9 @@ export namespace Prisma {
     qualification_id: 'qualification_id',
     name: 'name',
     nqf_level: 'nqf_level',
-    originator: 'originator',
     saqa_id: 'saqa_id',
-    sector: 'sector'
+    sector: 'sector',
+    originator: 'originator'
   };
 
   export type QualificationScalarFieldEnum = (typeof QualificationScalarFieldEnum)[keyof typeof QualificationScalarFieldEnum]
@@ -12779,9 +12779,9 @@ export namespace Prisma {
     qualification_id?: IntFilter<"Qualification"> | number
     name?: StringFilter<"Qualification"> | string
     nqf_level?: IntFilter<"Qualification"> | number
-    originator?: StringNullableFilter<"Qualification"> | string | null
     saqa_id?: StringNullableFilter<"Qualification"> | string | null
     sector?: StringNullableFilter<"Qualification"> | string | null
+    originator?: StringNullableFilter<"Qualification"> | string | null
     applicantQualifications?: ApplicantQualificationListRelationFilter
   }
 
@@ -12789,9 +12789,9 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
-    originator?: SortOrderInput | SortOrder
     saqa_id?: SortOrderInput | SortOrder
     sector?: SortOrderInput | SortOrder
+    originator?: SortOrderInput | SortOrder
     applicantQualifications?: ApplicantQualificationOrderByRelationAggregateInput
   }
 
@@ -12803,8 +12803,8 @@ export namespace Prisma {
     NOT?: QualificationWhereInput | QualificationWhereInput[]
     name?: StringFilter<"Qualification"> | string
     nqf_level?: IntFilter<"Qualification"> | number
-    originator?: StringNullableFilter<"Qualification"> | string | null
     sector?: StringNullableFilter<"Qualification"> | string | null
+    originator?: StringNullableFilter<"Qualification"> | string | null
     applicantQualifications?: ApplicantQualificationListRelationFilter
   }, "qualification_id" | "saqa_id">
 
@@ -12812,9 +12812,9 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
-    originator?: SortOrderInput | SortOrder
     saqa_id?: SortOrderInput | SortOrder
     sector?: SortOrderInput | SortOrder
+    originator?: SortOrderInput | SortOrder
     _count?: QualificationCountOrderByAggregateInput
     _avg?: QualificationAvgOrderByAggregateInput
     _max?: QualificationMaxOrderByAggregateInput
@@ -12829,9 +12829,9 @@ export namespace Prisma {
     qualification_id?: IntWithAggregatesFilter<"Qualification"> | number
     name?: StringWithAggregatesFilter<"Qualification"> | string
     nqf_level?: IntWithAggregatesFilter<"Qualification"> | number
-    originator?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
     saqa_id?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
     sector?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
+    originator?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
   }
 
   export type ApplicantQualificationWhereInput = {
@@ -13466,9 +13466,9 @@ export namespace Prisma {
   export type QualificationCreateInput = {
     name: string
     nqf_level: number
-    originator?: string | null
     saqa_id?: string | null
     sector?: string | null
+    originator?: string | null
     applicantQualifications?: ApplicantQualificationCreateNestedManyWithoutQualificationInput
   }
 
@@ -13476,18 +13476,18 @@ export namespace Prisma {
     qualification_id?: number
     name: string
     nqf_level: number
-    originator?: string | null
     saqa_id?: string | null
     sector?: string | null
+    originator?: string | null
     applicantQualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
     applicantQualifications?: ApplicantQualificationUpdateManyWithoutQualificationNestedInput
   }
 
@@ -13495,35 +13495,35 @@ export namespace Prisma {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
     applicantQualifications?: ApplicantQualificationUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationCreateManyInput = {
     name: string
     nqf_level: number
-    originator?: string | null
     saqa_id?: string | null
     sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QualificationUncheckedUpdateManyInput = {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicantQualificationCreateInput = {
@@ -14232,9 +14232,9 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
-    originator?: SortOrder
     saqa_id?: SortOrder
     sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationAvgOrderByAggregateInput = {
@@ -14246,18 +14246,18 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
-    originator?: SortOrder
     saqa_id?: SortOrder
     sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationMinOrderByAggregateInput = {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
-    originator?: SortOrder
     saqa_id?: SortOrder
     sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationSumOrderByAggregateInput = {
@@ -16259,18 +16259,18 @@ export namespace Prisma {
   export type QualificationCreateWithoutApplicantQualificationsInput = {
     name: string
     nqf_level: number
-    originator?: string | null
     saqa_id?: string | null
     sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationUncheckedCreateWithoutApplicantQualificationsInput = {
     qualification_id?: number
     name: string
     nqf_level: number
-    originator?: string | null
     saqa_id?: string | null
     sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationCreateOrConnectWithoutApplicantQualificationsInput = {
@@ -16320,18 +16320,18 @@ export namespace Prisma {
   export type QualificationUpdateWithoutApplicantQualificationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QualificationUncheckedUpdateWithoutApplicantQualificationsInput = {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
-    originator?: NullableStringFieldUpdateOperationsInput | string | null
     saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ListingCreateWithoutReportInput = {

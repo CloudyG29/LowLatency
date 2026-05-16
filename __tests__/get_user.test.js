@@ -23,6 +23,7 @@ const mockRes = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 describe('getUsers', () => {
