@@ -258,11 +258,24 @@ describe("fetchOpportunities()", () => {
         expect(document.querySelector(".apply-btn")).toBeNull();
     });
 
-    test("shows Already applied when applications array is non-empty", async () => {
-        mockFetch([makeListing({ hasApplied: false, applications: [{ id: 99 }] })]);
+    test('shows Already applied when applications array contains the user', async () => {
+        // 1. Log a fake user into localStorage just for this test
+        const testEmail = "test@example.com";
+        localStorage.setItem("userData", JSON.stringify({ email: testEmail }));
+    
+        // 2. Mock the fetch with an application that belongs to THIS exact user
+        mockFetch([
+          makeListing({ 
+            hasApplied: false, 
+            applications: [{ email: testEmail }] 
+          })
+        ]);
+    
         await fetchOpportunities();
+        
+        // 3. Now the DOM should successfully render the badge!
         expect(document.querySelector(".already-applied")).not.toBeNull();
-    });
+      });
 
     // ── Competition badge ─────────────────────────────────────────────────────
 
