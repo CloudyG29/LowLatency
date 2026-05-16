@@ -220,76 +220,54 @@ async function displayApplications() {
       '<div class="empty-state">Error loading applications.</div>';
   }
 }
+async function displayOpportunities() {
+  const container = document.getElementById("myOpportunities");
+  container.innerHTML = '<div class="empty-state">Loading...</div>';
 
-async function displayApplications() {
-  const container = document.getElementById("applicationsList");
-  container.innerHTML =
-    '<div class="empty-state">Loading applications...</div>';
   try {
     showLoader();
     const response = await fetch(
-      `/api/listings/provider-applications?email=${currentUser.email}`,
+      `/api/listings/provider?email=${currentUser.email}`,
     );
-    const applications = await response.json();
+    const listings = await response.json();
 
-    if (applications.length === 0) {
-      hideLoader();
+    if (listings.length === 0) {
       container.innerHTML =
-        '<div class="empty-state">No applications received yet.</div>';
+        '<div class="empty-state">No opportunities posted yet.</div>';
+      hideLoader();
       return;
     }
 
     container.innerHTML = "";
-    applications.forEach((app) => {
+    listings.forEach((listing) => {
       const div = document.createElement("div");
       div.className = "opportunity-card";
       div.innerHTML = `
-        <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
-        <p><strong>Email:</strong> ${app.user.email}</p>
-        <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
-        <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
-        ${
-          app.status === "pending"
-            ? `
-          <button class="btn-hire" data-id="${app.application_id}">Hire</button>
-          <button class="btn-reject" data-id="${app.application_id}">Reject</button>
-        `
-            : ""
-        }
+        <h3>${listing.listname}</h3>
+        <p><strong>Type:</strong> ${listing.list_type}</p>
+        <p><strong>Status:</strong> <span class="status-badge status-${listing.status}">${listing.status}</span></p>
+        <p><strong>Location:</strong> ${listing.location || "N/A"}</p>
+        <p><strong>Stipend:</strong> R${listing.stipend || "0.00"}</p>
+        <p><strong>Closing Date:</strong> ${listing.closing_date ? new Date(listing.closing_date).toDateString() : "N/A"}</p>
+        <button class="btn-reject" onclick="deleteListing(${listing.listings_id})">Delete</button>
       `;
       container.appendChild(div);
     });
-    hideLoader();
-
-    document.querySelectorAll(".btn-hire").forEach((btn) => {
-      showLoader();
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "hired" }),
-        });
-        displayApplications();
-      });
-      hideLoader();
-    });
-
-    document.querySelectorAll(".btn-reject").forEach((btn) => {
-      showLoader();
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "rejected" }),
-        });
-        displayApplications();
-      });
-    });
-    hideLoader();
   } catch (error) {
-    hideLoader();
     container.innerHTML =
-      '<div class="empty-state">Error loading applications.</div>';
+      '<div class="empty-state">Error loading opportunities.</div>';
+  } finally {
+    hideLoader();
+  }
+}
+
+async function deleteListing(id) {
+  if (!confirm("Are you sure you want to delete this listing?")) return;
+  try {
+    await fetch(`/api/listings/${id}`, { method: "DELETE" });
+    displayOpportunities();
+  } catch (error) {
+    alert("Failed to delete listing.");
   }
 }
 
