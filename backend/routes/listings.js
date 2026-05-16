@@ -3,7 +3,7 @@ const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
 
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
+  const { listname, list_type, sector, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -19,6 +19,7 @@ async function postListing(req, res) {
       data: {
         listname,
         list_type,
+        sector: sector || null,
         nqf_level: nqf_level ? parseInt(nqf_level) : null,
         description,
         stipend: stipend ? parseFloat(stipend) : null,

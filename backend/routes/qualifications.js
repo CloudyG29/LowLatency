@@ -48,4 +48,26 @@ router.get('/nqf-levels', async (req, res) => {
   }
 });
 
+router.get('/sectors', async (req, res) => {
+  const { search = '' } = req.query;
+
+  try {
+    const sectors = await prisma.qualification.findMany({
+      where: {
+        sector: {
+          contains: search,
+        },
+      },
+      distinct: ['sector'],
+      select: { sector: true },
+      orderBy: { sector: 'asc' },
+    });
+
+    res.json(sectors.map(s => s.sector));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch sectors' });
+  }
+});
+
 module.exports = router;

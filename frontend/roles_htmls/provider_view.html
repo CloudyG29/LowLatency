@@ -28,6 +28,46 @@
       margin-bottom: 4px;
       display: block;
     }
+
+    .qual-search-wrapper {
+  position: relative;
+}
+
+.qual-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+
+  border: 1px solid #ddd;
+  border-radius: 4px;
+
+  max-height: 200px;
+  overflow-y: auto;
+
+  background: #125473;
+  z-index: 999;
+
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.qual-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  background: rgba(255,255,255,0.07);
+}
+
+.qual-dropdown-item:hover {
+  background: #1d9dbd;
+}
+
+.qual-dropdown-item small {
+  color: #888;
+  display: block;
+}
   </style>
 </head>
 
@@ -74,6 +114,22 @@
         <div class="card">
           <input id="listname" placeholder="Title *" required />
           <input id="list_type" placeholder="Type (e.g. Internship, Learnership, Job) *" required />
+<div class="form-group qual-search-wrapper">
+  <label class="nqf-label">Sector</label>
+
+  <input
+    type="text"
+    id="sectorSearch"
+    class="qual-search"
+    placeholder="Search sector (e.g. Information Technology)"
+    oninput="handleSectorSearch(this)"
+    autocomplete="off"
+  />
+
+  <div class="qual-dropdown"></div>
+
+  <input type="hidden" id="sector" />
+</div>
           <input id="stipend" placeholder="Stipend (e.g., R5000/month)" />
           <input id="location" placeholder="Location (e.g., Johannesburg, Cape Town)" />
           <input id="duration" placeholder="Duration (e.g., 12 months)" />
@@ -133,6 +189,61 @@
       }
     }
 
+async function searchSectors(query) {
+  if (query.length < 2) return [];
+
+  const res = await fetch(
+    `/api/qualifications/sectors?search=${encodeURIComponent(query)}`
+  );
+
+  return await res.json();
+}
+
+async function handleSectorSearch(input) {
+  const query = input.value.trim();
+  const wrapper = input.closest('.qual-search-wrapper');
+  const dropdown = wrapper.querySelector('.qual-dropdown');
+  const hidden = document.getElementById('sector');
+
+  if (query.length < 2) {
+    dropdown.style.display = 'none';
+    return;
+  }
+
+  const results = await searchSectors(query);
+  dropdown.innerHTML = '';
+
+  if (!results.length) {
+    dropdown.innerHTML =
+      '<div class="qual-dropdown-item">No results found</div>';
+  } else {
+    results.forEach((sector) => {
+      const item = document.createElement('div');
+      item.className = 'qual-dropdown-item';
+
+      item.innerHTML = `<strong>${sector}</strong>`;
+
+      item.onclick = () => {
+        input.value = sector;
+        hidden.value = sector;
+        dropdown.style.display = 'none';
+      };
+
+      dropdown.appendChild(item);
+    });
+  }
+
+  dropdown.style.display = 'block';
+}
+
+// close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('qual-search')) {
+    document.querySelectorAll('.qual-dropdown').forEach((d) => {
+      d.style.display = 'none';
+    });
+  }
+});
     // Load NQF levels when page loads
     loadNQFLevels();
   </script>
