@@ -15,15 +15,15 @@ const adminRoutes = require("./routes/get_user");
 const listingRoutes = require("./routes/listings");
 const qualificationsRouter = require('./routes/qualifications');
 const profileRoutes = require("./routes/profile");
-const dashboardRoutes = require("./routes/dashboard"); 
+const dashboardRoutes = require("./routes/dashboard");
+const reportRoutes = require("./routes/reports");   
 
 app.use("/api/listings", listingRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
 app.use("/api/admin", adminRoutes);
-
-
+app.use("/api/reports", reportRoutes);  
 app.use('/api/qualifications', qualificationsRouter);
+
 // Fix COOP header to allow Firebase popups
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
@@ -64,7 +64,7 @@ app.get("/dashboard", (req, res) => {
   res.sendFile(
     path.join(__dirname, "../frontend/roles_htmls", "dashboard.html"),
   );
-}); // ADDED: allows browser route http://localhost:3000/dashboard
+});
 
 app.get("/provider-onboarding", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "provider-onboarding.html"));
@@ -79,12 +79,10 @@ app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "forgot-password.html"));
 });
 
-//  opportunity detail page
 app.get("/opportunity/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "opportunity_detail.html"));
 });
 
-// Report detail page
 app.get("/admin/report/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "report_detail.html"));
 });

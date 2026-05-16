@@ -4,6 +4,7 @@ let opportunityChart = null;
 let sectorChart = null;
 
 async function loadDashboard() {
+  showLoader();
   try {
     const response = await fetch("/api/dashboard/summary");
 
@@ -20,18 +21,23 @@ async function loadDashboard() {
   } catch (error) {
     console.error("Failed to load dashboard:", error);
     alert("Failed to load dashboard analytics.");
+  } finally {
+    hideLoader();
   }
 }
 
 function updateCards(data) {
+  showLoader();
   document.getElementById("totalListings").innerText = data.totalListings;
   document.getElementById("totalApplications").innerText = data.totalApplications;
   document.getElementById("shortlistedApplicants").innerText = data.shortlistedApplicants;
   document.getElementById("successfulPlacements").innerText = data.successfulPlacements;
   document.getElementById("averagePlacementRate").innerText = data.averagePlacementRate;
+  hideLoader();
 }
 
 function populateStatusFilter(statusBreakdown) {
+  showLoader();
   const statusFilter = document.getElementById("statusFilter");
 
   statusBreakdown.forEach((item) => {
@@ -40,31 +46,38 @@ function populateStatusFilter(statusBreakdown) {
     option.textContent = item.status;
     statusFilter.appendChild(option);
   });
+  hideLoader();
 }
 
 function getFilteredStatusData() {
+  showLoader();
   const selectedStatus = document.getElementById("statusFilter").value;
 
   if (selectedStatus === "all") {
+    hideLoader();
     return dashboardData.statusBreakdown;
   }
 
+  hideLoader();
   return dashboardData.statusBreakdown.filter(
     (item) => item.status === selectedStatus
   );
 }
 
 function getFilteredOpportunityData() {
+  showLoader();
   const selectedOpportunityFilter =
     document.getElementById("opportunityFilter").value;
 
   if (selectedOpportunityFilter === "all") {
+    hideLoader();
     return dashboardData.applicationsPerOpportunity;
   }
-
+  hideLoader();
   return dashboardData.applicationsPerOpportunity.filter(
     (item) => item.count > 0
   );
+
 }
 
 function destroyExistingCharts() {
@@ -74,7 +87,11 @@ function destroyExistingCharts() {
 }
 
 function renderCharts() {
-  if (!dashboardData) return;
+  showLoader();
+  if (!dashboardData) {
+    hideLoader();
+    return;
+  }
 
   destroyExistingCharts();
 
@@ -157,6 +174,7 @@ function renderCharts() {
 }
 
 function renderTopOpportunitiesTable(topOpportunities) {
+  showLoader();
   const tableBody = document.getElementById(
     "topOpportunitiesTable"
   );
@@ -169,6 +187,7 @@ function renderTopOpportunitiesTable(topOpportunities) {
         <td colspan="6">No opportunities found yet.</td>
       </tr>
     `;
+    hideLoader();
     return;
   }
 
@@ -186,10 +205,15 @@ function renderTopOpportunitiesTable(topOpportunities) {
 
     tableBody.appendChild(row);
   });
+  hideLoader();
 }
 
 function exportDashboardToCSV() {
-  if (!dashboardData) return;
+  showLoader();
+  if (!dashboardData) {
+    hideLoader();
+    return;
+  }
 
   const rows = [
     ["Metric", "Value"],
@@ -245,6 +269,15 @@ function exportDashboardToCSV() {
   downloadLink.href = URL.createObjectURL(blob);
   downloadLink.download = "skillbridge-dashboard-report.csv";
   downloadLink.click();
+  hideLoader();
+}
+
+function showLoader() {
+  document.getElementById('loader').classList.remove('hidden');
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
 }
 
 document

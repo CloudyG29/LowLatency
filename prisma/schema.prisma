@@ -58,7 +58,7 @@ model Listing {
   cvUploadedAt DateTime?
   applications Application[]
   provider     Provider      @relation(fields: [provider_id], references: [provider_id])
-  Report       Report[]
+  reports Report[]
 }
 
 model Application {

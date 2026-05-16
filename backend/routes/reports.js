@@ -61,7 +61,7 @@ router.get("/", async (req, res) => {
     try {
       reports = await prisma.report.findMany({
         include: {
-          listing: {
+          Listing: {
             include: { provider: true }
           }
         },
@@ -88,7 +88,7 @@ router.get("/:id", async (req, res) => {
     const report = await prisma.report.findUnique({
       where: { report_id: parseInt(id) },
       include: {
-        listing: {
+        Listing: {
           include: { provider: true }
         }
       }

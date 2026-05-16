@@ -575,35 +575,18 @@ async function fetchOpportunities(type = "") {
       </div>
 
       <div class="opportunity-actions">
-        <button class="view-opportunity-details-btn" type="button">View Details</button>
+        <button class="view-opportunity-details-btn" type="button"  data-id="${listing.listings_id}">View Details</button>
         ${actionUI}
       </div>
       `;
 
       container.appendChild(card);
 
-      const detailsBtn = card.querySelector(".view-opportunity-details-btn");
-      const detailsSection = card.querySelector(".opportunity-expanded-details");
-
-      detailsBtn.addEventListener("click", () => {
-        detailsSection.classList.toggle("hidden");
-        detailsBtn.textContent = detailsSection.classList.contains("hidden")
-          ? "View Details"
-          : "Hide Details";
-      });
-    });
-
-    document.querySelectorAll('.view-details-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const listingId = btn.getAttribute('data-id');
-        window.location.href = `/opportunity/${listingId}`;
-      });
-    });
-
-    document.querySelectorAll('.view-details-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const listingId = btn.getAttribute('data-id');
-        window.location.href = `/opportunity/${listingId}`;
+      document.querySelectorAll('.view-opportunity-details-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const listingId = btn.getAttribute('data-id');
+          window.location.href = `/opportunity/${listingId}`;
+        });
       });
     });
 
@@ -766,8 +749,6 @@ if (typeof module !== 'undefined' && module.exports) {
     getCompetition,
     renderNotifications,
     startNotificationListener,
-    // displayApplications,
-    // updateApplicationStatus,
   };
 } else {
   renderEducationDisplay();
