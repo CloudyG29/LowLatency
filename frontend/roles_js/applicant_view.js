@@ -185,12 +185,12 @@ function showTab(tabName) {
     renderProfile(); // Load saved data when tab is opened
   }
 
-  else if(tabName === 'notifications') {
+  else if (tabName === 'notifications') {
     const tabBtn = document.getElementById('tab-notifications') || document.querySelectorAll('.tab')[3];
     if (tabBtn) tabBtn.classList.add('active');
 
     document.getElementById('notificationsTab').classList.add('active');
-    
+
   }
 }
 
@@ -530,7 +530,14 @@ async function fetchOpportunities(type = "") {
       // FIX 1: Keep your new CSS class, but add the old one for the tests
       card.className = "opportunity-preview-card opportunity-card";
 
-      const hasApplied = listing.hasApplied || (listing.applications && listing.applications.length > 0);
+      let hasApplied = listing.hasApplied === true;
+
+      if (!hasApplied && listing.applications) {
+        hasApplied = listing.applications.some(app =>
+          app.email === userEmail ||
+          (app.user && app.user.email === userEmail)
+        );
+      }
 
       const actionUI = hasApplied
         ? `<div class="already-applied">Already Applied</div>`
@@ -540,7 +547,7 @@ async function fetchOpportunities(type = "") {
       const competition = getCompetition(applicantCount);
 
       // Extract values from your competition object safely
-      const compLevel = competition?.level || competition || "low"; 
+      const compLevel = competition?.level || competition || "low";
       const compText = competition?.text || competition?.label || `${compLevel} competition`;
 
       card.innerHTML = `
@@ -618,7 +625,7 @@ function applyForListing(listingId, requiredNqfLevel = 0) {
 async function submitApplicationFromModal() {
   const listingInput = document.getElementById("applicationListingId");
   const listingId = parseInt(listingInput.value, 10);
-  
+
   const requiredNqf = parseInt(listingInput.dataset.requiredNqf || "0", 10);
   const motivation = document.getElementById("applicationMotivation").value.trim();
   const availability = document.getElementById("applicationAvailability").value.trim();
@@ -698,9 +705,9 @@ function startNotificationListener(userFirebaseUid) {
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        
+
         const timeString = data.createdAt ? data.createdAt.toDate().toLocaleString() : "Just now";
-        
+
         liveNotifications.push({
           id: doc.id,
           type: data.type || "Status Update",
