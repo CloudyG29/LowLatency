@@ -168,7 +168,7 @@ function showTab(tabName) {
     if (tabBtn) tabBtn.classList.add('active');
 
     document.getElementById('opportunitiesTab').classList.add('active');
-    fetchOpportunities(this.document.getElementById("listTypeFilter").value);
+    fetchOpportunities(document.getElementById("listTypeFilter").value);
 
   } else if (tabName === 'applications') {
     const tabBtn = document.getElementById('tab-apps') || document.querySelectorAll('.tab')[1];
@@ -590,6 +590,20 @@ async function fetchOpportunities(type = "") {
         detailsBtn.textContent = detailsSection.classList.contains("hidden")
           ? "View Details"
           : "Hide Details";
+      });
+    });
+
+    document.querySelectorAll('.view-details-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const listingId = btn.getAttribute('data-id');
+        window.location.href = `/opportunity/${listingId}`;
+      });
+    });
+
+    document.querySelectorAll('.view-details-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const listingId = btn.getAttribute('data-id');
+        window.location.href = `/opportunity/${listingId}`;
       });
     });
 

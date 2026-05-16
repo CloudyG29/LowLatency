@@ -988,6 +988,29 @@ h2 {
     .cv-upload-section {
         max-width: 100%;
     }
+/* View Details Button Styles */
+    .view-details-btn {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      color: hsl(197, 77%, 68%);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .view-details-btn:hover {
+      background: linear-gradient(90deg, #0056b3, #003d80);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .view-details-btn:active {
+      transform: translateY(0);
+    }
 }
 
 /* ================================
@@ -1256,7 +1279,6 @@ h2 {
 }
 
 /* Notification Card */
-
 .notification-card {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid #2d3748;
@@ -1269,38 +1291,37 @@ h2 {
     cursor: pointer;
     transition: transform 0.2s, border-color 0.2s;
     margin-bottom: 15px;
-  }
-  
-  .notification-card:hover {
+}
+
+.notification-card:hover {
     border-color: #4a5568;
     transform: translateY(-2px);
-  }
-  
-  .notification-info h3 {
+}
+
+.notification-info h3 {
     margin: 0 0 8px 0;
     font-size: 18px;
-  }
-  
-  .notification-info p {
+}
+
+.notification-info p {
     margin: 0;
     color: #cbd5e0;
-  }
-  
- 
-  .status-badge {
+}
+
+.status-badge {
     padding: 4px 12px;
     border-radius: 99px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-  }
-  
-  .status-unread {
-    background-color: #fbd38d; 
+}
+
+.status-unread {
+    background-color: #fbd38d;
     color: #7b341e;
-  }
-  
-  .status-read {
-    background-color: #4a5568; 
+}
+
+.status-read {
+    background-color: #4a5568;
     color: #a0aec0;
-  }
+}

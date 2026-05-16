@@ -100,6 +100,7 @@ async function loginAndRedirect(email, password) {
     try {
         const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
+        localStorage.setItem('userData', JSON.stringify({ email: user.email, name: user.displayName }));
         localStorage.setItem('firebase_uid', user.uid);
         // Ask your backend: "What is the role of this email in the Prisma DB?"
 
@@ -137,10 +138,11 @@ async function loginAndRedirect(email, password) {
 
 async function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    try {
+    try{
         // 1. Auth with Firebase
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
+         localStorage.setItem('userData', JSON.stringify({ email: user.email, name: user.displayName }));
         localStorage.setItem('firebase_uid', user.uid);
         const email = user.email;
 
