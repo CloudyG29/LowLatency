@@ -139,8 +139,8 @@ async function displayPending() {
                     <td>${opp.nqf_level || 'N/A'}</td>
                     <td>${escapeHtml(opp.location || 'N/A')}</td>
                     <td>
-                        <button class="btn-approve" data-id="${opp.id}">Approve</button>
-                        <button class="btn-reject" data-id="${opp.id}">Reject</button>
+                        <button class="btn-approve" data-id="${opp.listings_id}">Approve</button>
+                        <button class="btn-reject" data-id="${opp.listings_id}">Reject</button>
                     </td>
                 </tr>
             `;

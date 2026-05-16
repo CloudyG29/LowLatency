@@ -407,6 +407,7 @@ async function loadDataOnStartup() {
   const firebaseUid = localStorage.getItem('firebase_uid');
 
   try {
+    showLoader();
     const response = await fetch(`/api/profile/${firebaseUid}`);
     const profileData = await response.json();
 
@@ -420,8 +421,8 @@ async function loadDataOnStartup() {
     fetchOpportunities(document.getElementById("listTypeFilter").value);
     renderApplications();
     startNotificationListener(firebaseUid);
-
   } catch (error) {
+    hideLoader();
     console.error("Error loading profile:", error);
   }
 }
