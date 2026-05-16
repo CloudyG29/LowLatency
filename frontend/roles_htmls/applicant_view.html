@@ -1,7 +1,8 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Dashboard - SkillBridge</title>
@@ -57,78 +58,38 @@
 
 <body>
 
-  <body>
     <!-- From Uiverse.io by PriyanshuGupta28 -->
     <div id="loader" class="loader-overlay hidden">
-      <div class="spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div class="spinner">
+          <div></div>   
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+          <div></div>    
+        </div>
       </div>
-    </div>
 
     <div class="layout">
-      <nav class="sidebar">
-        <h2>SkillBridge</h2>
-        <hr />
-        <ul class="nav-links">
-          <li>
-            <a href="#" onclick="showTab('opportunities')"
-              >Browse Opportunity</a
-            >
-          </li>
-          <li>
-            <a href="#" onclick="showTab('applications')">My Applications</a>
-          </li>
-          <li><a href="#" onclick="showTab('profile')">Profile</a></li>
-          <li><a href="/login">Logout</a></li>
-        </ul>
-      </nav>
+        <nav class="sidebar">
+            <h2>SkillBridge</h2>
+            <hr />
+            <ul class="nav-links">
+                <li><a href="#" onclick="showTab('opportunities')">Browse Opportunity</a></li>
+                <li><a href="#" onclick="showTab('applications')">My Applications</a></li>
+                <li><a href="#" onclick="showTab('profile')">Profile</a></li>
+                <li><a href="/login">Logout</a></li>
+            </ul>
+        </nav>
 
-      <main class="container">
-        <header class="header">
-          <h1>🎓 Applicant Dashboard</h1>
-          <p>Welcome!</p>
-        </header>
-
-        <div id="opportunitiesTab" class="tab-content active">
-          <h2>Available Opportunities</h2>
-
-          <div class="filter-controls" style="margin-bottom: 20px">
-            <label for="listTypeFilter"
-              ><strong>Filter by Type:</strong>
-            </label>
-            <select
-              id="listTypeFilter"
-              onchange="fetchOpportunities(this.value)"
-            >
-              <option value="">All Opportunities</option>
-              <option value="Internship">Internship</option>
-              <option value="Learnership">Learnership</option>
-              <option value="Apprenticeship">Apprenticeship</option>
-            </select>
-          </div>
-          <div id="opportunitiesList" class="opportunities-grid">
-            <div class="empty-state">Loading...</div>
-          </div>
-        </div>
-
-        <div id="applicationsTab" class="tab-content">
-          <h2>My Applications</h2>
-          <div id="applicationsList"></div>
-        </div>
-
-        <section id="profileTab" class="tab-content">
-          <section class="profile-dashboard">
-            <header class="page-header">
-              <h2>My Profile</h2>
+        <main class="container">
+            <header class="header">
+                <h1>🎓 Applicant Dashboard</h1>
+                <p>Welcome!</p>
             </header>
 
 <div id="opportunitiesTab" class="tab-content active">
@@ -148,190 +109,16 @@
     </div>
 </div>
 
-            <article class="profile-card">
-              <div class="card-header">
-                <h3>Professional Summary</h3>
-                <button class="btn-edit-secondary" onclick="prepBioModal()">
-                  Edit
-                </button>
-              </div>
-              <p id="displayBio">No professional summary added yet.</p>
-            </article>
-
-            <article class="profile-card">
-              <div class="card-header">
-                <h3>Personal Information</h3>
-                <button
-                  class="btn-edit-primary"
-                  onclick="prepPersonalInfoModal()"
-                >
-                  Edit
-                </button>
-              </div>
-              <div class="card-grid">
-                <div class="data-group">
-                  <span class="data-label">First Name</span>
-                  <span class="data-value" id="displayFirstName">Not set</span>
-                </div>
-                <div class="data-group">
-                  <span class="data-label">Last Name</span>
-                  <span class="data-value" id="displayLastName">Not set</span>
-                </div>
-                <div class="data-group">
-                  <span class="data-label">Email Address</span>
-                  <span class="data-value" id="displayEmail">Not set</span>
-                </div>
-                <div class="data-group">
-                  <span class="data-label">User Role</span>
-                  <span class="data-value" id="displayRoleBottom"
-                    >Applicant</span
-                  >
-                </div>
-                <div class="data-group">
-                  <span class="data-label">CV Document</span>
-                  <span class="data-value" id="displayCv">No CV uploaded</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="profile-card">
-              <div class="card-header">
-                <h3>Education</h3>
-                <button
-                  class="btn-edit-secondary"
-                  onclick="prepEducationInfoModal()"
-                >
-                  Edit
-                </button>
-              </div>
-              <div id="educationDisplayContainer"></div>
-            </article>
-
-            <article class="profile-card">
-              <div class="card-header">
-                <h3>Skills & Expertise</h3>
-                <button
-                  class="btn-edit-secondary"
-                  onclick="alert('Skills editing coming soon!')"
-                >
-                  Edit
-                </button>
-              </div>
-              <div class="skills-container" id="displaySkills">
-                <span class="skill-pill">JavaScript</span>
-                <span class="skill-pill">React.js</span>
-                <span class="skill-pill">UI/UX Design</span>
-                <span class="skill-pill">Node.js</span>
-                <span class="skill-pill">Project Management</span>
-                <span class="skill-pill">Agile</span>
-              </div>
-            </article>
-          </section>
-
-          <div id="personalInfoModal" class="modal-overlay">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3>Edit Personal Information</h3>
-                <button
-                  class="btn-close"
-                  onclick="closeModal('personalInfoModal')"
-                >
-                  ✕
-                </button>
-              </div>
-              <form id="editPersonalForm">
-                <div class="form-grid">
-                  <div class="form-group">
-                    <label>First Name</label>
-                    <input
-                      type="text"
-                      id="editFirstName"
-                      placeholder="First Name"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Last Name</label>
-                    <input
-                      type="text"
-                      id="editLastName"
-                      placeholder="Last Name"
-                    />
-                  </div>
-                  <div class="form-group full-width">
-                    <label>Email Address</label>
-                    <input
-                      type="email"
-                      id="editEmail"
-                      readonly
-                      style="background: #f9f9f9; cursor: not-allowed"
-                    />
-                  </div>
-                  <div class="form-group full-width">
-                    <label>Phone Number</label>
-                    <input
-                      type="text"
-                      id="editPhone"
-                      placeholder="(+27) 821..."
-                    />
-                  </div>
-                  <div class="form-group full-width">
-                    <label>Date of Birth</label>
-                    <input type="date" id="editDob" />
-                  </div>
-                  <div class="form-group full-width">
-                    <label>CV Upload</label>
-                    <div class="cv-upload-section">
-                      <h3>Upload Your CV</h3>
-                      <input type="file" id="cvFile" accept=".pdf,.doc,.docx" />
-                      <button onclick="uploadCV()" class="btn-primary">
-                        Upload CV
-                      </button>
-                      <div id="cvUploadMsg"></div>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  class="btn-save"
-                  onclick="savePersonalInfo()"
-                >
-                  Save Changes
-                </button>
-              </form>
+            <div id="applicationsTab" class="tab-content">
+                <h2>My Applications</h2>
+                <div id="applicationsList"></div>
             </div>
-          </div>
 
-          <!-- Education Information - Edit Popup -->
-          <div id="educationInfoModal" class="modal-overlay">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3>Edit Education & NQF Levels</h3>
-                <button
-                  class="btn-close"
-                  onclick="closeModal('educationInfoModal')"
-                >
-                  ✕
-                </button>
-              </div>
-              <form id="editEducationForm">
-                <div id="educationListContainer"></div>
-                <button
-                  type="button"
-                  class="btn-add-outline"
-                  onclick="addEducationRow()"
-                >
-                  + Add Another Qualification
-                </button>
-                <button
-                  type="button"
-                  class="btn-save"
-                  onclick="saveEducationInfo()"
-                >
-                  Save Changes
-                </button>
-              </form>
-            </div>
-          </div>
+            <section id="profileTab" class="tab-content">
+                <section class="profile-dashboard">
+                    <header class="page-header">
+                        <h2>My Profile</h2>
+                    </header>
 
                     <article class="profile-card top-card">
                         <div class="avatar-container">
@@ -483,6 +270,7 @@
             </section>
         </main>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="../public/firebase.js"></script>
@@ -573,33 +361,5 @@
             }
         });
     </script>
-    <!-- Application Modal,CV popup shows when apply is clicked -->
-    <div id="applyModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>Apply for Opportunity</h3>
-      <button class="btn-close" onclick="closeModal('applyModal')">✕</button>
-    </div>
-    <p id="applyModalListingName" style="margin-bottom: 16px; font-weight: 500;"></p>
-
-    <div class="form-group">
-      <label>Upload your CV <span style="color: red;">*</span></label>
-      <input type="file" id="applyModalCvFile" accept=".pdf,.doc,.docx" />
-      <small style="color: #888;">Max 5MB. PDF, DOC, or DOCX.</small>
-    </div>
-
-    <div class="form-group">
-      <label>Motivation Letter <span style="color: #aaa; font-weight: normal;">(optional)</span></label>
-      <textarea id="applyModalMotivation" rows="4"
-        placeholder="Briefly describe why you're a great fit..."
-        style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; resize:vertical; font-family:inherit; font-size:14px;">
-      </textarea>
-    </div>
-
-    <div id="applyModalMsg" style="margin: 8px 0;"></div>
-
-    <button class="btn-save" onclick="submitApplication()">Submit Application</button>
-  </div>
-</div>
 </body>
 </html>
