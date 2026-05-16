@@ -271,7 +271,7 @@ test('should submit application with motivation, availability and cv_name', asyn
       provider_id: 7,
       motivation: 'I am interested',
       availability: 'Immediately',
-      cv_name: 'cv.pdf',
+      cvOriginalFilename: 'cv.pdf',
       status: 'pending'
     }
   });

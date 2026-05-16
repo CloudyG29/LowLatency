@@ -201,7 +201,7 @@ router.post("/apply", async (req, res) => {
         provider_id: listing.provider_id,
         motivation: motivation || null,
         availability: availability || null,
-        cv_name: cv_name || null,
+        cvOriginalFilename: cv_name || null,
         status: "pending",
       },
     });

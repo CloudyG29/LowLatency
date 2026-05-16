@@ -599,9 +599,13 @@ async function fetchOpportunities(type = "") {
 }
 
 
-function applyForListing(listingId) {
+function applyForListing(listingId, requiredNqfLevel = 0) {
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const cvName = userData.cvName || "No CV uploaded yet";
+
+  const listingInput = document.getElementById("applicationListingId");
+  listingInput.value = listingId;
+  listingInput.dataset.requiredNqf = requiredNqfLevel;
 
   document.getElementById("applicationListingId").value = listingId;
   document.getElementById("applicationMotivation").value = "";
@@ -612,7 +616,10 @@ function applyForListing(listingId) {
 }
 
 async function submitApplicationFromModal() {
-  const listingId = document.getElementById("applicationListingId").value;
+  const listingInput = document.getElementById("applicationListingId");
+  const listingId = parseInt(listingInput.value, 10);
+  
+  const requiredNqf = parseInt(listingInput.dataset.requiredNqf || "0", 10);
   const motivation = document.getElementById("applicationMotivation").value.trim();
   const availability = document.getElementById("applicationAvailability").value.trim();
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');

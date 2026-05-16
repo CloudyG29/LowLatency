@@ -285,7 +285,7 @@ test('should save null values when optional application fields are missing', asy
       provider_id: 7,
       motivation: null,
       availability: null,
-      cv_name: null,
+      cvOriginalFilename: null,
       status: 'pending'
     }
   });
