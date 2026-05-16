@@ -632,6 +632,49 @@ async function submitApplication() {
     hideLoader();
   }
 }
+async function renderApplications() {
+  const container = document.getElementById("applicationsList");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+  if (!container) return;
+
+  container.innerHTML =
+    '<div class="empty-state">Loading applications...</div>';
+
+  try {
+    const response = await fetch(
+      `/api/listings/my-applications?email=${encodeURIComponent(userData.email || "")}`,
+    );
+    const applications = await response.json();
+
+    if (!response.ok) throw new Error("Failed to fetch applications");
+
+    if (applications.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state">You have not applied to any opportunities yet.</div>';
+      return;
+    }
+
+    container.innerHTML = "";
+    applications.forEach((app) => {
+      const div = document.createElement("div");
+      div.className = "application-card";
+      div.innerHTML = `
+        <div class="application-info">
+          <h3>${app.listing.listname}</h3>
+          <p><strong>Type:</strong> ${app.listing.list_type}</p>
+          <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
+        </div>
+        <span class="status-badge status-${app.status}">${app.status}</span>
+      `;
+      container.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Error loading applications:", error);
+    container.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
+  }
+}
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== "undefined" && module.exports) {
