@@ -55,13 +55,6 @@ async function guardApplicantPage() {
 // ===============================
 // LOADER
 // ===============================
-function showLoader() {
-  document.getElementById("loader").classList.remove("hidden");
-}
-
-function hideLoader() {
-  document.getElementById("loader").classList.add("hidden");
-}
 
 // ===============================
 // LOAD DATA ON STARTUP
@@ -658,5 +651,3 @@ if (typeof module !== "undefined" && module.exports) {
   renderEducationDisplay();
   loadDataOnStartup();
 }
- 
- 
