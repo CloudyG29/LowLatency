@@ -602,18 +602,17 @@ describe('Persistent Login and Logout', () => {
   beforeEach(() => {
     localStorage.clear();
 
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: {
-        assign: jest.fn(),
-      },
-    });
+    jest.spyOn(window.location, 'assign').mockImplementation(() => {});
 
     global.firebase = {
       auth: () => ({
         signOut: jest.fn(() => Promise.resolve()),
       }),
     };
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   test('stores firebase uid in localStorage', () => {
