@@ -573,5 +573,33 @@
             }
         });
     </script>
+    <!-- Application Modal,CV popup shows when apply is clicked -->
+    <div id="applyModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Apply for Opportunity</h3>
+      <button class="btn-close" onclick="closeModal('applyModal')">✕</button>
+    </div>
+    <p id="applyModalListingName" style="margin-bottom: 16px; font-weight: 500;"></p>
+
+    <div class="form-group">
+      <label>Upload your CV <span style="color: red;">*</span></label>
+      <input type="file" id="applyModalCvFile" accept=".pdf,.doc,.docx" />
+      <small style="color: #888;">Max 5MB. PDF, DOC, or DOCX.</small>
+    </div>
+
+    <div class="form-group">
+      <label>Motivation Letter <span style="color: #aaa; font-weight: normal;">(optional)</span></label>
+      <textarea id="applyModalMotivation" rows="4"
+        placeholder="Briefly describe why you're a great fit..."
+        style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; resize:vertical; font-family:inherit; font-size:14px;">
+      </textarea>
+    </div>
+
+    <div id="applyModalMsg" style="margin: 8px 0;"></div>
+
+    <button class="btn-save" onclick="submitApplication()">Submit Application</button>
+  </div>
+</div>
 </body>
 </html>

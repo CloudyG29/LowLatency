@@ -2,7 +2,7 @@ const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   "https://qhlfrgwaxzrqxsadicgi.supabase.co",
-  "sb_secretnx07Y7euLrDJMT-L2-COJw_riUxrpS7",
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
 );
 
 const BUCKET = "cvs";
