@@ -1,19 +1,8 @@
-const { PrismaClient } = require("../generated/client");
-const { PrismaMssql } = require("@prisma/adapter-mssql");
+require('dotenv').config();
+const { PrismaClient } = require('../generated/client');
+const { PrismaMssql } = require('@prisma/adapter-mssql');
 
-const config = {
-  server: "lowlatency2.database.windows.net",
-  port: 1433,
-  database: "SkillBridge",
-  user: "CloudSAca3dae46",
-  password: "LowLatency5",
-  options: {
-    encrypt: true,
-    trustServerCertificate: true,
-  },
-};
-
-const adapter = new PrismaMssql(config);
+const adapter = new PrismaMssql(process.env.DATABASE_URL);
 const prisma = new PrismaClient({ adapter });
 
 module.exports = prisma;
