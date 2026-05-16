@@ -66,41 +66,6 @@ function hideLoader() {
 // ===============================
 // LOAD DATA ON STARTUP
 // ===============================
-async function loadDataOnStartup() {
-  try {
-    // FIRST validate auth
-    const allowed = await guardApplicantPage();
-
-    if (!allowed) return;
-
-    const firebaseUid = localStorage.getItem("firebase_uid");
-
-    if (!firebaseUid) {
-      console.error("No firebase UID found.");
-      return;
-    }
-
-    container.innerHTML = "";
-    applications.forEach((app) => {
-      const div = document.createElement("div");
-      div.className = "application-card";
-      div.innerHTML = `
-        <div class="application-info">
-          <h3>${app.listing.listname}</h3>
-          <p><strong>Type:</strong> ${app.listing.list_type}</p>
-          <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
-        </div>
-        <span class="status-badge status-${app.status}">${app.status}</span>
-      `;
-      container.appendChild(div);
-    });
-    hideLoader();
-  } catch (error) {
-    container.innerHTML =
-      '<div class="empty-state">Error loading applications.</div>';
-    hideLoader();
-  }
-}
 
 function renderProfile() {
   showLoader();
