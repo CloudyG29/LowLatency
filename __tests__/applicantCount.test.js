@@ -1,4 +1,4 @@
-const { getCompetition, fetchOpportunities } = require('../frontend/roles_js/applicant_view.js');
+const { getCompetition, fetchOpportunities, toggleFavorite } = require('../frontend/roles_js/applicant_view.js');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -338,4 +338,95 @@ describe("fetchOpportunities()", () => {
         expect(document.querySelector(".competition-badge").getAttribute("role")).toBe("status");
     });
 
+});
+
+describe("Favorites Button Rendering", () => {
+    test("renders 'Save' when listing is not saved", async () => {
+        mockFetch([makeListing({ isSaved: false })]);
+        await fetchOpportunities();
+        const saveBtn = document.querySelector(".save-btn");
+        
+        expect(saveBtn).not.toBeNull();
+        expect(saveBtn.textContent).toContain("Save");
+        expect(saveBtn.classList.contains("saved")).toBe(false);
+    });
+
+    test("renders 'Saved' when listing is already saved", async () => {
+        mockFetch([makeListing({ isSaved: true })]);
+        await fetchOpportunities();
+        const saveBtn = document.querySelector(".save-btn");
+        
+        expect(saveBtn.textContent).toContain("Saved");
+        expect(saveBtn.classList.contains("saved")).toBe(true);
+    });
+});
+
+describe("toggleFavorite()", () => {
+    let mockButton;
+
+    beforeEach(() => {
+        // Clear mocks and set up our fake DOM button and localStorage
+        jest.clearAllMocks();
+        localStorage.clear();
+        
+        // Create a fake button to pass into the function
+        mockButton = document.createElement("button");
+        mockButton.className = "save-btn";
+        mockButton.innerHTML = "Save";
+        
+        // Mock a logged-in user
+        const testEmail = "applicant@test.com";
+        localStorage.setItem("userData", JSON.stringify({ email: testEmail }));
+    });
+
+    test("sends POST request with userEmail and listingId", async () => {
+        // 1. Mock a successful fetch response
+        global.fetch = jest.fn().mockResolvedValue({ ok: true });
+
+        // 2. Call the function
+        const listingId = 42;
+        await toggleFavorite(listingId, mockButton);
+
+        // 3. Verify fetch was called with the exact right data
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        expect(global.fetch).toHaveBeenCalledWith('/api/favorites', expect.objectContaining({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userEmail: "applicant@test.com", 
+                listingId: 42 
+            })
+        }));
+    });
+
+    test("updates button UI to 'Saved' on successful request", async () => {
+        global.fetch = jest.fn().mockResolvedValue({ ok: true });
+
+        await toggleFavorite(99, mockButton);
+
+        // Check that the UI updated properly
+        expect(mockButton.classList.contains("favorited")).toBe(true);
+        expect(mockButton.innerHTML).toContain("Saved");
+    });
+
+    test("does NOT update UI if the server request fails", async () => {
+        // Mock a failed response (e.g., 500 Internal Server Error)
+        global.fetch = jest.fn().mockResolvedValue({ ok: false });
+
+        await toggleFavorite(99, mockButton);
+
+        // UI should remain unchanged
+        expect(mockButton.classList.contains("favorited")).toBe(false);
+        expect(mockButton.innerHTML).toContain("Save");
+    });
+
+    test("does NOT update UI if fetch throws a network error", async () => {
+        global.fetch = jest.fn().mockRejectedValue(new Error("Network Error"));
+
+        await toggleFavorite(99, mockButton);
+
+        // UI should remain unchanged
+        expect(mockButton.classList.contains("favorited")).toBe(false);
+        expect(mockButton.innerHTML).toContain("Save");
+    });
 });

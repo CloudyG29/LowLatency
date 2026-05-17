@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const cron = require("node-cron");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,13 +17,15 @@ const listingRoutes = require("./routes/listings");
 const qualificationsRouter = require('./routes/qualifications');
 const profileRoutes = require("./routes/profile");
 const dashboardRoutes = require("./routes/dashboard");
-const reportRoutes = require("./routes/reports");   
+const reportRoutes = require("./routes/reports");
+const savedListingsRoutes = require('./routes/savedListings');   
 
 app.use("/api/listings", listingRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reports", reportRoutes);  
 app.use('/api/qualifications', qualificationsRouter);
+app.use('/api/savedListings', savedListingsRoutes);
 
 // Fix COOP header to allow Firebase popups
 app.use((req, res, next) => {

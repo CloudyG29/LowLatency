@@ -527,6 +527,18 @@ async function fetchOpportunities(type = "") {
 
     listings.forEach((listing) => {
       const card = document.createElement("div");
+      const listingId = listing.listings_id;
+      const isSaved = listing.isSaved;
+
+      const saveButtonHtml = `
+        <button 
+          class="save-btn ${isSaved ? 'saved' : ''}" 
+          onclick="toggleFavorite(${listingId}, this)"
+          style="background: transparent; border: 1px solid #4a5568; color: #a0aec0; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px;"
+        >
+          ${isSaved ? 'Saved' : 'Save'}
+        </button>
+      `;
 
       // FIX 1: Keep your new CSS class, but add the old one for the tests
       card.className = "opportunity-preview-card opportunity-card";
@@ -584,6 +596,7 @@ async function fetchOpportunities(type = "") {
 
       <div class="opportunity-actions">
         <button class="view-opportunity-details-btn" type="button"  data-id="${listing.listings_id}">View Details</button>
+        ${saveButtonHtml}
         ${actionUI}
       </div>
       `;
@@ -748,6 +761,47 @@ async function markAsRead(notificationId) {
   }
 }
 
+async function toggleFavorite(listingId) {
+  try {
+    // 1. Grab the currently authenticated user directly from Firebase
+    // Note: If you are using Firebase v9 modular, this might be `auth.currentUser` instead.
+    const user = firebase.auth().currentUser;
+
+    // 2. Safety check: Make sure someone is actually logged in
+    if (!user) {
+      console.error("User is not logged in");
+      alert("You must be logged in to save listings.");
+      return;
+    }
+
+    // 3. Make the fetch request
+    const response = await fetch('/api/savedListings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user.uid, // <-- Use the uid from the 'user' variable we just checked
+        listingId: listingId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      buttonElement.classList.add('favorited');
+      buttonElement.innerHTML = 'Saved';
+    }
+
+    const result = await response.json();
+    console.log("Success:", result);
+
+    // Optional: Update your UI here (e.g., change the heart button color)
+
+  } catch (error) {
+    console.error("Error saving listing:", error);
+  }
+}
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
@@ -764,6 +818,7 @@ if (typeof module !== 'undefined' && module.exports) {
     getCompetition,
     renderNotifications,
     startNotificationListener,
+    toggleFavorite,
   };
 } else {
   renderEducationDisplay();
