@@ -536,7 +536,7 @@ async function fetchOpportunities(type = "") {
           onclick="toggleFavorite(${listingId}, this)"
           style="background: transparent; border: 1px solid #4a5568; color: #a0aec0; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px;"
         >
-          ${isSaved ? '❤️ Saved' : '🤍 Save'}
+          ${isSaved ? 'Saved' : 'Save'}
         </button>
       `;
 
@@ -763,7 +763,8 @@ async function markAsRead(notificationId) {
 }
 
 async function toggleFavorite(listingId, buttonElement) {
-  const userEmail = localStorage.getItem("email");
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userEmail = userData.email || "";
 
   try {
     const response = await fetch('/api/favorites', {
@@ -796,6 +797,7 @@ if (typeof module !== 'undefined' && module.exports) {
     getCompetition,
     renderNotifications,
     startNotificationListener,
+    toggleFavorite,
   };
 } else {
   renderEducationDisplay();

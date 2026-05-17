@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const prisma = require('../db'); 
+const prisma = require('../DB_connect/prisma'); 
 const admin = require('firebase-admin');
 
 // Run every day at 8:00 AM server time
@@ -29,15 +29,13 @@ cron.schedule('0 8 * * *', async () => {
     // 3. Send to Firebase!
     for (const saved of closingSoon) {
       const message = `Reminder: ${saved.listing.listname} closes in 3 days!`;
-      await sendFirebaseNotification(saved.userEmail, message); 
+      await sendFirebaseNotification(saved.userId, message);
     }
 
   } catch (error) {
     console.error("Error running daily closing check:", error);
   }
 });
-
-// backend/jobs/notifications.js
 
 async function sendFirebaseNotification(firebaseUid, messageText) {
     try {
