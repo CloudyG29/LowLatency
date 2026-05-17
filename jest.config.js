@@ -1,13 +1,16 @@
 module.exports = {
-  testEnvironment: "node",
   testMatch: ["**/__tests__/**/*.test.js"],
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
   collectCoverageFrom: [
     "backend/**/*.js",
-    "frontend/script.js",
-    "frontend/roles_js/applicant_view.js"
+    "frontend/**/*.js"
   ],
-  testEnvironment: "jsdom",
+  testEnvironment: "node",
+  setupFiles: ["./jest.setup.js"],
+  moduleNameMapper: {
+    "^undici$": "<rootDir>/jest.undici.mock.js",
+    "^cheerio$": "<rootDir>/node_modules/cheerio/dist/commonjs/index.js"
+  },
 };

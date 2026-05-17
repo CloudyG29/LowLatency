@@ -97,7 +97,19 @@ async function seedQualificationsIncremental(startFrom = 11525) {
   await prisma.$disconnect();
 }
 
-seedQualificationsIncremental().catch(async (err) => {
-  console.error(err);
-  await prisma.$disconnect();
-});
+async function runSeed() {
+  try {
+    await seedQualificationsIncremental();
+  } catch (err) {
+    console.error(err);
+    await prisma.$disconnect();
+  }
+}
+
+if (require.main === module) {
+  runSeed();
+}
+
+module.exports = {
+  seedQualificationsIncremental,
+};
