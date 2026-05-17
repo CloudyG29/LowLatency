@@ -231,7 +231,8 @@ if (typeof module !== "undefined" && module.exports) {
     module.exports = { 
       guardProviderPage,
       displayOpportunities,
-      displayApplications
+      displayApplications,
+      postOpportunity
     };
 }
 firebase.auth().onAuthStateChanged((user) => {
