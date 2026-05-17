@@ -596,9 +596,8 @@ async function fetchOpportunities(type = "") {
 
       <div class="opportunity-actions">
         <button class="view-opportunity-details-btn" type="button"  data-id="${listing.listings_id}">View Details</button>
-        ${actionUI}
-
         ${saveButtonHtml}
+        ${actionUI}
       </div>
       `;
 
