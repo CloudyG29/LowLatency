@@ -761,21 +761,43 @@ async function markAsRead(notificationId) {
   }
 }
 
-async function toggleFavorite(listingId, buttonElement) {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const userEmail = userData.email || "";
-
+async function toggleFavorite(listingId) {
   try {
-    const response = await fetch('/api/favorites', {
+    // 1. Grab the currently authenticated user directly from Firebase
+    // Note: If you are using Firebase v9 modular, this might be `auth.currentUser` instead.
+    const user = firebase.auth().currentUser;
+
+    // 2. Safety check: Make sure someone is actually logged in
+    if (!user) {
+      console.error("User is not logged in");
+      alert("You must be logged in to save listings.");
+      return;
+    }
+
+    // 3. Make the fetch request
+    const response = await fetch('/api/savedListings', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userEmail, listingId })
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user.uid, // <-- Use the uid from the 'user' variable we just checked
+        listingId: listingId
+      })
     });
 
-    if (response.ok) {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
       buttonElement.classList.add('favorited');
       buttonElement.innerHTML = 'Saved';
     }
+
+    const result = await response.json();
+    console.log("Success:", result);
+
+    // Optional: Update your UI here (e.g., change the heart button color)
+
   } catch (error) {
     console.error("Error saving listing:", error);
   }
