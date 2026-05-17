@@ -527,6 +527,18 @@ async function fetchOpportunities(type = "") {
 
     listings.forEach((listing) => {
       const card = document.createElement("div");
+      const listingId = listing.listings_id;
+      const isSaved = listing.isSaved;
+
+      const saveButtonHtml = `
+        <button 
+          class="save-btn ${isSaved ? 'saved' : ''}" 
+          onclick="toggleFavorite(${listingId}, this)"
+          style="background: transparent; border: 1px solid #4a5568; color: #a0aec0; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px;"
+        >
+          ${isSaved ? '❤️ Saved' : '🤍 Save'}
+        </button>
+      `;
 
       // FIX 1: Keep your new CSS class, but add the old one for the tests
       card.className = "opportunity-preview-card opportunity-card";
@@ -585,6 +597,8 @@ async function fetchOpportunities(type = "") {
       <div class="opportunity-actions">
         <button class="view-opportunity-details-btn" type="button"  data-id="${listing.listings_id}">View Details</button>
         ${actionUI}
+
+        ${saveButtonHtml}
       </div>
       `;
 
@@ -750,7 +764,7 @@ async function markAsRead(notificationId) {
 
 async function toggleFavorite(listingId, buttonElement) {
   const userEmail = localStorage.getItem("email");
-  
+
   try {
     const response = await fetch('/api/favorites', {
       method: 'POST',
