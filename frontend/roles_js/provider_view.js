@@ -42,6 +42,19 @@ async function guardProviderPage() {
   });
 }
 
+function toggleCustomSectorInput() {
+  const sector = document.getElementById("sector")?.value;
+  const customSectorInput = document.getElementById("customSector");
+
+  if (!customSectorInput) return;
+
+  customSectorInput.style.display = sector === "Other" ? "block" : "none";
+
+  if (sector !== "Other") {
+    customSectorInput.value = "";
+  }
+}
+
 async function postOpportunity() {
   if (!currentUser) return;
 
@@ -57,9 +70,27 @@ async function postOpportunity() {
   const stipend = document.getElementById("stipend")?.value;
   const location = document.getElementById("location")?.value;
   const duration = document.getElementById("duration")?.value;
+  const sector = document.getElementById("sector")?.value;
+  const customSector = document.getElementById("customSector")?.value;
 
-  if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
+  if (
+    !listname ||
+    !list_type ||
+    !stipend ||
+    !location ||
+    !duration ||
+    !requirements ||
+    !nqf_level ||
+    !closing_date ||
+    !sector
+  ) {
     msg.innerText = " Please fill in all fields before posting a job";
+    msg.style.color = "#fc8181";
+    return;
+  }
+
+  if (sector === "Other" && !customSector) {
+    msg.innerText = " Please specify the sector when selecting Other";
     msg.style.color = "#fc8181";
     return;
   }
@@ -78,6 +109,7 @@ async function postOpportunity() {
         stipend,
         location,
         duration,
+        sector,
         email: currentUser.email,
       }),
     });
@@ -88,6 +120,9 @@ async function postOpportunity() {
     msg.innerText = "✅ Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
     document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
+    const sectorSelect = document.getElementById("sector");
+    if (sectorSelect) sectorSelect.value = "";
+    toggleCustomSectorInput();
     displayOpportunities();
   } catch (error) {
     msg.innerText = "❌ " + error.message;
@@ -119,6 +154,7 @@ async function displayOpportunities() {
       div.innerHTML = `
         <h3>${opp.listname}</h3>
         <p><strong>Type:</strong> ${opp.list_type}</p>
+        <p><strong>Sector:</strong> ${opp.sector || "N/A"}</p>
         <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
         <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
         <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
@@ -148,13 +184,11 @@ async function displayApplications() {
     const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
     const applications = await response.json();
 
-    // --- DASHBOARD STATS ---
     document.getElementById("totalApplications").textContent = applications.length;
 
     document.getElementById("pendingApplications").textContent =
       applications.filter((app) => app.status === "pending").length;
 
-    // ADDED: count shortlisted applications
     document.getElementById("shortlistedApplications").textContent =
       applications.filter((app) => app.status === "shortlisted").length;
 
@@ -228,6 +262,7 @@ async function displayApplications() {
 
                 <p><strong>Title:</strong> ${app.listing.listname || "N/A"}</p>
                 <p><strong>Type:</strong> ${app.listing.list_type || "N/A"}</p>
+                <p><strong>Sector:</strong> ${app.listing.sector || "N/A"}</p>
                 <p><strong>Location:</strong> ${app.listing.location || "N/A"}</p>
               </div>
 
@@ -250,7 +285,6 @@ async function displayApplications() {
             ${status === "pending" ? `
               <div class="selected-actions">
 
-                <!-- ADDED: shortlist action -->
                 <button class="btn-shortlist action-btn" data-id="${app.application_id}">
                   Shortlist Applicant
                 </button>
@@ -268,7 +302,6 @@ async function displayApplications() {
           </div>
         `;
 
-        // ADDED: shortlist button event
         document.querySelectorAll(".btn-shortlist").forEach((btn) => {
           btn.addEventListener("click", async () => {
             await updateApplicationStatus(btn.dataset.id, "shortlisted");
@@ -350,6 +383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const allowed = await guardProviderPage();
   if (!allowed) return;
 
+  toggleCustomSectorInput();
   displayOpportunities();
 });
 
@@ -359,6 +393,7 @@ if (typeof module !== "undefined" && module.exports) {
     displayOpportunities,
     displayApplications,
     updateApplicationStatus,
+    toggleCustomSectorInput,
   };
 }
 

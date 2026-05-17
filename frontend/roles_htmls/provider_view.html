@@ -10,7 +10,6 @@
 
 <body>
 
-  <!-- From Uiverse.io by PriyanshuGupta28 -->
   <div id="loader" class="loader-overlay hidden">
     <div class="spinner">
       <div></div>
@@ -46,7 +45,6 @@
         <p>Welcome!</p>
       </div>
 
-      <!-- POST TAB -->
       <div id="postTab" class="tab-content active">
         <h2>Post a New Opportunity</h2>
         <div class="card">
@@ -57,21 +55,45 @@
           <input id="duration" placeholder="Duration (e.g., 12 months)" />
           <input id="requirements" placeholder="Requirements (e.g., Matric, NQF 4)" />
           <input id="nqf_level" placeholder="NQF Level" type="number" />
+
           <input id="closing_date" type="text" placeholder="Closing Date (YYYY-MM-DD)" onfocus="this.type='date'"
             onblur="if(!this.value)this.type='text'" />
+
+          <!-- Sector is used by analytics to group opportunities by sector -->
+          <select id="sector" required onchange="toggleCustomSectorInput()">
+            <option value="">Select Sector *</option>
+            <option value="ICT">ICT</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Finance">Finance</option>
+            <option value="Education">Education</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Hospitality">Hospitality</option>
+            <option value="Retail">Retail</option>
+            <option value="Construction">Construction</option>
+            <option value="Agriculture">Agriculture</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <!-- Only shown when provider selects Other. Analytics will still group this as Other. -->
+          <input
+            id="customSector"
+            placeholder="Please specify sector"
+            style="display: none;"
+          />
+
           <textarea id="description" placeholder="Description *"></textarea>
+
           <button class="post-btn" onclick="postOpportunity()">Post</button>
           <p id="msg"></p>
         </div>
       </div>
 
-      <!-- MANAGE TAB -->
       <div id="manageTab" class="tab-content">
         <h2>My Opportunities</h2>
         <div id="myOpportunities"></div>
       </div>
 
-      <!-- APPLICATIONS TAB -->
       <div id="applicationsTab" class="tab-content">
 
         <div class="applications-dashboard-header">
@@ -91,7 +113,6 @@
               <span class="stat-label">Pending</span>
             </div>
 
-            <!-- ADDED: shows number of shortlisted applications -->
             <div class="stat-card">
               <span class="stat-number" id="shortlistedApplications">0</span>
               <span class="stat-label">Shortlisted</span>
@@ -106,9 +127,7 @@
 
         <div class="applications-dashboard-layout">
 
-          <!-- LEFT PANEL -->
           <div class="applications-sidebar">
-
             <div class="applications-toolbar">
               <input 
                 type="text" 
@@ -120,7 +139,6 @@
             <div id="applicationsList" class="applications-list"></div>
           </div>
 
-          <!-- RIGHT PANEL -->
           <div class="application-details-panel">
 
             <div id="emptyApplicationState" class="empty-details-state">

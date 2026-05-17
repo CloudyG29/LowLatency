@@ -3,7 +3,19 @@ const router = express.Router();
 const prisma = require("../../DB_connect/prisma");
 
 async function postListing(req, res) {
-  const { listname, list_type, nqf_level, description, email, stipend, location, duration, requirements, closing_date } = req.body;
+  const {
+    listname,
+    list_type,
+    nqf_level,
+    description,
+    email,
+    stipend,
+    location,
+    duration,
+    requirements,
+    closing_date,
+    sector, // ADDED: receive sector from provider form for dashboard analytics
+  } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -26,6 +38,7 @@ async function postListing(req, res) {
         duration: duration || null,
         closing_date: closing_date && !isNaN(new Date(closing_date)) ? new Date(closing_date) : null,
         requirements: requirements && typeof requirements === "string" ? requirements : null,
+        sector: sector || null, // ADDED: save sector on listing for sector-based analytics
         provider_id: user.provider.provider_id,
       },
     });
@@ -68,21 +81,21 @@ router.get("/approved", async (req, res) => {
       include: {
         provider: true,
         _count: {
-          select: { applications: true }
+          select: { applications: true },
         },
         applications: {
           where: {
-            user: { email: userEmail || "" }
-          }
-        }
+            user: { email: userEmail || "" },
+          },
+        },
       },
     });
 
     // Map the results to include an 'hasApplied' boolean
-    const results = listings.map(listing => ({
+    const results = listings.map((listing) => ({
       ...listing,
       hasApplied: listing.applications.length > 0,
-      applicantCount: listing._count.applications
+      applicantCount: listing._count.applications,
     }));
 
     res.status(200).json(results);
@@ -114,7 +127,6 @@ router.get("/pending", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
 
 router.post("/apply", async (req, res) => {
   const { listing_id, email, motivation, availability, cv_name } = req.body;
@@ -151,7 +163,6 @@ router.post("/apply", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
 
 router.get("/my-applications", async (req, res) => {
   const { email } = req.query;
@@ -231,5 +242,6 @@ router.put("/applications/:id/status", async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 });
+
 router.post("/post", postListing);
 module.exports = router;

@@ -2,10 +2,13 @@ let dashboardData = null;
 let statusChart = null;
 let opportunityChart = null;
 let sectorChart = null;
+let currentUser = null;
 
-async function loadDashboard() {
+async function loadDashboardForProvider(user) {
   try {
-    const response = await fetch("/api/dashboard/summary");
+    const response = await fetch(
+      `/api/dashboard/summary?email=${encodeURIComponent(user.email)}`
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch dashboard summary");
@@ -33,6 +36,8 @@ function updateCards(data) {
 
 function populateStatusFilter(statusBreakdown) {
   const statusFilter = document.getElementById("statusFilter");
+
+  statusFilter.innerHTML = `<option value="all">All statuses</option>`;
 
   statusBreakdown.forEach((item) => {
     const option = document.createElement("option");
@@ -81,33 +86,26 @@ function renderCharts() {
   const filteredStatusData = getFilteredStatusData();
   const filteredOpportunityData = getFilteredOpportunityData();
 
-  opportunityChart = new Chart(
-    document.getElementById("opportunityChart"),
-    {
-      type: "bar",
-      data: {
-        labels: filteredOpportunityData.map(
-          (item) => item.opportunity
-        ),
-        datasets: [
-          {
-            label: "Applications",
-            data: filteredOpportunityData.map(
-              (item) => item.count
-            ),
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
-          },
+  opportunityChart = new Chart(document.getElementById("opportunityChart"), {
+    type: "bar",
+    data: {
+      labels: filteredOpportunityData.map((item) => item.opportunity),
+      datasets: [
+        {
+          label: "Applications",
+          data: filteredOpportunityData.map((item) => item.count),
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
         },
       },
-    }
-  );
+    },
+  });
 
   statusChart = new Chart(document.getElementById("statusChart"), {
     type: "doughnut",
@@ -127,15 +125,11 @@ function renderCharts() {
   sectorChart = new Chart(document.getElementById("sectorChart"), {
     type: "bar",
     data: {
-      labels: dashboardData.sectorAnalysis.map(
-        (item) => item.sector
-      ),
+      labels: dashboardData.sectorAnalysis.map((item) => item.sector),
       datasets: [
         {
           label: "Success Rate (%)",
-          data: dashboardData.sectorAnalysis.map(
-            (item) => item.successRate
-          ),
+          data: dashboardData.sectorAnalysis.map((item) => item.successRate),
         },
       ],
     },
@@ -157,9 +151,7 @@ function renderCharts() {
 }
 
 function renderTopOpportunitiesTable(topOpportunities) {
-  const tableBody = document.getElementById(
-    "topOpportunitiesTable"
-  );
+  const tableBody = document.getElementById("topOpportunitiesTable");
 
   tableBody.innerHTML = "";
 
@@ -197,16 +189,10 @@ function exportDashboardToCSV() {
     ["Total Applications", dashboardData.totalApplications],
     ["Shortlisted Applicants", dashboardData.shortlistedApplicants],
     ["Successful Placements", dashboardData.successfulPlacements],
-    [
-      "Average Placement Rate",
-      `${dashboardData.averagePlacementRate}%`,
-    ],
+    ["Average Placement Rate", `${dashboardData.averagePlacementRate}%`],
     [],
     ["Status", "Count"],
-    ...dashboardData.statusBreakdown.map((item) => [
-      item.status,
-      item.count,
-    ]),
+    ...dashboardData.statusBreakdown.map((item) => [item.status, item.count]),
     [],
     ["Sector", "Applications", "Placements", "Success Rate"],
     ...dashboardData.sectorAnalysis.map((item) => [
@@ -216,14 +202,7 @@ function exportDashboardToCSV() {
       `${item.successRate}%`,
     ]),
     [],
-    [
-      "Opportunity",
-      "Sector",
-      "Applications",
-      "Shortlisted",
-      "Placements",
-      "Success Rate",
-    ],
+    ["Opportunity", "Sector", "Applications", "Shortlisted", "Placements", "Success Rate"],
     ...dashboardData.applicationsPerOpportunity.map((item) => [
       item.opportunity,
       item.sector,
@@ -267,4 +246,12 @@ document
   .getElementById("exportCsvBtn")
   .addEventListener("click", exportDashboardToCSV);
 
-loadDashboard();
+firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    window.location.href = "/login";
+    return;
+  }
+
+  currentUser = user;
+  loadDashboardForProvider(user);
+});

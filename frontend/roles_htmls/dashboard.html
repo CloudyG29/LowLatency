@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="../roles_css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="dashboard-layout">
+
     <aside class="sidebar">
       <h2 class="logo">SkillBridge</h2>
 
@@ -20,22 +22,32 @@
         <a href="/provider">Placements</a>
       </nav>
 
-      <button class="post-btn" onclick="window.location.href='/provider'">
+      <button
+        class="post-btn"
+        onclick="window.location.href='/provider'"
+      >
         Post Opportunity
       </button>
     </aside>
 
     <main class="main-content">
+
       <header class="dashboard-header">
         <div>
           <h1>Dashboard</h1>
-          <p>Welcome back. Here’s what’s happening on SkillBridge.</p>
+          <p>
+            Welcome back. Here’s what’s happening on SkillBridge.
+          </p>
         </div>
 
-        <button id="exportCsvBtn" class="export-btn">Export CSV</button>
+        <button id="exportCsvBtn" class="export-btn">
+          Export CSV
+        </button>
       </header>
 
+      <!-- DASHBOARD METRIC CARDS -->
       <section class="cards-grid">
+
         <div class="metric-card">
           <p>Total Opportunities</p>
           <h2 id="totalListings">0</h2>
@@ -58,24 +70,36 @@
 
         <div class="metric-card">
           <p>Average Placement Rate</p>
-          <h2><span id="averagePlacementRate">0</span>%</h2>
+          <h2>
+            <span id="averagePlacementRate">0</span>%
+          </h2>
         </div>
+
       </section>
 
+      <!-- FILTER CONTROLS -->
       <section class="filters">
+
         <select id="statusFilter">
           <option value="all">All statuses</option>
         </select>
 
         <select id="opportunityFilter">
           <option value="all">All opportunities</option>
-          <option value="nonZero">Only opportunities with applications</option>
+          <option value="nonZero">
+            Only opportunities with applications
+          </option>
         </select>
 
-        <button id="resetFiltersBtn">Reset filters</button>
+        <button id="resetFiltersBtn">
+          Reset filters
+        </button>
+
       </section>
 
+      <!-- CHARTS -->
       <section class="charts-grid">
+
         <div class="chart-card">
           <h3>Application Volume per Opportunity</h3>
           <canvas id="opportunityChart"></canvas>
@@ -90,12 +114,16 @@
           <h3>Placement Success Rate by Sector</h3>
           <canvas id="sectorChart"></canvas>
         </div>
+
       </section>
 
+      <!-- TOP OPPORTUNITIES TABLE -->
       <section class="table-card">
+
         <h3>Top Performing Opportunities</h3>
 
         <table>
+
           <thead>
             <tr>
               <th>Opportunity</th>
@@ -106,12 +134,27 @@
               <th>Success Rate</th>
             </tr>
           </thead>
+
           <tbody id="topOpportunitiesTable"></tbody>
+
         </table>
+
       </section>
+
     </main>
   </div>
 
+  <!-- Chart.js already loaded in head -->
+
+  <!-- ADDED: Firebase scripts for provider authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script src="../public/firebase.js"></script>
+
+  <!-- Dashboard logic -->
   <script src="../roles_js/dashboard.js"></script>
+
 </body>
 </html>

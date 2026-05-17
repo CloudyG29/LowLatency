@@ -22,15 +22,46 @@ function normaliseOpportunityName(name) {
 
 router.get("/summary", async (req, res) => {
   try {
-    const totalListings = await prisma.listing.count();
-    const totalApplications = await prisma.application.count();
+    const { email } = req.query; // ADDED: provider email comes from frontend
+
+    if (!email) {
+      return res.status(400).json({ error: "Provider email is required." });
+    }
+
+    // ADDED: find provider linked to logged-in user
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { provider: true },
+    });
+
+    if (!user || !user.provider) {
+      return res.status(404).json({ error: "Provider not found." });
+    }
+
+    const providerId = user.provider.provider_id;
+
+    // CHANGED: count only this provider's listings
+    const totalListings = await prisma.listing.count({
+      where: { provider_id: providerId },
+    });
+
+    // CHANGED: count only applications linked to this provider
+    const totalApplications = await prisma.application.count({
+      where: { provider_id: providerId },
+    });
 
     const shortlistedApplicants = await prisma.application.count({
-      where: { status: "shortlisted" },
+      where: {
+        provider_id: providerId,
+        status: "shortlisted",
+      },
     });
 
     const successfulPlacements = await prisma.application.count({
-      where: { status: "hired" },
+      where: {
+        provider_id: providerId,
+        status: "hired",
+      },
     });
 
     const averagePlacementRate =
@@ -38,8 +69,10 @@ router.get("/summary", async (req, res) => {
         ? 0
         : Number(((successfulPlacements / totalApplications) * 100).toFixed(1));
 
+    // CHANGED: group statuses only for this provider's applications
     const statusBreakdownRaw = await prisma.application.groupBy({
       by: ["status"],
+      where: { provider_id: providerId },
       _count: { status: true },
     });
 
@@ -48,7 +81,9 @@ router.get("/summary", async (req, res) => {
       count: item._count.status,
     }));
 
+    // CHANGED: fetch only this provider's listings and their applications
     const opportunitiesRaw = await prisma.listing.findMany({
+      where: { provider_id: providerId },
       include: {
         _count: {
           select: { applications: true },
@@ -63,9 +98,11 @@ router.get("/summary", async (req, res) => {
       const opportunity = normaliseOpportunityName(listing.listname);
       const sector = listing.sector || "Unspecified";
       const applicationCount = listing._count.applications;
+
       const shortlistedCount = listing.applications.filter(
         (app) => app.status === "shortlisted",
       ).length;
+
       const placementCount = listing.applications.filter(
         (app) => app.status === "hired",
       ).length;
@@ -110,6 +147,7 @@ router.get("/summary", async (req, res) => {
       }
 
       sectorMap[sector].applications += listing.applications.length;
+
       sectorMap[sector].placements += listing.applications.filter(
         (app) => app.status === "hired",
       ).length;
