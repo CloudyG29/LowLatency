@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - SkillBridge</title>
   <link rel="stylesheet" href="../roles_css/admin_view.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -14,18 +15,44 @@
   </div>
 
   <div class="layout">
-    <nav class="sidebar">
-      <h2>SkillBridge</h2>
-      <hr/>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+              <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="text-logo">SkillBridge</h2>
+      </div>
+      <hr />
+  
       <ul class="nav-links">
-        <li><a href="#" onclick="showTab('opportunities')">Opportunities</a></li>
-        <li><a href="#" onclick="showTab('users')">Users</a></li>
-        <li><a href="#" onclick="showTab('reports')">Reports</a></li>
-        <li><a href="/login">Logout</a></li>
+          <li>
+              <a href="#" onclick="showTab('opportunities')">
+                  <i class="fa-solid fa-briefcase icon"></i>
+                  <span class="text">Opportunities</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('users')">
+                  <i class="fa-solid fa-users icon"></i>
+                  <span class="text">Users</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('reports')">
+                  <i class="fa-solid fa-chart-bar icon"></i>
+                  <span class="text">Reports</span>
+              </a>
+          </li>
+          <li>
+              <a href="/login">
+                  <i class="fa-solid fa-right-from-bracket icon"></i>
+                  <span class="text">Logout</span>
+              </a>
+          </li>
       </ul>
-    </nav>
+  </nav>
 
-    <main class="container">
+    <main class="container" id="main-content">
       <header class="header">
         <h1>Admin Dashboard</h1>
         <p>Welcome, Admin! Manage opportunities, users, and reports below.</p>

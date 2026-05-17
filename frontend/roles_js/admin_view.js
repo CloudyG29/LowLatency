@@ -441,6 +441,14 @@ async function loadDataOnStartup() {
     hideLoader();
 }
 
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const container = document.getElementById('main-content');
+  
+    sidebar.classList.toggle('collapsed');
+    container.classList.toggle('expanded');
+  }
+
 // Make functions global
 window.showTab = showTab;
 window.displayUsers = displayUsers;

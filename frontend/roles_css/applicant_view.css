@@ -12,67 +12,133 @@ body {
     padding: 30px 20px;
 }
 
-.container {
-    margin-left: 23%;
-    width: 77%;
-}
-
-/* Side Bar CSS*/
+/* --- Sidebar Base --- */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    height: 94vh;
-    width: 20%;
-    background-color: #272d33;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 30px;
-    vertical-align: center;
-    margin: 2% 0% 5% 2%;
+    height: 100vh;
+    width: 250px; /* Full width */
+    background-color: #111827; /* Darker theme from your image */
+    transition: all 0.4s ease;
+    z-index: 1000;
+    overflow: hidden; /* Prevents text from wrapping when shrinking */
 }
 
-.sidebar>hr {
+/* --- Collapsed State --- */
+.sidebar.collapsed {
+    width: 80px; /* Mini width */
+}
+
+/* Header & Toggle Button */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligns everything nicely to the left */
+    gap: 15px;                   /* Creates a permanent space between the button and text */
+    padding: 20px 15px;
+}
+
+.text-logo {
+    color: white;
+    font-size: 18px;   /* Scaled down slightly to fit nicely */
+    margin: 0;         /* CRITICAL: Removes default browser margins causing overlap */
+    white-space: nowrap; /* Prevents text from breaking into two lines */
+    transition: opacity 0.3s;
+
+    text-transform: none !important; /* Stops it from being forced into ALL CAPS */
+    letter-spacing: normal;          /* Stops text from stretching out */
+    font-weight: bold;
+}
+
+/* Make sure text totally vanishes when collapsed */
+.sidebar.collapsed .text-logo {
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.sidebar-toggle {
+    background: #1f2937; /* The dark grey box from your screenshot */
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 20px 0;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    
+    /* Make the button a perfect square */
+    min-width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    
+    /* Perfectly center the icon inside the button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* CRITICAL: Remove the old margin that was causing the overlap! */
+    margin: 0; 
+    padding: 0;
+    transition: 0.3s ease;
 }
 
-.sidebar>h2 {
-    padding-top: 35px;
-    padding-bottom: 12px;
+.sidebar-toggle:hover {
+    background: #374151; /* Slightly lighter grey on hover */
+}
+
+/* --- Navigation Links --- */
+.nav-links {
+    list-style: none;
+    padding: 0 10px;
+}
+
+.nav-links > li > a {
+    display: flex;
+    align-items: center;
+    color: #a0aec0;
+    text-decoration: none;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    white-space: nowrap; /* Stops text from dropping to next line */
+    transition: 0.3s;
+}
+
+.nav-links > li > a:hover {
+    background: #1f2937;
+    color: white;
+}
+
+/* Icon Styling */
+.nav-links > li > a .icon {
+    min-width: 40px; /* Gives icon a fixed box so they all align perfectly */
+    font-size: 20px;
     text-align: center;
 }
 
-.nav-links {
-    list-style: none;
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 20px 0; 
+}
+
+/* Hide the link text when collapsed */
+.sidebar.collapsed .text {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Main Content Container --- */
+.container {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    transition: all 0.4s ease;
     padding: 20px;
 }
 
-.nav-links>li {
-    margin-bottom: 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.nav-links>li:hover {
-    transition-duration: 0.5s;
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
-    border-radius: 10px;
-    transform: scale(1.05);
-}
-
-.nav-links>li>a {
-    color: #a0aec0;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
-    padding: 10px 15px;
-    border-radius: 8px;
-}
-
-.nav-links>li>a:hover {
-    color: black;
-    transition-duration: 0.5s;
+.container.expanded {
+    margin-left: 80px;
+    width: calc(100% - 80px);
 }
 
 .header {
@@ -803,18 +869,26 @@ h2 {
         padding: 10px;
     }
 
+    .sidebar {
+        width: 250px; /* Switch to a fixed width on mobile so it doesn't look squished */
+        transform: translateX(-100%); /* Automatically hide off-screen */
+        height: 100vh;
+    }
+
+    /* On mobile, this class will slide the sidebar INTO view overlaying the content */
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
     .container {
         margin-left: 0;
         width: 100%;
     }
 
-    /* --- Sidebar → Top Navbar --- */
-    .sidebar {
-        position: relative;
+    /* Prevent the container from shifting or shrinking when the sidebar opens on mobile */
+    .container.expanded {
+        margin-left: 0;
         width: 100%;
-        height: auto;
-        margin: 0 0 15px 0;
-        border-radius: 12px;
     }
 
     .sidebar h2 {
@@ -929,6 +1003,15 @@ h2 {
 
     .view-details-btn:active {
       transform: translateY(0);
+    }
+
+    .profile-dashboard {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .application-card {
+        width: 100%;
     }
 }
 
@@ -1243,4 +1326,35 @@ h2 {
 .status-read {
     background-color: #4a5568;
     color: #a0aec0;
+}
+
+.sidebar-toggle {
+    /* Position it nicely at the top left of the main content */
+    margin: 20px 0 20px 20px;
+    background-color: #272d33;
+    color: #a0aec0;
+    border: none;
+    padding: 10px 15px;
+    font-size: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1001; /* Keeps it above the sidebar (which is 1000) */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    color: black;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    transform: scale(1.05);
+}
+
+/* Optional: If you want the button fixed to the top left of the screen at all times */
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        margin: 0;
+    }
 }

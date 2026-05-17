@@ -364,6 +364,14 @@ function showTab(tab) {
 
 }
 
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const container = document.getElementById('main-content');
+
+  sidebar.classList.toggle('collapsed');
+  container.classList.toggle('expanded');
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   showLoader();
   const allowed = await guardProviderPage();

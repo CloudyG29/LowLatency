@@ -803,6 +803,14 @@ async function toggleFavorite(listingId) {
   }
 }
 
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const container = document.getElementById('main-content');
+
+  sidebar.classList.toggle('collapsed');
+  container.classList.toggle('expanded');
+}
+
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {

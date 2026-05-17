@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Dashboard - SkillBridge</title>
     <link rel="stylesheet" href="../roles_css/applicant_view.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .qual-search-wrapper {
             position: relative;
@@ -63,19 +64,50 @@
       </div>
 
     <div class="layout">
-        <nav class="sidebar">
-            <h2>SkillBridge</h2>
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 class="text-logo">SkillBridge</h2>
+            </div>
             <hr />
+        
             <ul class="nav-links">
-                <li><a href="#" onclick="showTab('opportunities')">Browse Opportunity</a></li>
-                <li><a href="#" onclick="showTab('applications')">My Applications</a></li>
-                <li><a href="#" onclick="showTab('profile')">Profile</a></li>
-                <li><a href="#" onclick="showTab('notifications')">Notifications</a></li>
-                <li><a href="/login">Logout</a></li>
+                <li>
+                    <a href="#" onclick="showTab('opportunities')">
+                        <i class="fa-solid fa-briefcase icon"></i>
+                        <span class="text">Browse Opportunity</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showTab('applications')">
+                        <i class="fa-solid fa-file-lines icon"></i>
+                        <span class="text">My Applications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showTab('profile')">
+                        <i class="fa-solid fa-user icon"></i>
+                        <span class="text">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showTab('notifications')">
+                        <i class="fa-solid fa-bell icon"></i>
+                        <span class="text">Notifications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/login">
+                        <i class="fa-solid fa-right-from-bracket icon"></i>
+                        <span class="text">Logout</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
-        <main class="container">
+        <main class="container" id="main-content">
             <header class="header">
                 <h1>🎓 Applicant Dashboard</h1>
                 <p>Welcome!</p>
