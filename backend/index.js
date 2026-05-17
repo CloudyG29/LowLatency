@@ -21,12 +21,14 @@ const adminRoutes = require("./routes/get_user");
 const listRoutes = require("./routes/listings");
 const profileRoutes = require("./routes/profile");
 const qualificationsRoute = require("./routes/qualifications");
-const reportRoutes = require("./routes/reports");  
+const reportRoutes = require("./routes/reports");
 
 app.use("/api/listings", listRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/qualifications", qualificationsRoute);
-app.use("/api/reports", reportRoutes);  
+app.use("/api/reports", reportRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/profile", profileRoutes);
 
 // Serve HTML files
 app.get("/", (req, res) => {
@@ -60,7 +62,7 @@ app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "forgot-password.html"));
 });
 
-//  opportunity detail page
+// Opportunity detail page
 app.get("/opportunity/:id", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "opportunity_detail.html"));
 });

@@ -1636,13 +1636,13 @@ export namespace Prisma {
    */
 
   export type ApplicantProfileCountOutputType = {
-    skills: number
     qualifications: number
+    skills: number
   }
 
   export type ApplicantProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    skills?: boolean | ApplicantProfileCountOutputTypeCountSkillsArgs
     qualifications?: boolean | ApplicantProfileCountOutputTypeCountQualificationsArgs
+    skills?: boolean | ApplicantProfileCountOutputTypeCountSkillsArgs
   }
 
   // Custom InputTypes
@@ -1659,15 +1659,15 @@ export namespace Prisma {
   /**
    * ApplicantProfileCountOutputType without action
    */
-  export type ApplicantProfileCountOutputTypeCountSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicantSkillWhereInput
+  export type ApplicantProfileCountOutputTypeCountQualificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicantQualificationWhereInput
   }
 
   /**
    * ApplicantProfileCountOutputType without action
    */
-  export type ApplicantProfileCountOutputTypeCountQualificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicantQualificationWhereInput
+  export type ApplicantProfileCountOutputTypeCountSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicantSkillWhereInput
   }
 
 
@@ -1676,13 +1676,13 @@ export namespace Prisma {
    */
 
   export type ProviderCountOutputType = {
-    listings: number
     applications: number
+    listings: number
   }
 
   export type ProviderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    listings?: boolean | ProviderCountOutputTypeCountListingsArgs
     applications?: boolean | ProviderCountOutputTypeCountApplicationsArgs
+    listings?: boolean | ProviderCountOutputTypeCountListingsArgs
   }
 
   // Custom InputTypes
@@ -1699,15 +1699,15 @@ export namespace Prisma {
   /**
    * ProviderCountOutputType without action
    */
-  export type ProviderCountOutputTypeCountListingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ListingWhereInput
+  export type ProviderCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWhereInput
   }
 
   /**
    * ProviderCountOutputType without action
    */
-  export type ProviderCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationWhereInput
+  export type ProviderCountOutputTypeCountListingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingWhereInput
   }
 
 
@@ -1717,12 +1717,12 @@ export namespace Prisma {
 
   export type ListingCountOutputType = {
     applications: number
-    reports: number
+    Report: number
   }
 
   export type ListingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applications?: boolean | ListingCountOutputTypeCountApplicationsArgs
-    reports?: boolean | ListingCountOutputTypeCountReportsArgs
+    Report?: boolean | ListingCountOutputTypeCountReportArgs
   }
 
   // Custom InputTypes
@@ -1746,7 +1746,7 @@ export namespace Prisma {
   /**
    * ListingCountOutputType without action
    */
-  export type ListingCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ListingCountOutputTypeCountReportArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReportWhereInput
   }
 
@@ -1839,29 +1839,29 @@ export namespace Prisma {
 
   export type UserMinAggregateOutputType = {
     user_id: number | null
-    firebase_uid: string | null
-    email: string | null
     name: string | null
     surname: string | null
     role: string | null
+    email: string | null
+    firebase_uid: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     user_id: number | null
-    firebase_uid: string | null
-    email: string | null
     name: string | null
     surname: string | null
     role: string | null
+    email: string | null
+    firebase_uid: string | null
   }
 
   export type UserCountAggregateOutputType = {
     user_id: number
-    firebase_uid: number
-    email: number
     name: number
     surname: number
     role: number
+    email: number
+    firebase_uid: number
     _all: number
   }
 
@@ -1876,29 +1876,29 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     user_id?: true
-    firebase_uid?: true
-    email?: true
     name?: true
     surname?: true
     role?: true
+    email?: true
+    firebase_uid?: true
   }
 
   export type UserMaxAggregateInputType = {
     user_id?: true
-    firebase_uid?: true
-    email?: true
     name?: true
     surname?: true
     role?: true
+    email?: true
+    firebase_uid?: true
   }
 
   export type UserCountAggregateInputType = {
     user_id?: true
-    firebase_uid?: true
-    email?: true
     name?: true
     surname?: true
     role?: true
+    email?: true
+    firebase_uid?: true
     _all?: true
   }
 
@@ -1990,11 +1990,11 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     user_id: number
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -2018,14 +2018,14 @@ export namespace Prisma {
 
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     user_id?: boolean
-    firebase_uid?: boolean
-    email?: boolean
     name?: boolean
     surname?: boolean
     role?: boolean
+    email?: boolean
+    firebase_uid?: boolean
+    applicant?: boolean | User$applicantArgs<ExtArgs>
     applications?: boolean | User$applicationsArgs<ExtArgs>
     provider?: boolean | User$providerArgs<ExtArgs>
-    applicant?: boolean | User$applicantArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2033,35 +2033,35 @@ export namespace Prisma {
 
   export type UserSelectScalar = {
     user_id?: boolean
-    firebase_uid?: boolean
-    email?: boolean
     name?: boolean
     surname?: boolean
     role?: boolean
+    email?: boolean
+    firebase_uid?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "firebase_uid" | "email" | "name" | "surname" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "name" | "surname" | "role" | "email" | "firebase_uid", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicant?: boolean | User$applicantArgs<ExtArgs>
     applications?: boolean | User$applicationsArgs<ExtArgs>
     provider?: boolean | User$providerArgs<ExtArgs>
-    applicant?: boolean | User$applicantArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      applicant: Prisma.$ApplicantProfilePayload<ExtArgs> | null
       applications: Prisma.$ApplicationPayload<ExtArgs>[]
       provider: Prisma.$ProviderPayload<ExtArgs> | null
-      applicant: Prisma.$ApplicantProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
-      firebase_uid: string
-      email: string
       name: string
       surname: string
       role: string
+      email: string
+      firebase_uid: string
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2402,9 +2402,9 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    applicant<T extends User$applicantArgs<ExtArgs> = {}>(args?: Subset<T, User$applicantArgs<ExtArgs>>): Prisma__ApplicantProfileClient<$Result.GetResult<Prisma.$ApplicantProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     applications<T extends User$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     provider<T extends User$providerArgs<ExtArgs> = {}>(args?: Subset<T, User$providerArgs<ExtArgs>>): Prisma__ProviderClient<$Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    applicant<T extends User$applicantArgs<ExtArgs> = {}>(args?: Subset<T, User$applicantArgs<ExtArgs>>): Prisma__ApplicantProfileClient<$Result.GetResult<Prisma.$ApplicantProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2435,11 +2435,11 @@ export namespace Prisma {
    */
   interface UserFieldRefs {
     readonly user_id: FieldRef<"User", 'Int'>
-    readonly firebase_uid: FieldRef<"User", 'String'>
-    readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly surname: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
+    readonly email: FieldRef<"User", 'String'>
+    readonly firebase_uid: FieldRef<"User", 'String'>
   }
     
 
@@ -2787,6 +2787,25 @@ export namespace Prisma {
   }
 
   /**
+   * User.applicant
+   */
+  export type User$applicantArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicantProfile
+     */
+    select?: ApplicantProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicantProfile
+     */
+    omit?: ApplicantProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicantProfileInclude<ExtArgs> | null
+    where?: ApplicantProfileWhereInput
+  }
+
+  /**
    * User.applications
    */
   export type User$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2827,25 +2846,6 @@ export namespace Prisma {
      */
     include?: ProviderInclude<ExtArgs> | null
     where?: ProviderWhereInput
-  }
-
-  /**
-   * User.applicant
-   */
-  export type User$applicantArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ApplicantProfile
-     */
-    select?: ApplicantProfileSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ApplicantProfile
-     */
-    omit?: ApplicantProfileOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicantProfileInclude<ExtArgs> | null
-    where?: ApplicantProfileWhereInput
   }
 
   /**
@@ -3070,8 +3070,8 @@ export namespace Prisma {
     dob?: boolean
     bio?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
     qualifications?: boolean | ApplicantProfile$qualificationsArgs<ExtArgs>
+    skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
     _count?: boolean | ApplicantProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["applicantProfile"]>
 
@@ -3088,8 +3088,8 @@ export namespace Prisma {
   export type ApplicantProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"applicant_id" | "user_id" | "phone" | "dob" | "bio", ExtArgs["result"]["applicantProfile"]>
   export type ApplicantProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
     qualifications?: boolean | ApplicantProfile$qualificationsArgs<ExtArgs>
+    skills?: boolean | ApplicantProfile$skillsArgs<ExtArgs>
     _count?: boolean | ApplicantProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3097,8 +3097,8 @@ export namespace Prisma {
     name: "ApplicantProfile"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      skills: Prisma.$ApplicantSkillPayload<ExtArgs>[]
       qualifications: Prisma.$ApplicantQualificationPayload<ExtArgs>[]
+      skills: Prisma.$ApplicantSkillPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       applicant_id: number
@@ -3447,8 +3447,8 @@ export namespace Prisma {
   export interface Prisma__ApplicantProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    skills<T extends ApplicantProfile$skillsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProfile$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantSkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     qualifications<T extends ApplicantProfile$qualificationsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProfile$qualificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantQualificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    skills<T extends ApplicantProfile$skillsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProfile$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantSkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3830,30 +3830,6 @@ export namespace Prisma {
   }
 
   /**
-   * ApplicantProfile.skills
-   */
-  export type ApplicantProfile$skillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ApplicantSkill
-     */
-    select?: ApplicantSkillSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ApplicantSkill
-     */
-    omit?: ApplicantSkillOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicantSkillInclude<ExtArgs> | null
-    where?: ApplicantSkillWhereInput
-    orderBy?: ApplicantSkillOrderByWithRelationInput | ApplicantSkillOrderByWithRelationInput[]
-    cursor?: ApplicantSkillWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ApplicantSkillScalarFieldEnum | ApplicantSkillScalarFieldEnum[]
-  }
-
-  /**
    * ApplicantProfile.qualifications
    */
   export type ApplicantProfile$qualificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3875,6 +3851,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicantQualificationScalarFieldEnum | ApplicantQualificationScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicantProfile.skills
+   */
+  export type ApplicantProfile$skillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicantSkill
+     */
+    select?: ApplicantSkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicantSkill
+     */
+    omit?: ApplicantSkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicantSkillInclude<ExtArgs> | null
+    where?: ApplicantSkillWhereInput
+    orderBy?: ApplicantSkillOrderByWithRelationInput | ApplicantSkillOrderByWithRelationInput[]
+    cursor?: ApplicantSkillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicantSkillScalarFieldEnum | ApplicantSkillScalarFieldEnum[]
   }
 
   /**
@@ -4098,9 +4098,9 @@ export namespace Prisma {
     profile?: boolean
     user_id?: boolean
     onboarded?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    listings?: boolean | Provider$listingsArgs<ExtArgs>
     applications?: boolean | Provider$applicationsArgs<ExtArgs>
+    listings?: boolean | Provider$listingsArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | ProviderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["provider"]>
 
@@ -4116,18 +4116,18 @@ export namespace Prisma {
 
   export type ProviderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"provider_id" | "provider_name" | "profile" | "user_id" | "onboarded", ExtArgs["result"]["provider"]>
   export type ProviderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    listings?: boolean | Provider$listingsArgs<ExtArgs>
     applications?: boolean | Provider$applicationsArgs<ExtArgs>
+    listings?: boolean | Provider$listingsArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | ProviderCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $ProviderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Provider"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      listings: Prisma.$ListingPayload<ExtArgs>[]
       applications: Prisma.$ApplicationPayload<ExtArgs>[]
+      listings: Prisma.$ListingPayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       provider_id: number
@@ -4475,9 +4475,9 @@ export namespace Prisma {
    */
   export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    listings<T extends Provider$listingsArgs<ExtArgs> = {}>(args?: Subset<T, Provider$listingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     applications<T extends Provider$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, Provider$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    listings<T extends Provider$listingsArgs<ExtArgs> = {}>(args?: Subset<T, Provider$listingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4859,30 +4859,6 @@ export namespace Prisma {
   }
 
   /**
-   * Provider.listings
-   */
-  export type Provider$listingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Listing
-     */
-    select?: ListingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Listing
-     */
-    omit?: ListingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ListingInclude<ExtArgs> | null
-    where?: ListingWhereInput
-    orderBy?: ListingOrderByWithRelationInput | ListingOrderByWithRelationInput[]
-    cursor?: ListingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ListingScalarFieldEnum | ListingScalarFieldEnum[]
-  }
-
-  /**
    * Provider.applications
    */
   export type Provider$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4904,6 +4880,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * Provider.listings
+   */
+  export type Provider$listingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listing
+     */
+    select?: ListingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listing
+     */
+    omit?: ListingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingInclude<ExtArgs> | null
+    where?: ListingWhereInput
+    orderBy?: ListingOrderByWithRelationInput | ListingOrderByWithRelationInput[]
+    cursor?: ListingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingScalarFieldEnum | ListingScalarFieldEnum[]
   }
 
   /**
@@ -4939,134 +4939,134 @@ export namespace Prisma {
 
   export type ListingAvgAggregateOutputType = {
     listings_id: number | null
-    provider_id: number | null
     nqf_level: number | null
+    provider_id: number | null
     stipend: number | null
   }
 
   export type ListingSumAggregateOutputType = {
     listings_id: number | null
-    provider_id: number | null
     nqf_level: number | null
+    provider_id: number | null
     stipend: number | null
   }
 
   export type ListingMinAggregateOutputType = {
     listings_id: number | null
-    provider_id: number | null
     listname: string | null
     list_type: string | null
     nqf_level: number | null
     description: string | null
-    stipend: number | null
-    location: string | null
-    duration: string | null
-    requirements: string | null
-    closing_date: Date | null
-    cvUploadedAt: Date | null
-    sector: string | null
+    provider_id: number | null
     status: string | null
+    closing_date: Date | null
+    duration: string | null
+    location: string | null
+    requirements: string | null
+    stipend: number | null
+    sector: string | null
+    cvUploadedAt: Date | null
   }
 
   export type ListingMaxAggregateOutputType = {
     listings_id: number | null
-    provider_id: number | null
     listname: string | null
     list_type: string | null
     nqf_level: number | null
     description: string | null
-    stipend: number | null
-    location: string | null
-    duration: string | null
-    requirements: string | null
-    closing_date: Date | null
-    cvUploadedAt: Date | null
-    sector: string | null
+    provider_id: number | null
     status: string | null
+    closing_date: Date | null
+    duration: string | null
+    location: string | null
+    requirements: string | null
+    stipend: number | null
+    sector: string | null
+    cvUploadedAt: Date | null
   }
 
   export type ListingCountAggregateOutputType = {
     listings_id: number
-    provider_id: number
     listname: number
     list_type: number
     nqf_level: number
     description: number
-    stipend: number
-    location: number
-    duration: number
-    requirements: number
-    closing_date: number
-    cvUploadedAt: number
-    sector: number
+    provider_id: number
     status: number
+    closing_date: number
+    duration: number
+    location: number
+    requirements: number
+    stipend: number
+    sector: number
+    cvUploadedAt: number
     _all: number
   }
 
 
   export type ListingAvgAggregateInputType = {
     listings_id?: true
-    provider_id?: true
     nqf_level?: true
+    provider_id?: true
     stipend?: true
   }
 
   export type ListingSumAggregateInputType = {
     listings_id?: true
-    provider_id?: true
     nqf_level?: true
+    provider_id?: true
     stipend?: true
   }
 
   export type ListingMinAggregateInputType = {
     listings_id?: true
-    provider_id?: true
     listname?: true
     list_type?: true
     nqf_level?: true
     description?: true
-    stipend?: true
-    location?: true
-    duration?: true
-    requirements?: true
-    closing_date?: true
-    cvUploadedAt?: true
-    sector?: true
+    provider_id?: true
     status?: true
+    closing_date?: true
+    duration?: true
+    location?: true
+    requirements?: true
+    stipend?: true
+    sector?: true
+    cvUploadedAt?: true
   }
 
   export type ListingMaxAggregateInputType = {
     listings_id?: true
-    provider_id?: true
     listname?: true
     list_type?: true
     nqf_level?: true
     description?: true
-    stipend?: true
-    location?: true
-    duration?: true
-    requirements?: true
-    closing_date?: true
-    cvUploadedAt?: true
-    sector?: true
+    provider_id?: true
     status?: true
+    closing_date?: true
+    duration?: true
+    location?: true
+    requirements?: true
+    stipend?: true
+    sector?: true
+    cvUploadedAt?: true
   }
 
   export type ListingCountAggregateInputType = {
     listings_id?: true
-    provider_id?: true
     listname?: true
     list_type?: true
     nqf_level?: true
     description?: true
-    stipend?: true
-    location?: true
-    duration?: true
-    requirements?: true
-    closing_date?: true
-    cvUploadedAt?: true
-    sector?: true
+    provider_id?: true
     status?: true
+    closing_date?: true
+    duration?: true
+    location?: true
+    requirements?: true
+    stipend?: true
+    sector?: true
+    cvUploadedAt?: true
     _all?: true
   }
 
@@ -5158,19 +5158,19 @@ export namespace Prisma {
 
   export type ListingGroupByOutputType = {
     listings_id: number
-    provider_id: number
     listname: string
     list_type: string
     nqf_level: number | null
     description: string | null
-    stipend: number | null
-    location: string | null
-    duration: string | null
-    requirements: string | null
-    closing_date: Date | null
-    cvUploadedAt: Date | null
-    sector: string | null
+    provider_id: number
     status: string
+    closing_date: Date | null
+    duration: string | null
+    location: string | null
+    requirements: string | null
+    stipend: number | null
+    sector: string | null
+    cvUploadedAt: Date | null
     _count: ListingCountAggregateOutputType | null
     _avg: ListingAvgAggregateOutputType | null
     _sum: ListingSumAggregateOutputType | null
@@ -5194,22 +5194,22 @@ export namespace Prisma {
 
   export type ListingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     listings_id?: boolean
-    provider_id?: boolean
     listname?: boolean
     list_type?: boolean
     nqf_level?: boolean
     description?: boolean
-    stipend?: boolean
-    location?: boolean
-    duration?: boolean
-    requirements?: boolean
-    closing_date?: boolean
-    cvUploadedAt?: boolean
-    sector?: boolean
+    provider_id?: boolean
     status?: boolean
-    provider?: boolean | ProviderDefaultArgs<ExtArgs>
+    closing_date?: boolean
+    duration?: boolean
+    location?: boolean
+    requirements?: boolean
+    stipend?: boolean
+    sector?: boolean
+    cvUploadedAt?: boolean
     applications?: boolean | Listing$applicationsArgs<ExtArgs>
-    reports?: boolean | Listing$reportsArgs<ExtArgs>
+    provider?: boolean | ProviderDefaultArgs<ExtArgs>
+    Report?: boolean | Listing$ReportArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["listing"]>
 
@@ -5217,51 +5217,51 @@ export namespace Prisma {
 
   export type ListingSelectScalar = {
     listings_id?: boolean
-    provider_id?: boolean
     listname?: boolean
     list_type?: boolean
     nqf_level?: boolean
     description?: boolean
-    stipend?: boolean
-    location?: boolean
-    duration?: boolean
-    requirements?: boolean
-    closing_date?: boolean
-    cvUploadedAt?: boolean
-    sector?: boolean
+    provider_id?: boolean
     status?: boolean
+    closing_date?: boolean
+    duration?: boolean
+    location?: boolean
+    requirements?: boolean
+    stipend?: boolean
+    sector?: boolean
+    cvUploadedAt?: boolean
   }
 
-  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"listings_id" | "provider_id" | "listname" | "list_type" | "nqf_level" | "description" | "stipend" | "location" | "duration" | "requirements" | "closing_date" | "cvUploadedAt" | "sector" | "status", ExtArgs["result"]["listing"]>
+  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"listings_id" | "listname" | "list_type" | "nqf_level" | "description" | "provider_id" | "status" | "closing_date" | "duration" | "location" | "requirements" | "stipend" | "sector" | "cvUploadedAt", ExtArgs["result"]["listing"]>
   export type ListingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    provider?: boolean | ProviderDefaultArgs<ExtArgs>
     applications?: boolean | Listing$applicationsArgs<ExtArgs>
-    reports?: boolean | Listing$reportsArgs<ExtArgs>
+    provider?: boolean | ProviderDefaultArgs<ExtArgs>
+    Report?: boolean | Listing$ReportArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $ListingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Listing"
     objects: {
-      provider: Prisma.$ProviderPayload<ExtArgs>
       applications: Prisma.$ApplicationPayload<ExtArgs>[]
-      reports: Prisma.$ReportPayload<ExtArgs>[]
+      provider: Prisma.$ProviderPayload<ExtArgs>
+      Report: Prisma.$ReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       listings_id: number
-      provider_id: number
       listname: string
       list_type: string
       nqf_level: number | null
       description: string | null
-      stipend: number | null
-      location: string | null
-      duration: string | null
-      requirements: string | null
-      closing_date: Date | null
-      cvUploadedAt: Date | null
-      sector: string | null
+      provider_id: number
       status: string
+      closing_date: Date | null
+      duration: string | null
+      location: string | null
+      requirements: string | null
+      stipend: number | null
+      sector: string | null
+      cvUploadedAt: Date | null
     }, ExtArgs["result"]["listing"]>
     composites: {}
   }
@@ -5602,9 +5602,9 @@ export namespace Prisma {
    */
   export interface Prisma__ListingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    provider<T extends ProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProviderDefaultArgs<ExtArgs>>): Prisma__ProviderClient<$Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     applications<T extends Listing$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    reports<T extends Listing$reportsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    provider<T extends ProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProviderDefaultArgs<ExtArgs>>): Prisma__ProviderClient<$Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Report<T extends Listing$ReportArgs<ExtArgs> = {}>(args?: Subset<T, Listing$ReportArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5635,19 +5635,19 @@ export namespace Prisma {
    */
   interface ListingFieldRefs {
     readonly listings_id: FieldRef<"Listing", 'Int'>
-    readonly provider_id: FieldRef<"Listing", 'Int'>
     readonly listname: FieldRef<"Listing", 'String'>
     readonly list_type: FieldRef<"Listing", 'String'>
     readonly nqf_level: FieldRef<"Listing", 'Int'>
     readonly description: FieldRef<"Listing", 'String'>
-    readonly stipend: FieldRef<"Listing", 'Float'>
-    readonly location: FieldRef<"Listing", 'String'>
-    readonly duration: FieldRef<"Listing", 'String'>
-    readonly requirements: FieldRef<"Listing", 'String'>
-    readonly closing_date: FieldRef<"Listing", 'DateTime'>
-    readonly cvUploadedAt: FieldRef<"Listing", 'DateTime'>
-    readonly sector: FieldRef<"Listing", 'String'>
+    readonly provider_id: FieldRef<"Listing", 'Int'>
     readonly status: FieldRef<"Listing", 'String'>
+    readonly closing_date: FieldRef<"Listing", 'DateTime'>
+    readonly duration: FieldRef<"Listing", 'String'>
+    readonly location: FieldRef<"Listing", 'String'>
+    readonly requirements: FieldRef<"Listing", 'String'>
+    readonly stipend: FieldRef<"Listing", 'Float'>
+    readonly sector: FieldRef<"Listing", 'String'>
+    readonly cvUploadedAt: FieldRef<"Listing", 'DateTime'>
   }
     
 
@@ -6019,9 +6019,9 @@ export namespace Prisma {
   }
 
   /**
-   * Listing.reports
+   * Listing.Report
    */
-  export type Listing$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Listing$ReportArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
      */
@@ -6076,51 +6076,66 @@ export namespace Prisma {
   export type ApplicationAvgAggregateOutputType = {
     application_id: number | null
     user_id: number | null
-    listing_id: number | null
     provider_id: number | null
+    listing_id: number | null
   }
 
   export type ApplicationSumAggregateOutputType = {
     application_id: number | null
     user_id: number | null
-    listing_id: number | null
     provider_id: number | null
+    listing_id: number | null
   }
 
   export type ApplicationMinAggregateOutputType = {
     application_id: number | null
     user_id: number | null
-    listing_id: number | null
     provider_id: number | null
     availability: string | null
     motivation: string | null
     status: string | null
+    listing_id: number | null
     created_at: Date | null
     updated_at: Date | null
+    availability: string | null
+    motivation: string | null
+    cvFilePath: string | null
+    cvOriginalFilename: string | null
+    cvUploadedAt: Date | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
     application_id: number | null
     user_id: number | null
-    listing_id: number | null
     provider_id: number | null
     availability: string | null
     motivation: string | null
     status: string | null
+    listing_id: number | null
     created_at: Date | null
     updated_at: Date | null
+    availability: string | null
+    motivation: string | null
+    cvFilePath: string | null
+    cvOriginalFilename: string | null
+    cvUploadedAt: Date | null
   }
 
   export type ApplicationCountAggregateOutputType = {
     application_id: number
     user_id: number
-    listing_id: number
     provider_id: number
     availability: number
     motivation: number
     status: number
+    listing_id: number
     created_at: number
     updated_at: number
+    availability: number
+    motivation: number
+    cvFilePath: number
+    cvOriginalFilename: number
+    cvUploadedAt: number
     _all: number
   }
 
@@ -6128,51 +6143,66 @@ export namespace Prisma {
   export type ApplicationAvgAggregateInputType = {
     application_id?: true
     user_id?: true
-    listing_id?: true
     provider_id?: true
+    listing_id?: true
   }
 
   export type ApplicationSumAggregateInputType = {
     application_id?: true
     user_id?: true
-    listing_id?: true
     provider_id?: true
+    listing_id?: true
   }
 
   export type ApplicationMinAggregateInputType = {
     application_id?: true
     user_id?: true
-    listing_id?: true
     provider_id?: true
     availability?: true
     motivation?: true
     status?: true
+    listing_id?: true
     created_at?: true
     updated_at?: true
+    availability?: true
+    motivation?: true
+    cvFilePath?: true
+    cvOriginalFilename?: true
+    cvUploadedAt?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
     application_id?: true
     user_id?: true
-    listing_id?: true
     provider_id?: true
     availability?: true
     motivation?: true
     status?: true
+    listing_id?: true
     created_at?: true
     updated_at?: true
+    availability?: true
+    motivation?: true
+    cvFilePath?: true
+    cvOriginalFilename?: true
+    cvUploadedAt?: true
   }
 
   export type ApplicationCountAggregateInputType = {
     application_id?: true
     user_id?: true
-    listing_id?: true
     provider_id?: true
     availability?: true
     motivation?: true
     status?: true
+    listing_id?: true
     created_at?: true
     updated_at?: true
+    availability?: true
+    motivation?: true
+    cvFilePath?: true
+    cvOriginalFilename?: true
+    cvUploadedAt?: true
     _all?: true
   }
 
@@ -6265,13 +6295,18 @@ export namespace Prisma {
   export type ApplicationGroupByOutputType = {
     application_id: number
     user_id: number
-    listing_id: number
     provider_id: number
     availability: string | null
     motivation: string | null
     status: string
+    listing_id: number
     created_at: Date
     updated_at: Date
+    availability: string | null
+    motivation: string | null
+    cvFilePath: string | null
+    cvOriginalFilename: string | null
+    cvUploadedAt: Date | null
     _count: ApplicationCountAggregateOutputType | null
     _avg: ApplicationAvgAggregateOutputType | null
     _sum: ApplicationSumAggregateOutputType | null
@@ -6296,16 +6331,21 @@ export namespace Prisma {
   export type ApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     application_id?: boolean
     user_id?: boolean
-    listing_id?: boolean
     provider_id?: boolean
     availability?: boolean
     motivation?: boolean
     status?: boolean
+    listing_id?: boolean
     created_at?: boolean
     updated_at?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    availability?: boolean
+    motivation?: boolean
+    cvFilePath?: boolean
+    cvOriginalFilename?: boolean
+    cvUploadedAt?: boolean
     listing?: boolean | ListingDefaultArgs<ExtArgs>
     provider?: boolean | ProviderDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
 
@@ -6313,39 +6353,49 @@ export namespace Prisma {
   export type ApplicationSelectScalar = {
     application_id?: boolean
     user_id?: boolean
-    listing_id?: boolean
     provider_id?: boolean
     availability?: boolean
     motivation?: boolean
     status?: boolean
+    listing_id?: boolean
     created_at?: boolean
     updated_at?: boolean
+    availability?: boolean
+    motivation?: boolean
+    cvFilePath?: boolean
+    cvOriginalFilename?: boolean
+    cvUploadedAt?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"application_id" | "user_id" | "listing_id" | "provider_id" | "availability" | "motivation" | "status" | "created_at" | "updated_at", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"application_id" | "user_id" | "provider_id" | "status" | "listing_id" | "created_at" | "updated_at" | "availability" | "motivation" | "cvFilePath" | "cvOriginalFilename" | "cvUploadedAt", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     listing?: boolean | ListingDefaultArgs<ExtArgs>
     provider?: boolean | ProviderDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Application"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       listing: Prisma.$ListingPayload<ExtArgs>
       provider: Prisma.$ProviderPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       application_id: number
       user_id: number
-      listing_id: number
       provider_id: number
       availability: string | null
       motivation: string | null
       status: string
+      listing_id: number
       created_at: Date
       updated_at: Date
+      availability: string | null
+      motivation: string | null
+      cvFilePath: string | null
+      cvOriginalFilename: string | null
+      cvUploadedAt: Date | null
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -6686,9 +6736,9 @@ export namespace Prisma {
    */
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     listing<T extends ListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ListingDefaultArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     provider<T extends ProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProviderDefaultArgs<ExtArgs>>): Prisma__ProviderClient<$Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6720,13 +6770,18 @@ export namespace Prisma {
   interface ApplicationFieldRefs {
     readonly application_id: FieldRef<"Application", 'Int'>
     readonly user_id: FieldRef<"Application", 'Int'>
-    readonly listing_id: FieldRef<"Application", 'Int'>
     readonly provider_id: FieldRef<"Application", 'Int'>
     readonly availability: FieldRef<"Application", 'String'>
     readonly motivation: FieldRef<"Application", 'String'>
     readonly status: FieldRef<"Application", 'String'>
+    readonly listing_id: FieldRef<"Application", 'Int'>
     readonly created_at: FieldRef<"Application", 'DateTime'>
     readonly updated_at: FieldRef<"Application", 'DateTime'>
+    readonly availability: FieldRef<"Application", 'String'>
+    readonly motivation: FieldRef<"Application", 'String'>
+    readonly cvFilePath: FieldRef<"Application", 'String'>
+    readonly cvOriginalFilename: FieldRef<"Application", 'String'>
+    readonly cvUploadedAt: FieldRef<"Application", 'DateTime'>
   }
     
 
@@ -7118,18 +7173,24 @@ export namespace Prisma {
     skill_id: number | null
     name: string | null
     nqf_level: number | null
+    saqa_id: string | null
+    sector: string | null
   }
 
   export type SkillMaxAggregateOutputType = {
     skill_id: number | null
     name: string | null
     nqf_level: number | null
+    saqa_id: string | null
+    sector: string | null
   }
 
   export type SkillCountAggregateOutputType = {
     skill_id: number
     name: number
     nqf_level: number
+    saqa_id: number
+    sector: number
     _all: number
   }
 
@@ -7148,18 +7209,24 @@ export namespace Prisma {
     skill_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
   }
 
   export type SkillMaxAggregateInputType = {
     skill_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
   }
 
   export type SkillCountAggregateInputType = {
     skill_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
     _all?: true
   }
 
@@ -7253,6 +7320,8 @@ export namespace Prisma {
     skill_id: number
     name: string
     nqf_level: number | null
+    saqa_id: string | null
+    sector: string | null
     _count: SkillCountAggregateOutputType | null
     _avg: SkillAvgAggregateOutputType | null
     _sum: SkillSumAggregateOutputType | null
@@ -7278,6 +7347,8 @@ export namespace Prisma {
     skill_id?: boolean
     name?: boolean
     nqf_level?: boolean
+    saqa_id?: boolean
+    sector?: boolean
     applicantSkills?: boolean | Skill$applicantSkillsArgs<ExtArgs>
     _count?: boolean | SkillCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["skill"]>
@@ -7288,9 +7359,11 @@ export namespace Prisma {
     skill_id?: boolean
     name?: boolean
     nqf_level?: boolean
+    saqa_id?: boolean
+    sector?: boolean
   }
 
-  export type SkillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"skill_id" | "name" | "nqf_level", ExtArgs["result"]["skill"]>
+  export type SkillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"skill_id" | "name" | "nqf_level" | "saqa_id" | "sector", ExtArgs["result"]["skill"]>
   export type SkillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicantSkills?: boolean | Skill$applicantSkillsArgs<ExtArgs>
     _count?: boolean | SkillCountOutputTypeDefaultArgs<ExtArgs>
@@ -7305,6 +7378,8 @@ export namespace Prisma {
       skill_id: number
       name: string
       nqf_level: number | null
+      saqa_id: string | null
+      sector: string | null
     }, ExtArgs["result"]["skill"]>
     composites: {}
   }
@@ -7678,6 +7753,8 @@ export namespace Prisma {
     readonly skill_id: FieldRef<"Skill", 'Int'>
     readonly name: FieldRef<"Skill", 'String'>
     readonly nqf_level: FieldRef<"Skill", 'Int'>
+    readonly saqa_id: FieldRef<"Skill", 'String'>
+    readonly sector: FieldRef<"Skill", 'String'>
   }
     
 
@@ -9050,18 +9127,27 @@ export namespace Prisma {
     qualification_id: number | null
     name: string | null
     nqf_level: number | null
+    saqa_id: string | null
+    sector: string | null
+    originator: string | null
   }
 
   export type QualificationMaxAggregateOutputType = {
     qualification_id: number | null
     name: string | null
     nqf_level: number | null
+    saqa_id: string | null
+    sector: string | null
+    originator: string | null
   }
 
   export type QualificationCountAggregateOutputType = {
     qualification_id: number
     name: number
     nqf_level: number
+    saqa_id: number
+    sector: number
+    originator: number
     _all: number
   }
 
@@ -9080,18 +9166,27 @@ export namespace Prisma {
     qualification_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
+    originator?: true
   }
 
   export type QualificationMaxAggregateInputType = {
     qualification_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
+    originator?: true
   }
 
   export type QualificationCountAggregateInputType = {
     qualification_id?: true
     name?: true
     nqf_level?: true
+    saqa_id?: true
+    sector?: true
+    originator?: true
     _all?: true
   }
 
@@ -9185,6 +9280,9 @@ export namespace Prisma {
     qualification_id: number
     name: string
     nqf_level: number
+    saqa_id: string | null
+    sector: string | null
+    originator: string | null
     _count: QualificationCountAggregateOutputType | null
     _avg: QualificationAvgAggregateOutputType | null
     _sum: QualificationSumAggregateOutputType | null
@@ -9210,6 +9308,9 @@ export namespace Prisma {
     qualification_id?: boolean
     name?: boolean
     nqf_level?: boolean
+    saqa_id?: boolean
+    sector?: boolean
+    originator?: boolean
     applicantQualifications?: boolean | Qualification$applicantQualificationsArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qualification"]>
@@ -9220,9 +9321,12 @@ export namespace Prisma {
     qualification_id?: boolean
     name?: boolean
     nqf_level?: boolean
+    saqa_id?: boolean
+    sector?: boolean
+    originator?: boolean
   }
 
-  export type QualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"qualification_id" | "name" | "nqf_level", ExtArgs["result"]["qualification"]>
+  export type QualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"qualification_id" | "name" | "nqf_level" | "saqa_id" | "sector" | "originator", ExtArgs["result"]["qualification"]>
   export type QualificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicantQualifications?: boolean | Qualification$applicantQualificationsArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
@@ -9237,6 +9341,9 @@ export namespace Prisma {
       qualification_id: number
       name: string
       nqf_level: number
+      saqa_id: string | null
+      sector: string | null
+      originator: string | null
     }, ExtArgs["result"]["qualification"]>
     composites: {}
   }
@@ -9610,6 +9717,9 @@ export namespace Prisma {
     readonly qualification_id: FieldRef<"Qualification", 'Int'>
     readonly name: FieldRef<"Qualification", 'String'>
     readonly nqf_level: FieldRef<"Qualification", 'Int'>
+    readonly saqa_id: FieldRef<"Qualification", 'String'>
+    readonly sector: FieldRef<"Qualification", 'String'>
+    readonly originator: FieldRef<"Qualification", 'String'>
   }
     
 
@@ -11200,10 +11310,999 @@ export namespace Prisma {
     reported_by?: boolean
     status?: boolean
     created_at?: boolean
+    Listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["report"]>
+
+
+
+  export type ReportSelectScalar = {
+    report_id?: boolean
+    listing_id?: boolean
+    reason?: boolean
+    details?: boolean
+    reported_by?: boolean
+    status?: boolean
+    created_at?: boolean
+  }
+
+  export type ReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"report_id" | "listing_id" | "reason" | "details" | "reported_by" | "status" | "created_at", ExtArgs["result"]["report"]>
+  export type ReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Listing?: boolean | ListingDefaultArgs<ExtArgs>
+  }
+
+  export type $ReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Report"
+    objects: {
+      Listing: Prisma.$ListingPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      report_id: number
+      listing_id: number
+      reason: string
+      details: string | null
+      reported_by: string
+      status: string
+      created_at: Date
+    }, ExtArgs["result"]["report"]>
+    composites: {}
+  }
+
+  type ReportGetPayload<S extends boolean | null | undefined | ReportDefaultArgs> = $Result.GetResult<Prisma.$ReportPayload, S>
+
+  type ReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReportCountAggregateInputType | true
+    }
+
+  export interface ReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report'], meta: { name: 'Report' } }
+    /**
+     * Find zero or one Report that matches the filter.
+     * @param {ReportFindUniqueArgs} args - Arguments to find a Report
+     * @example
+     * // Get one Report
+     * const report = await prisma.report.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReportFindUniqueArgs>(args: SelectSubset<T, ReportFindUniqueArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Report that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReportFindUniqueOrThrowArgs} args - Arguments to find a Report
+     * @example
+     * // Get one Report
+     * const report = await prisma.report.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReportFindUniqueOrThrowArgs>(args: SelectSubset<T, ReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Report that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportFindFirstArgs} args - Arguments to find a Report
+     * @example
+     * // Get one Report
+     * const report = await prisma.report.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReportFindFirstArgs>(args?: SelectSubset<T, ReportFindFirstArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Report that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportFindFirstOrThrowArgs} args - Arguments to find a Report
+     * @example
+     * // Get one Report
+     * const report = await prisma.report.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReportFindFirstOrThrowArgs>(args?: SelectSubset<T, ReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Reports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Reports
+     * const reports = await prisma.report.findMany()
+     * 
+     * // Get first 10 Reports
+     * const reports = await prisma.report.findMany({ take: 10 })
+     * 
+     * // Only select the `report_id`
+     * const reportWithReport_idOnly = await prisma.report.findMany({ select: { report_id: true } })
+     * 
+     */
+    findMany<T extends ReportFindManyArgs>(args?: SelectSubset<T, ReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Report.
+     * @param {ReportCreateArgs} args - Arguments to create a Report.
+     * @example
+     * // Create one Report
+     * const Report = await prisma.report.create({
+     *   data: {
+     *     // ... data to create a Report
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReportCreateArgs>(args: SelectSubset<T, ReportCreateArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Reports.
+     * @param {ReportCreateManyArgs} args - Arguments to create many Reports.
+     * @example
+     * // Create many Reports
+     * const report = await prisma.report.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReportCreateManyArgs>(args?: SelectSubset<T, ReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Report.
+     * @param {ReportDeleteArgs} args - Arguments to delete one Report.
+     * @example
+     * // Delete one Report
+     * const Report = await prisma.report.delete({
+     *   where: {
+     *     // ... filter to delete one Report
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReportDeleteArgs>(args: SelectSubset<T, ReportDeleteArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Report.
+     * @param {ReportUpdateArgs} args - Arguments to update one Report.
+     * @example
+     * // Update one Report
+     * const report = await prisma.report.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReportUpdateArgs>(args: SelectSubset<T, ReportUpdateArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Reports.
+     * @param {ReportDeleteManyArgs} args - Arguments to filter Reports to delete.
+     * @example
+     * // Delete a few Reports
+     * const { count } = await prisma.report.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReportDeleteManyArgs>(args?: SelectSubset<T, ReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Reports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Reports
+     * const report = await prisma.report.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReportUpdateManyArgs>(args: SelectSubset<T, ReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Report.
+     * @param {ReportUpsertArgs} args - Arguments to update or create a Report.
+     * @example
+     * // Update or create a Report
+     * const report = await prisma.report.upsert({
+     *   create: {
+     *     // ... data to create a Report
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Report we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReportUpsertArgs>(args: SelectSubset<T, ReportUpsertArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Reports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportCountArgs} args - Arguments to filter Reports to count.
+     * @example
+     * // Count the number of Reports
+     * const count = await prisma.report.count({
+     *   where: {
+     *     // ... the filter for the Reports we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReportCountArgs>(
+      args?: Subset<T, ReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Report.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReportAggregateArgs>(args: Subset<T, ReportAggregateArgs>): Prisma.PrismaPromise<GetReportAggregateType<T>>
+
+    /**
+     * Group by Report.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReportGroupByArgs['orderBy'] }
+        : { orderBy?: ReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Report model
+   */
+  readonly fields: ReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Report.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Listing<T extends ListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ListingDefaultArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Report model
+   */
+  interface ReportFieldRefs {
+    readonly report_id: FieldRef<"Report", 'Int'>
+    readonly listing_id: FieldRef<"Report", 'Int'>
+    readonly reason: FieldRef<"Report", 'String'>
+    readonly details: FieldRef<"Report", 'String'>
+    readonly reported_by: FieldRef<"Report", 'String'>
+    readonly status: FieldRef<"Report", 'String'>
+    readonly created_at: FieldRef<"Report", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Report findUnique
+   */
+  export type ReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter, which Report to fetch.
+     */
+    where: ReportWhereUniqueInput
+  }
+
+  /**
+   * Report findUniqueOrThrow
+   */
+  export type ReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter, which Report to fetch.
+     */
+    where: ReportWhereUniqueInput
+  }
+
+  /**
+   * Report findFirst
+   */
+  export type ReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter, which Report to fetch.
+     */
+    where?: ReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reports to fetch.
+     */
+    orderBy?: ReportOrderByWithRelationInput | ReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reports.
+     */
+    cursor?: ReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reports.
+     */
+    distinct?: ReportScalarFieldEnum | ReportScalarFieldEnum[]
+  }
+
+  /**
+   * Report findFirstOrThrow
+   */
+  export type ReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter, which Report to fetch.
+     */
+    where?: ReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reports to fetch.
+     */
+    orderBy?: ReportOrderByWithRelationInput | ReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Reports.
+     */
+    cursor?: ReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reports.
+     */
+    distinct?: ReportScalarFieldEnum | ReportScalarFieldEnum[]
+  }
+
+  /**
+   * Report findMany
+   */
+  export type ReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter, which Reports to fetch.
+     */
+    where?: ReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reports to fetch.
+     */
+    orderBy?: ReportOrderByWithRelationInput | ReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Reports.
+     */
+    cursor?: ReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reports.
+     */
+    distinct?: ReportScalarFieldEnum | ReportScalarFieldEnum[]
+  }
+
+  /**
+   * Report create
+   */
+  export type ReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Report.
+     */
+    data: XOR<ReportCreateInput, ReportUncheckedCreateInput>
+  }
+
+  /**
+   * Report createMany
+   */
+  export type ReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Reports.
+     */
+    data: ReportCreateManyInput | ReportCreateManyInput[]
+  }
+
+  /**
+   * Report update
+   */
+  export type ReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Report.
+     */
+    data: XOR<ReportUpdateInput, ReportUncheckedUpdateInput>
+    /**
+     * Choose, which Report to update.
+     */
+    where: ReportWhereUniqueInput
+  }
+
+  /**
+   * Report updateMany
+   */
+  export type ReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Reports.
+     */
+    data: XOR<ReportUpdateManyMutationInput, ReportUncheckedUpdateManyInput>
+    /**
+     * Filter which Reports to update
+     */
+    where?: ReportWhereInput
+    /**
+     * Limit how many Reports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Report upsert
+   */
+  export type ReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Report to update in case it exists.
+     */
+    where: ReportWhereUniqueInput
+    /**
+     * In case the Report found by the `where` argument doesn't exist, create a new Report with this data.
+     */
+    create: XOR<ReportCreateInput, ReportUncheckedCreateInput>
+    /**
+     * In case the Report was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReportUpdateInput, ReportUncheckedUpdateInput>
+  }
+
+  /**
+   * Report delete
+   */
+  export type ReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
+     * Filter which Report to delete.
+     */
+    where: ReportWhereUniqueInput
+  }
+
+  /**
+   * Report deleteMany
+   */
+  export type ReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Reports to delete
+     */
+    where?: ReportWhereInput
+    /**
+     * Limit how many Reports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Report without action
+   */
+  export type ReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report
+     */
+    omit?: ReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReportInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Enums
+   */
+
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable',
+    Snapshot: 'Snapshot'
+  };
+
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+  export const UserScalarFieldEnum: {
+    user_id: 'user_id',
+    name: 'name',
+    surname: 'surname',
+    role: 'role',
+    email: 'email',
+    firebase_uid: 'firebase_uid'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const ApplicantProfileScalarFieldEnum: {
+    applicant_id: 'applicant_id',
+    user_id: 'user_id',
+    phone: 'phone',
+    dob: 'dob',
+    bio: 'bio'
+  };
+
+  export type ApplicantProfileScalarFieldEnum = (typeof ApplicantProfileScalarFieldEnum)[keyof typeof ApplicantProfileScalarFieldEnum]
+
+
+  export const ProviderScalarFieldEnum: {
+    provider_id: 'provider_id',
+    provider_name: 'provider_name',
+    profile: 'profile',
+    user_id: 'user_id',
+    onboarded: 'onboarded'
+  };
+
+  export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
+
+  export type ReportMaxAggregateInputType = {
+    report_id?: true
+    listing_id?: true
+    reason?: true
+    details?: true
+    reported_by?: true
+    status?: true
+    created_at?: true
+  }
+
+  export const ListingScalarFieldEnum: {
+    listings_id: 'listings_id',
+    listname: 'listname',
+    list_type: 'list_type',
+    nqf_level: 'nqf_level',
+    description: 'description',
+    provider_id: 'provider_id',
+    status: 'status',
+    closing_date: 'closing_date',
+    duration: 'duration',
+    location: 'location',
+    requirements: 'requirements',
+    stipend: 'stipend',
+    sector: 'sector',
+    cvUploadedAt: 'cvUploadedAt'
+  };
+
+  export type ReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Report to aggregate.
+     */
+    where?: ReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Reports to fetch.
+     */
+    orderBy?: ReportOrderByWithRelationInput | ReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Reports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Reports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Reports
+    **/
+    _count?: true | ReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReportMaxAggregateInputType
+  }
+
+  export type GetReportAggregateType<T extends ReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReport[P]>
+      : GetScalarType<T[P], AggregateReport[P]>
+  }
+
+  export const ApplicationScalarFieldEnum: {
+    application_id: 'application_id',
+    user_id: 'user_id',
+    provider_id: 'provider_id',
+    status: 'status',
+    listing_id: 'listing_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
+    availability: 'availability',
+    motivation: 'motivation',
+    cvFilePath: 'cvFilePath',
+    cvOriginalFilename: 'cvOriginalFilename',
+    cvUploadedAt: 'cvUploadedAt'
+  };
+
+
+
+  export const SkillScalarFieldEnum: {
+    skill_id: 'skill_id',
+    name: 'name',
+    nqf_level: 'nqf_level',
+    saqa_id: 'saqa_id',
+    sector: 'sector'
+  };
+
+  export type ReportGroupByOutputType = {
+    report_id: number
+    listing_id: number
+    reason: string
+    details: string | null
+    reported_by: string
+    status: string
+    created_at: Date
+    _count: ReportCountAggregateOutputType | null
+    _avg: ReportAvgAggregateOutputType | null
+    _sum: ReportSumAggregateOutputType | null
+    _min: ReportMinAggregateOutputType | null
+    _max: ReportMaxAggregateOutputType | null
+  }
+
+  type GetReportGroupByPayload<T extends ReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReportGroupByOutputType[P]>
+            : GetScalarType<T[P], ReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    report_id?: boolean
+    listing_id?: boolean
+    reason?: boolean
+    details?: boolean
+    reported_by?: boolean
+    status?: boolean
+    created_at?: boolean
     listing?: boolean | ListingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
 
 
+  export const QualificationScalarFieldEnum: {
+    qualification_id: 'qualification_id',
+    name: 'name',
+    nqf_level: 'nqf_level',
+    saqa_id: 'saqa_id',
+    sector: 'sector',
+    originator: 'originator'
+  };
 
   export type ReportSelectScalar = {
     report_id?: boolean
@@ -12174,50 +13273,50 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     user_id?: IntFilter<"User"> | number
-    firebase_uid?: StringFilter<"User"> | string
-    email?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
     surname?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    firebase_uid?: StringFilter<"User"> | string
+    applicant?: XOR<ApplicantProfileNullableScalarRelationFilter, ApplicantProfileWhereInput> | null
     applications?: ApplicationListRelationFilter
     provider?: XOR<ProviderNullableScalarRelationFilter, ProviderWhereInput> | null
-    applicant?: XOR<ApplicantProfileNullableScalarRelationFilter, ApplicantProfileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
     user_id?: SortOrder
-    firebase_uid?: SortOrder
-    email?: SortOrder
     name?: SortOrder
     surname?: SortOrder
     role?: SortOrder
+    email?: SortOrder
+    firebase_uid?: SortOrder
+    applicant?: ApplicantProfileOrderByWithRelationInput
     applications?: ApplicationOrderByRelationAggregateInput
     provider?: ProviderOrderByWithRelationInput
-    applicant?: ApplicantProfileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     user_id?: number
-    firebase_uid?: string
     email?: string
+    firebase_uid?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringFilter<"User"> | string
     surname?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
+    applicant?: XOR<ApplicantProfileNullableScalarRelationFilter, ApplicantProfileWhereInput> | null
     applications?: ApplicationListRelationFilter
     provider?: XOR<ProviderNullableScalarRelationFilter, ProviderWhereInput> | null
-    applicant?: XOR<ApplicantProfileNullableScalarRelationFilter, ApplicantProfileWhereInput> | null
-  }, "user_id" | "firebase_uid" | "email">
+  }, "user_id" | "email" | "firebase_uid">
 
   export type UserOrderByWithAggregationInput = {
     user_id?: SortOrder
-    firebase_uid?: SortOrder
-    email?: SortOrder
     name?: SortOrder
     surname?: SortOrder
     role?: SortOrder
+    email?: SortOrder
+    firebase_uid?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -12230,11 +13329,11 @@ export namespace Prisma {
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     user_id?: IntWithAggregatesFilter<"User"> | number
-    firebase_uid?: StringWithAggregatesFilter<"User"> | string
-    email?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
     surname?: StringWithAggregatesFilter<"User"> | string
     role?: StringWithAggregatesFilter<"User"> | string
+    email?: StringWithAggregatesFilter<"User"> | string
+    firebase_uid?: StringWithAggregatesFilter<"User"> | string
   }
 
   export type ApplicantProfileWhereInput = {
@@ -12247,8 +13346,8 @@ export namespace Prisma {
     dob?: DateTimeNullableFilter<"ApplicantProfile"> | Date | string | null
     bio?: StringNullableFilter<"ApplicantProfile"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    skills?: ApplicantSkillListRelationFilter
     qualifications?: ApplicantQualificationListRelationFilter
+    skills?: ApplicantSkillListRelationFilter
   }
 
   export type ApplicantProfileOrderByWithRelationInput = {
@@ -12258,8 +13357,8 @@ export namespace Prisma {
     dob?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
-    skills?: ApplicantSkillOrderByRelationAggregateInput
     qualifications?: ApplicantQualificationOrderByRelationAggregateInput
+    skills?: ApplicantSkillOrderByRelationAggregateInput
   }
 
   export type ApplicantProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -12272,8 +13371,8 @@ export namespace Prisma {
     dob?: DateTimeNullableFilter<"ApplicantProfile"> | Date | string | null
     bio?: StringNullableFilter<"ApplicantProfile"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    skills?: ApplicantSkillListRelationFilter
     qualifications?: ApplicantQualificationListRelationFilter
+    skills?: ApplicantSkillListRelationFilter
   }, "applicant_id" | "user_id">
 
   export type ApplicantProfileOrderByWithAggregationInput = {
@@ -12309,9 +13408,9 @@ export namespace Prisma {
     profile?: StringNullableFilter<"Provider"> | string | null
     user_id?: IntFilter<"Provider"> | number
     onboarded?: BoolFilter<"Provider"> | boolean
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    listings?: ListingListRelationFilter
     applications?: ApplicationListRelationFilter
+    listings?: ListingListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ProviderOrderByWithRelationInput = {
@@ -12320,9 +13419,9 @@ export namespace Prisma {
     profile?: SortOrderInput | SortOrder
     user_id?: SortOrder
     onboarded?: SortOrder
-    user?: UserOrderByWithRelationInput
-    listings?: ListingOrderByRelationAggregateInput
     applications?: ApplicationOrderByRelationAggregateInput
+    listings?: ListingOrderByRelationAggregateInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ProviderWhereUniqueInput = Prisma.AtLeast<{
@@ -12334,9 +13433,9 @@ export namespace Prisma {
     provider_name?: StringFilter<"Provider"> | string
     profile?: StringNullableFilter<"Provider"> | string | null
     onboarded?: BoolFilter<"Provider"> | boolean
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    listings?: ListingListRelationFilter
     applications?: ApplicationListRelationFilter
+    listings?: ListingListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "provider_id" | "user_id">
 
   export type ProviderOrderByWithAggregationInput = {
@@ -12368,42 +13467,42 @@ export namespace Prisma {
     OR?: ListingWhereInput[]
     NOT?: ListingWhereInput | ListingWhereInput[]
     listings_id?: IntFilter<"Listing"> | number
-    provider_id?: IntFilter<"Listing"> | number
     listname?: StringFilter<"Listing"> | string
     list_type?: StringFilter<"Listing"> | string
     nqf_level?: IntNullableFilter<"Listing"> | number | null
     description?: StringNullableFilter<"Listing"> | string | null
-    stipend?: FloatNullableFilter<"Listing"> | number | null
-    location?: StringNullableFilter<"Listing"> | string | null
-    duration?: StringNullableFilter<"Listing"> | string | null
-    requirements?: StringNullableFilter<"Listing"> | string | null
-    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    sector?: StringNullableFilter<"Listing"> | string | null
+    provider_id?: IntFilter<"Listing"> | number
     status?: StringFilter<"Listing"> | string
-    provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    duration?: StringNullableFilter<"Listing"> | string | null
+    location?: StringNullableFilter<"Listing"> | string | null
+    requirements?: StringNullableFilter<"Listing"> | string | null
+    stipend?: FloatNullableFilter<"Listing"> | number | null
+    sector?: StringNullableFilter<"Listing"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
     applications?: ApplicationListRelationFilter
-    reports?: ReportListRelationFilter
+    provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    Report?: ReportListRelationFilter
   }
 
   export type ListingOrderByWithRelationInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     listname?: SortOrder
     list_type?: SortOrder
     nqf_level?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
-    stipend?: SortOrderInput | SortOrder
-    location?: SortOrderInput | SortOrder
-    duration?: SortOrderInput | SortOrder
-    requirements?: SortOrderInput | SortOrder
-    closing_date?: SortOrderInput | SortOrder
-    cvUploadedAt?: SortOrderInput | SortOrder
-    sector?: SortOrderInput | SortOrder
+    provider_id?: SortOrder
     status?: SortOrder
-    provider?: ProviderOrderByWithRelationInput
+    closing_date?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    stipend?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
+    cvUploadedAt?: SortOrderInput | SortOrder
     applications?: ApplicationOrderByRelationAggregateInput
-    reports?: ReportOrderByRelationAggregateInput
+    provider?: ProviderOrderByWithRelationInput
+    Report?: ReportOrderByRelationAggregateInput
   }
 
   export type ListingWhereUniqueInput = Prisma.AtLeast<{
@@ -12411,39 +13510,39 @@ export namespace Prisma {
     AND?: ListingWhereInput | ListingWhereInput[]
     OR?: ListingWhereInput[]
     NOT?: ListingWhereInput | ListingWhereInput[]
-    provider_id?: IntFilter<"Listing"> | number
     listname?: StringFilter<"Listing"> | string
     list_type?: StringFilter<"Listing"> | string
     nqf_level?: IntNullableFilter<"Listing"> | number | null
     description?: StringNullableFilter<"Listing"> | string | null
-    stipend?: FloatNullableFilter<"Listing"> | number | null
-    location?: StringNullableFilter<"Listing"> | string | null
-    duration?: StringNullableFilter<"Listing"> | string | null
-    requirements?: StringNullableFilter<"Listing"> | string | null
-    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    sector?: StringNullableFilter<"Listing"> | string | null
+    provider_id?: IntFilter<"Listing"> | number
     status?: StringFilter<"Listing"> | string
-    provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    duration?: StringNullableFilter<"Listing"> | string | null
+    location?: StringNullableFilter<"Listing"> | string | null
+    requirements?: StringNullableFilter<"Listing"> | string | null
+    stipend?: FloatNullableFilter<"Listing"> | number | null
+    sector?: StringNullableFilter<"Listing"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
     applications?: ApplicationListRelationFilter
-    reports?: ReportListRelationFilter
+    provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    Report?: ReportListRelationFilter
   }, "listings_id">
 
   export type ListingOrderByWithAggregationInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     listname?: SortOrder
     list_type?: SortOrder
     nqf_level?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
-    stipend?: SortOrderInput | SortOrder
-    location?: SortOrderInput | SortOrder
-    duration?: SortOrderInput | SortOrder
-    requirements?: SortOrderInput | SortOrder
-    closing_date?: SortOrderInput | SortOrder
-    cvUploadedAt?: SortOrderInput | SortOrder
-    sector?: SortOrderInput | SortOrder
+    provider_id?: SortOrder
     status?: SortOrder
+    closing_date?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    requirements?: SortOrderInput | SortOrder
+    stipend?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
+    cvUploadedAt?: SortOrderInput | SortOrder
     _count?: ListingCountOrderByAggregateInput
     _avg?: ListingAvgOrderByAggregateInput
     _max?: ListingMaxOrderByAggregateInput
@@ -12456,19 +13555,19 @@ export namespace Prisma {
     OR?: ListingScalarWhereWithAggregatesInput[]
     NOT?: ListingScalarWhereWithAggregatesInput | ListingScalarWhereWithAggregatesInput[]
     listings_id?: IntWithAggregatesFilter<"Listing"> | number
-    provider_id?: IntWithAggregatesFilter<"Listing"> | number
     listname?: StringWithAggregatesFilter<"Listing"> | string
     list_type?: StringWithAggregatesFilter<"Listing"> | string
     nqf_level?: IntNullableWithAggregatesFilter<"Listing"> | number | null
     description?: StringNullableWithAggregatesFilter<"Listing"> | string | null
-    stipend?: FloatNullableWithAggregatesFilter<"Listing"> | number | null
-    location?: StringNullableWithAggregatesFilter<"Listing"> | string | null
-    duration?: StringNullableWithAggregatesFilter<"Listing"> | string | null
-    requirements?: StringNullableWithAggregatesFilter<"Listing"> | string | null
-    closing_date?: DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
-    cvUploadedAt?: DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
-    sector?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    provider_id?: IntWithAggregatesFilter<"Listing"> | number
     status?: StringWithAggregatesFilter<"Listing"> | string
+    closing_date?: DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
+    duration?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    location?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    requirements?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    stipend?: FloatNullableWithAggregatesFilter<"Listing"> | number | null
+    sector?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    cvUploadedAt?: DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
   }
 
   export type ApplicationWhereInput = {
@@ -12477,31 +13576,41 @@ export namespace Prisma {
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     application_id?: IntFilter<"Application"> | number
     user_id?: IntFilter<"Application"> | number
-    listing_id?: IntFilter<"Application"> | number
     provider_id?: IntFilter<"Application"> | number
     availability?: StringNullableFilter<"Application"> | string | null
     motivation?: StringNullableFilter<"Application"> | string | null
     status?: StringFilter<"Application"> | string
+    listing_id?: IntFilter<"Application"> | number
     created_at?: DateTimeFilter<"Application"> | Date | string
     updated_at?: DateTimeFilter<"Application"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    availability?: StringNullableFilter<"Application"> | string | null
+    motivation?: StringNullableFilter<"Application"> | string | null
+    cvFilePath?: StringNullableFilter<"Application"> | string | null
+    cvOriginalFilename?: StringNullableFilter<"Application"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
     provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ApplicationOrderByWithRelationInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
     availability?: SortOrderInput | SortOrder
     motivation?: SortOrderInput | SortOrder
     status?: SortOrder
+    listing_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    user?: UserOrderByWithRelationInput
+    availability?: SortOrderInput | SortOrder
+    motivation?: SortOrderInput | SortOrder
+    cvFilePath?: SortOrderInput | SortOrder
+    cvOriginalFilename?: SortOrderInput | SortOrder
+    cvUploadedAt?: SortOrderInput | SortOrder
     listing?: ListingOrderByWithRelationInput
     provider?: ProviderOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -12510,28 +13619,38 @@ export namespace Prisma {
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     user_id?: IntFilter<"Application"> | number
-    listing_id?: IntFilter<"Application"> | number
     provider_id?: IntFilter<"Application"> | number
     availability?: StringNullableFilter<"Application"> | string | null
     motivation?: StringNullableFilter<"Application"> | string | null
     status?: StringFilter<"Application"> | string
+    listing_id?: IntFilter<"Application"> | number
     created_at?: DateTimeFilter<"Application"> | Date | string
     updated_at?: DateTimeFilter<"Application"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    availability?: StringNullableFilter<"Application"> | string | null
+    motivation?: StringNullableFilter<"Application"> | string | null
+    cvFilePath?: StringNullableFilter<"Application"> | string | null
+    cvOriginalFilename?: StringNullableFilter<"Application"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
     provider?: XOR<ProviderScalarRelationFilter, ProviderWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "application_id">
 
   export type ApplicationOrderByWithAggregationInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
     availability?: SortOrderInput | SortOrder
     motivation?: SortOrderInput | SortOrder
     status?: SortOrder
+    listing_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    availability?: SortOrderInput | SortOrder
+    motivation?: SortOrderInput | SortOrder
+    cvFilePath?: SortOrderInput | SortOrder
+    cvOriginalFilename?: SortOrderInput | SortOrder
+    cvUploadedAt?: SortOrderInput | SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _avg?: ApplicationAvgOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
@@ -12545,13 +13664,18 @@ export namespace Prisma {
     NOT?: ApplicationScalarWhereWithAggregatesInput | ApplicationScalarWhereWithAggregatesInput[]
     application_id?: IntWithAggregatesFilter<"Application"> | number
     user_id?: IntWithAggregatesFilter<"Application"> | number
-    listing_id?: IntWithAggregatesFilter<"Application"> | number
     provider_id?: IntWithAggregatesFilter<"Application"> | number
     availability?: StringNullableWithAggregatesFilter<"Application"> | string | null
     motivation?: StringNullableWithAggregatesFilter<"Application"> | string | null
     status?: StringWithAggregatesFilter<"Application"> | string
+    listing_id?: IntWithAggregatesFilter<"Application"> | number
     created_at?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Application"> | Date | string
+    availability?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    motivation?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    cvFilePath?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    cvOriginalFilename?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    cvUploadedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
   }
 
   export type SkillWhereInput = {
@@ -12561,6 +13685,8 @@ export namespace Prisma {
     skill_id?: IntFilter<"Skill"> | number
     name?: StringFilter<"Skill"> | string
     nqf_level?: IntNullableFilter<"Skill"> | number | null
+    saqa_id?: StringNullableFilter<"Skill"> | string | null
+    sector?: StringNullableFilter<"Skill"> | string | null
     applicantSkills?: ApplicantSkillListRelationFilter
   }
 
@@ -12568,23 +13694,29 @@ export namespace Prisma {
     skill_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrderInput | SortOrder
+    saqa_id?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
     applicantSkills?: ApplicantSkillOrderByRelationAggregateInput
   }
 
   export type SkillWhereUniqueInput = Prisma.AtLeast<{
     skill_id?: number
+    saqa_id?: string
     AND?: SkillWhereInput | SkillWhereInput[]
     OR?: SkillWhereInput[]
     NOT?: SkillWhereInput | SkillWhereInput[]
     name?: StringFilter<"Skill"> | string
     nqf_level?: IntNullableFilter<"Skill"> | number | null
+    sector?: StringNullableFilter<"Skill"> | string | null
     applicantSkills?: ApplicantSkillListRelationFilter
-  }, "skill_id">
+  }, "skill_id" | "saqa_id">
 
   export type SkillOrderByWithAggregationInput = {
     skill_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrderInput | SortOrder
+    saqa_id?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
     _count?: SkillCountOrderByAggregateInput
     _avg?: SkillAvgOrderByAggregateInput
     _max?: SkillMaxOrderByAggregateInput
@@ -12599,6 +13731,8 @@ export namespace Prisma {
     skill_id?: IntWithAggregatesFilter<"Skill"> | number
     name?: StringWithAggregatesFilter<"Skill"> | string
     nqf_level?: IntNullableWithAggregatesFilter<"Skill"> | number | null
+    saqa_id?: StringNullableWithAggregatesFilter<"Skill"> | string | null
+    sector?: StringNullableWithAggregatesFilter<"Skill"> | string | null
   }
 
   export type ApplicantSkillWhereInput = {
@@ -12658,6 +13792,9 @@ export namespace Prisma {
     qualification_id?: IntFilter<"Qualification"> | number
     name?: StringFilter<"Qualification"> | string
     nqf_level?: IntFilter<"Qualification"> | number
+    saqa_id?: StringNullableFilter<"Qualification"> | string | null
+    sector?: StringNullableFilter<"Qualification"> | string | null
+    originator?: StringNullableFilter<"Qualification"> | string | null
     applicantQualifications?: ApplicantQualificationListRelationFilter
   }
 
@@ -12665,23 +13802,32 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
+    originator?: SortOrderInput | SortOrder
     applicantQualifications?: ApplicantQualificationOrderByRelationAggregateInput
   }
 
   export type QualificationWhereUniqueInput = Prisma.AtLeast<{
     qualification_id?: number
+    saqa_id?: string
     AND?: QualificationWhereInput | QualificationWhereInput[]
     OR?: QualificationWhereInput[]
     NOT?: QualificationWhereInput | QualificationWhereInput[]
     name?: StringFilter<"Qualification"> | string
     nqf_level?: IntFilter<"Qualification"> | number
+    sector?: StringNullableFilter<"Qualification"> | string | null
+    originator?: StringNullableFilter<"Qualification"> | string | null
     applicantQualifications?: ApplicantQualificationListRelationFilter
-  }, "qualification_id">
+  }, "qualification_id" | "saqa_id">
 
   export type QualificationOrderByWithAggregationInput = {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrderInput | SortOrder
+    sector?: SortOrderInput | SortOrder
+    originator?: SortOrderInput | SortOrder
     _count?: QualificationCountOrderByAggregateInput
     _avg?: QualificationAvgOrderByAggregateInput
     _max?: QualificationMaxOrderByAggregateInput
@@ -12696,6 +13842,9 @@ export namespace Prisma {
     qualification_id?: IntWithAggregatesFilter<"Qualification"> | number
     name?: StringWithAggregatesFilter<"Qualification"> | string
     nqf_level?: IntWithAggregatesFilter<"Qualification"> | number
+    saqa_id?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
+    sector?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
+    originator?: StringNullableWithAggregatesFilter<"Qualification"> | string | null
   }
 
   export type ApplicantQualificationWhereInput = {
@@ -12769,7 +13918,7 @@ export namespace Prisma {
     reported_by?: StringFilter<"Report"> | string
     status?: StringFilter<"Report"> | string
     created_at?: DateTimeFilter<"Report"> | Date | string
-    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    Listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
   }
 
   export type ReportOrderByWithRelationInput = {
@@ -12780,7 +13929,7 @@ export namespace Prisma {
     reported_by?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
-    listing?: ListingOrderByWithRelationInput
+    Listing?: ListingOrderByWithRelationInput
   }
 
   export type ReportWhereUniqueInput = Prisma.AtLeast<{
@@ -12794,7 +13943,7 @@ export namespace Prisma {
     reported_by?: StringFilter<"Report"> | string
     status?: StringFilter<"Report"> | string
     created_at?: DateTimeFilter<"Report"> | Date | string
-    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    Listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
   }, "report_id">
 
   export type ReportOrderByWithAggregationInput = {
@@ -12826,74 +13975,74 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
     applications?: ApplicationCreateNestedManyWithoutUserInput
     provider?: ProviderCreateNestedOneWithoutUserInput
-    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     user_id?: number
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     provider?: ProviderUncheckedCreateNestedOneWithoutUserInput
-    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
     applications?: ApplicationUpdateManyWithoutUserNestedInput
     provider?: ProviderUpdateOneWithoutUserNestedInput
-    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     user_id?: IntFieldUpdateOperationsInput | number
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     provider?: ProviderUncheckedUpdateOneWithoutUserNestedInput
-    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
   }
 
   export type UserUpdateManyMutationInput = {
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
     user_id?: IntFieldUpdateOperationsInput | number
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
   }
 
   export type ApplicantProfileCreateInput = {
@@ -12901,8 +14050,8 @@ export namespace Prisma {
     dob?: Date | string | null
     bio?: string | null
     user: UserCreateNestedOneWithoutApplicantInput
-    skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
   }
 
   export type ApplicantProfileUncheckedCreateInput = {
@@ -12911,8 +14060,8 @@ export namespace Prisma {
     phone?: string | null
     dob?: Date | string | null
     bio?: string | null
-    skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
   }
 
   export type ApplicantProfileUpdateInput = {
@@ -12920,8 +14069,8 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutApplicantNestedInput
-    skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
   }
 
   export type ApplicantProfileUncheckedUpdateInput = {
@@ -12930,8 +14079,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
   export type ApplicantProfileCreateManyInput = {
@@ -12959,9 +14108,9 @@ export namespace Prisma {
     provider_name: string
     profile?: string | null
     onboarded?: boolean
-    user: UserCreateNestedOneWithoutProviderInput
-    listings?: ListingCreateNestedManyWithoutProviderInput
     applications?: ApplicationCreateNestedManyWithoutProviderInput
+    listings?: ListingCreateNestedManyWithoutProviderInput
+    user: UserCreateNestedOneWithoutProviderInput
   }
 
   export type ProviderUncheckedCreateInput = {
@@ -12970,17 +14119,17 @@ export namespace Prisma {
     profile?: string | null
     user_id: number
     onboarded?: boolean
-    listings?: ListingUncheckedCreateNestedManyWithoutProviderInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutProviderInput
+    listings?: ListingUncheckedCreateNestedManyWithoutProviderInput
   }
 
   export type ProviderUpdateInput = {
     provider_name?: StringFieldUpdateOperationsInput | string
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    user?: UserUpdateOneRequiredWithoutProviderNestedInput
-    listings?: ListingUpdateManyWithoutProviderNestedInput
     applications?: ApplicationUpdateManyWithoutProviderNestedInput
+    listings?: ListingUpdateManyWithoutProviderNestedInput
+    user?: UserUpdateOneRequiredWithoutProviderNestedInput
   }
 
   export type ProviderUncheckedUpdateInput = {
@@ -12989,8 +14138,8 @@ export namespace Prisma {
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     user_id?: IntFieldUpdateOperationsInput | number
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    listings?: ListingUncheckedUpdateManyWithoutProviderNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutProviderNestedInput
+    listings?: ListingUncheckedUpdateManyWithoutProviderNestedInput
   }
 
   export type ProviderCreateManyInput = {
@@ -13019,36 +14168,36 @@ export namespace Prisma {
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
     status?: string
-    provider: ProviderCreateNestedOneWithoutListingsInput
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
     applications?: ApplicationCreateNestedManyWithoutListingInput
-    reports?: ReportCreateNestedManyWithoutListingInput
+    provider: ProviderCreateNestedOneWithoutListingsInput
+    Report?: ReportCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateInput = {
     listings_id?: number
-    provider_id: number
     listname: string
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
+    provider_id: number
     status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
     applications?: ApplicationUncheckedCreateNestedManyWithoutListingInput
-    reports?: ReportUncheckedCreateNestedManyWithoutListingInput
+    Report?: ReportUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingUpdateInput = {
@@ -13056,52 +14205,52 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    provider?: ProviderUpdateOneRequiredWithoutListingsNestedInput
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationUpdateManyWithoutListingNestedInput
-    reports?: ReportUpdateManyWithoutListingNestedInput
+    provider?: ProviderUpdateOneRequiredWithoutListingsNestedInput
+    Report?: ReportUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateInput = {
     listings_id?: IntFieldUpdateOperationsInput | number
-    provider_id?: IntFieldUpdateOperationsInput | number
     listname?: StringFieldUpdateOperationsInput | string
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationUncheckedUpdateManyWithoutListingNestedInput
-    reports?: ReportUncheckedUpdateManyWithoutListingNestedInput
+    Report?: ReportUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingCreateManyInput = {
-    provider_id: number
     listname: string
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
+    provider_id: number
     status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ListingUpdateManyMutationInput = {
@@ -13109,31 +14258,31 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ListingUncheckedUpdateManyInput = {
     listings_id?: IntFieldUpdateOperationsInput | number
-    provider_id?: IntFieldUpdateOperationsInput | number
     listname?: StringFieldUpdateOperationsInput | string
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationCreateInput = {
@@ -13142,21 +14291,31 @@ export namespace Prisma {
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
-    user: UserCreateNestedOneWithoutApplicationsInput
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
     listing: ListingCreateNestedOneWithoutApplicationsInput
     provider: ProviderCreateNestedOneWithoutApplicationsInput
+    user: UserCreateNestedOneWithoutApplicationsInput
   }
 
   export type ApplicationUncheckedCreateInput = {
     application_id?: number
     user_id: number
-    listing_id: number
     provider_id: number
     availability?: string | null
     motivation?: string | null
     status?: string
+    listing_id: number
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ApplicationUpdateInput = {
@@ -13165,32 +14324,47 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     listing?: ListingUpdateOneRequiredWithoutApplicationsNestedInput
     provider?: ProviderUpdateOneRequiredWithoutApplicationsNestedInput
+    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
     application_id?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
     provider_id?: IntFieldUpdateOperationsInput | number
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     motivation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationCreateManyInput = {
     user_id: number
-    listing_id: number
     provider_id: number
     availability?: string | null
     motivation?: string | null
     status?: string
+    listing_id: number
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ApplicationUpdateManyMutationInput = {
@@ -13199,23 +14373,35 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
     application_id?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
     provider_id?: IntFieldUpdateOperationsInput | number
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     motivation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SkillCreateInput = {
     name: string
     nqf_level?: number | null
+    saqa_id?: string | null
+    sector?: string | null
     applicantSkills?: ApplicantSkillCreateNestedManyWithoutSkillInput
   }
 
@@ -13223,12 +14409,16 @@ export namespace Prisma {
     skill_id?: number
     name: string
     nqf_level?: number | null
+    saqa_id?: string | null
+    sector?: string | null
     applicantSkills?: ApplicantSkillUncheckedCreateNestedManyWithoutSkillInput
   }
 
   export type SkillUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
     applicantSkills?: ApplicantSkillUpdateManyWithoutSkillNestedInput
   }
 
@@ -13236,23 +14426,31 @@ export namespace Prisma {
     skill_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
     applicantSkills?: ApplicantSkillUncheckedUpdateManyWithoutSkillNestedInput
   }
 
   export type SkillCreateManyInput = {
     name: string
     nqf_level?: number | null
+    saqa_id?: string | null
+    sector?: string | null
   }
 
   export type SkillUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SkillUncheckedUpdateManyInput = {
     skill_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicantSkillCreateInput = {
@@ -13295,6 +14493,9 @@ export namespace Prisma {
   export type QualificationCreateInput = {
     name: string
     nqf_level: number
+    saqa_id?: string | null
+    sector?: string | null
+    originator?: string | null
     applicantQualifications?: ApplicantQualificationCreateNestedManyWithoutQualificationInput
   }
 
@@ -13302,12 +14503,18 @@ export namespace Prisma {
     qualification_id?: number
     name: string
     nqf_level: number
+    saqa_id?: string | null
+    sector?: string | null
+    originator?: string | null
     applicantQualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
     applicantQualifications?: ApplicantQualificationUpdateManyWithoutQualificationNestedInput
   }
 
@@ -13315,23 +14522,35 @@ export namespace Prisma {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
     applicantQualifications?: ApplicantQualificationUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationCreateManyInput = {
     name: string
     nqf_level: number
+    saqa_id?: string | null
+    sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QualificationUncheckedUpdateManyInput = {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicantQualificationCreateInput = {
@@ -13390,7 +14609,7 @@ export namespace Prisma {
     reported_by: string
     status?: string
     created_at?: Date | string
-    listing: ListingCreateNestedOneWithoutReportsInput
+    Listing: ListingCreateNestedOneWithoutReportInput
   }
 
   export type ReportUncheckedCreateInput = {
@@ -13409,7 +14628,7 @@ export namespace Prisma {
     reported_by?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    listing?: ListingUpdateOneRequiredWithoutReportsNestedInput
+    Listing?: ListingUpdateOneRequiredWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateInput = {
@@ -13474,6 +14693,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type ApplicantProfileNullableScalarRelationFilter = {
+    is?: ApplicantProfileWhereInput | null
+    isNot?: ApplicantProfileWhereInput | null
+  }
+
   export type ApplicationListRelationFilter = {
     every?: ApplicationWhereInput
     some?: ApplicationWhereInput
@@ -13485,22 +14709,17 @@ export namespace Prisma {
     isNot?: ProviderWhereInput | null
   }
 
-  export type ApplicantProfileNullableScalarRelationFilter = {
-    is?: ApplicantProfileWhereInput | null
-    isNot?: ApplicantProfileWhereInput | null
-  }
-
   export type ApplicationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
     user_id?: SortOrder
-    firebase_uid?: SortOrder
-    email?: SortOrder
     name?: SortOrder
     surname?: SortOrder
     role?: SortOrder
+    email?: SortOrder
+    firebase_uid?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -13509,20 +14728,20 @@ export namespace Prisma {
 
   export type UserMaxOrderByAggregateInput = {
     user_id?: SortOrder
-    firebase_uid?: SortOrder
-    email?: SortOrder
     name?: SortOrder
     surname?: SortOrder
     role?: SortOrder
+    email?: SortOrder
+    firebase_uid?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     user_id?: SortOrder
-    firebase_uid?: SortOrder
-    email?: SortOrder
     name?: SortOrder
     surname?: SortOrder
     role?: SortOrder
+    email?: SortOrder
+    firebase_uid?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -13592,16 +14811,16 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
-  export type ApplicantSkillListRelationFilter = {
-    every?: ApplicantSkillWhereInput
-    some?: ApplicantSkillWhereInput
-    none?: ApplicantSkillWhereInput
-  }
-
   export type ApplicantQualificationListRelationFilter = {
     every?: ApplicantQualificationWhereInput
     some?: ApplicantQualificationWhereInput
     none?: ApplicantQualificationWhereInput
+  }
+
+  export type ApplicantSkillListRelationFilter = {
+    every?: ApplicantSkillWhereInput
+    some?: ApplicantSkillWhereInput
+    none?: ApplicantSkillWhereInput
   }
 
   export type SortOrderInput = {
@@ -13609,11 +14828,11 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type ApplicantSkillOrderByRelationAggregateInput = {
+  export type ApplicantQualificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ApplicantQualificationOrderByRelationAggregateInput = {
+  export type ApplicantSkillOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13778,66 +14997,66 @@ export namespace Prisma {
 
   export type ListingCountOrderByAggregateInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     listname?: SortOrder
     list_type?: SortOrder
     nqf_level?: SortOrder
     description?: SortOrder
-    stipend?: SortOrder
-    location?: SortOrder
-    duration?: SortOrder
-    requirements?: SortOrder
-    closing_date?: SortOrder
-    cvUploadedAt?: SortOrder
-    sector?: SortOrder
+    provider_id?: SortOrder
     status?: SortOrder
+    closing_date?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    requirements?: SortOrder
+    stipend?: SortOrder
+    sector?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ListingAvgOrderByAggregateInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     nqf_level?: SortOrder
+    provider_id?: SortOrder
     stipend?: SortOrder
   }
 
   export type ListingMaxOrderByAggregateInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     listname?: SortOrder
     list_type?: SortOrder
     nqf_level?: SortOrder
     description?: SortOrder
-    stipend?: SortOrder
-    location?: SortOrder
-    duration?: SortOrder
-    requirements?: SortOrder
-    closing_date?: SortOrder
-    cvUploadedAt?: SortOrder
-    sector?: SortOrder
+    provider_id?: SortOrder
     status?: SortOrder
+    closing_date?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    requirements?: SortOrder
+    stipend?: SortOrder
+    sector?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ListingMinOrderByAggregateInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     listname?: SortOrder
     list_type?: SortOrder
     nqf_level?: SortOrder
     description?: SortOrder
-    stipend?: SortOrder
-    location?: SortOrder
-    duration?: SortOrder
-    requirements?: SortOrder
-    closing_date?: SortOrder
-    cvUploadedAt?: SortOrder
-    sector?: SortOrder
+    provider_id?: SortOrder
     status?: SortOrder
+    closing_date?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    requirements?: SortOrder
+    stipend?: SortOrder
+    sector?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ListingSumOrderByAggregateInput = {
     listings_id?: SortOrder
-    provider_id?: SortOrder
     nqf_level?: SortOrder
+    provider_id?: SortOrder
     stipend?: SortOrder
   }
 
@@ -13892,51 +15111,66 @@ export namespace Prisma {
   export type ApplicationCountOrderByAggregateInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
     availability?: SortOrder
     motivation?: SortOrder
     status?: SortOrder
+    listing_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    availability?: SortOrder
+    motivation?: SortOrder
+    cvFilePath?: SortOrder
+    cvOriginalFilename?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ApplicationAvgOrderByAggregateInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
+    listing_id?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
     availability?: SortOrder
     motivation?: SortOrder
     status?: SortOrder
+    listing_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    availability?: SortOrder
+    motivation?: SortOrder
+    cvFilePath?: SortOrder
+    cvOriginalFilename?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
     availability?: SortOrder
     motivation?: SortOrder
     status?: SortOrder
+    listing_id?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    availability?: SortOrder
+    motivation?: SortOrder
+    cvFilePath?: SortOrder
+    cvOriginalFilename?: SortOrder
+    cvUploadedAt?: SortOrder
   }
 
   export type ApplicationSumOrderByAggregateInput = {
     application_id?: SortOrder
     user_id?: SortOrder
-    listing_id?: SortOrder
     provider_id?: SortOrder
+    listing_id?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -13957,6 +15191,8 @@ export namespace Prisma {
     skill_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
   }
 
   export type SkillAvgOrderByAggregateInput = {
@@ -13968,12 +15204,16 @@ export namespace Prisma {
     skill_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
   }
 
   export type SkillMinOrderByAggregateInput = {
     skill_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
   }
 
   export type SkillSumOrderByAggregateInput = {
@@ -14025,6 +15265,9 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationAvgOrderByAggregateInput = {
@@ -14036,12 +15279,18 @@ export namespace Prisma {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationMinOrderByAggregateInput = {
     qualification_id?: SortOrder
     name?: SortOrder
     nqf_level?: SortOrder
+    saqa_id?: SortOrder
+    sector?: SortOrder
+    originator?: SortOrder
   }
 
   export type QualificationSumOrderByAggregateInput = {
@@ -14132,6 +15381,52 @@ export namespace Prisma {
     listing_id?: SortOrder
   }
 
+  export type ApplicantProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
+    connect?: ApplicantProfileWhereUniqueInput
+  }
+
+  export type ReportCountOrderByAggregateInput = {
+    report_id?: SortOrder
+    listing_id?: SortOrder
+    reason?: SortOrder
+    details?: SortOrder
+    reported_by?: SortOrder
+    status?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ReportAvgOrderByAggregateInput = {
+    report_id?: SortOrder
+    listing_id?: SortOrder
+  }
+
+  export type ReportMaxOrderByAggregateInput = {
+    report_id?: SortOrder
+    listing_id?: SortOrder
+    reason?: SortOrder
+    details?: SortOrder
+    reported_by?: SortOrder
+    status?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ReportMinOrderByAggregateInput = {
+    report_id?: SortOrder
+    listing_id?: SortOrder
+    reason?: SortOrder
+    details?: SortOrder
+    reported_by?: SortOrder
+    status?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ReportSumOrderByAggregateInput = {
+    report_id?: SortOrder
+    listing_id?: SortOrder
+  }
+
   export type ApplicationCreateNestedManyWithoutUserInput = {
     create?: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput> | ApplicationCreateWithoutUserInput[] | ApplicationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutUserInput | ApplicationCreateOrConnectWithoutUserInput[]
@@ -14145,7 +15440,7 @@ export namespace Prisma {
     connect?: ProviderWhereUniqueInput
   }
 
-  export type ApplicantProfileCreateNestedOneWithoutUserInput = {
+  export type ApplicantProfileUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
     connect?: ApplicantProfileWhereUniqueInput
@@ -14164,14 +15459,18 @@ export namespace Prisma {
     connect?: ProviderWhereUniqueInput
   }
 
-  export type ApplicantProfileUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
-    connect?: ApplicantProfileWhereUniqueInput
-  }
-
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type ApplicantProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
+    upsert?: ApplicantProfileUpsertWithoutUserInput
+    disconnect?: ApplicantProfileWhereInput | boolean
+    delete?: ApplicantProfileWhereInput | boolean
+    connect?: ApplicantProfileWhereUniqueInput
+    update?: XOR<XOR<ApplicantProfileUpdateToOneWithWhereWithoutUserInput, ApplicantProfileUpdateWithoutUserInput>, ApplicantProfileUncheckedUpdateWithoutUserInput>
   }
 
   export type ApplicationUpdateManyWithoutUserNestedInput = {
@@ -14198,7 +15497,15 @@ export namespace Prisma {
     update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutUserInput, ProviderUpdateWithoutUserInput>, ProviderUncheckedUpdateWithoutUserInput>
   }
 
-  export type ApplicantProfileUpdateOneWithoutUserNestedInput = {
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
     upsert?: ApplicantProfileUpsertWithoutUserInput
@@ -14206,14 +15513,6 @@ export namespace Prisma {
     delete?: ApplicantProfileWhereInput | boolean
     connect?: ApplicantProfileWhereUniqueInput
     update?: XOR<XOR<ApplicantProfileUpdateToOneWithWhereWithoutUserInput, ApplicantProfileUpdateWithoutUserInput>, ApplicantProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ApplicationUncheckedUpdateManyWithoutUserNestedInput = {
@@ -14240,27 +15539,10 @@ export namespace Prisma {
     update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutUserInput, ProviderUpdateWithoutUserInput>, ProviderUncheckedUpdateWithoutUserInput>
   }
 
-  export type ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: ApplicantProfileCreateOrConnectWithoutUserInput
-    upsert?: ApplicantProfileUpsertWithoutUserInput
-    disconnect?: ApplicantProfileWhereInput | boolean
-    delete?: ApplicantProfileWhereInput | boolean
-    connect?: ApplicantProfileWhereUniqueInput
-    update?: XOR<XOR<ApplicantProfileUpdateToOneWithWhereWithoutUserInput, ApplicantProfileUpdateWithoutUserInput>, ApplicantProfileUncheckedUpdateWithoutUserInput>
-  }
-
   export type UserCreateNestedOneWithoutApplicantInput = {
     create?: XOR<UserCreateWithoutApplicantInput, UserUncheckedCreateWithoutApplicantInput>
     connectOrCreate?: UserCreateOrConnectWithoutApplicantInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type ApplicantSkillCreateNestedManyWithoutApplicantInput = {
-    create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
-    createMany?: ApplicantSkillCreateManyApplicantInputEnvelope
-    connect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
   }
 
   export type ApplicantQualificationCreateNestedManyWithoutApplicantInput = {
@@ -14270,7 +15552,7 @@ export namespace Prisma {
     connect?: ApplicantQualificationWhereUniqueInput | ApplicantQualificationWhereUniqueInput[]
   }
 
-  export type ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput = {
+  export type ApplicantSkillCreateNestedManyWithoutApplicantInput = {
     create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
     createMany?: ApplicantSkillCreateManyApplicantInputEnvelope
@@ -14282,6 +15564,13 @@ export namespace Prisma {
     connectOrCreate?: ApplicantQualificationCreateOrConnectWithoutApplicantInput | ApplicantQualificationCreateOrConnectWithoutApplicantInput[]
     createMany?: ApplicantQualificationCreateManyApplicantInputEnvelope
     connect?: ApplicantQualificationWhereUniqueInput | ApplicantQualificationWhereUniqueInput[]
+  }
+
+  export type ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput = {
+    create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
+    createMany?: ApplicantSkillCreateManyApplicantInputEnvelope
+    connect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -14300,20 +15589,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicantInput, UserUpdateWithoutApplicantInput>, UserUncheckedUpdateWithoutApplicantInput>
   }
 
-  export type ApplicantSkillUpdateManyWithoutApplicantNestedInput = {
-    create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
-    upsert?: ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput | ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput[]
-    createMany?: ApplicantSkillCreateManyApplicantInputEnvelope
-    set?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
-    disconnect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
-    delete?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
-    connect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
-    update?: ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput | ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput[]
-    updateMany?: ApplicantSkillUpdateManyWithWhereWithoutApplicantInput | ApplicantSkillUpdateManyWithWhereWithoutApplicantInput[]
-    deleteMany?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
-  }
-
   export type ApplicantQualificationUpdateManyWithoutApplicantNestedInput = {
     create?: XOR<ApplicantQualificationCreateWithoutApplicantInput, ApplicantQualificationUncheckedCreateWithoutApplicantInput> | ApplicantQualificationCreateWithoutApplicantInput[] | ApplicantQualificationUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicantQualificationCreateOrConnectWithoutApplicantInput | ApplicantQualificationCreateOrConnectWithoutApplicantInput[]
@@ -14328,7 +15603,7 @@ export namespace Prisma {
     deleteMany?: ApplicantQualificationScalarWhereInput | ApplicantQualificationScalarWhereInput[]
   }
 
-  export type ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput = {
+  export type ApplicantSkillUpdateManyWithoutApplicantNestedInput = {
     create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
     upsert?: ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput | ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput[]
@@ -14356,10 +15631,25 @@ export namespace Prisma {
     deleteMany?: ApplicantQualificationScalarWhereInput | ApplicantQualificationScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutProviderInput = {
-    create?: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
-    connectOrCreate?: UserCreateOrConnectWithoutProviderInput
-    connect?: UserWhereUniqueInput
+  export type ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput = {
+    create?: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput> | ApplicantSkillCreateWithoutApplicantInput[] | ApplicantSkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantSkillCreateOrConnectWithoutApplicantInput | ApplicantSkillCreateOrConnectWithoutApplicantInput[]
+    upsert?: ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput | ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput[]
+    createMany?: ApplicantSkillCreateManyApplicantInputEnvelope
+    set?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
+    disconnect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
+    delete?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
+    connect?: ApplicantSkillWhereUniqueInput | ApplicantSkillWhereUniqueInput[]
+    update?: ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput | ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput[]
+    updateMany?: ApplicantSkillUpdateManyWithWhereWithoutApplicantInput | ApplicantSkillUpdateManyWithWhereWithoutApplicantInput[]
+    deleteMany?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
+  }
+
+  export type ApplicationCreateNestedManyWithoutProviderInput = {
+    create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
+    createMany?: ApplicationCreateManyProviderInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
   export type ListingCreateNestedManyWithoutProviderInput = {
@@ -14369,7 +15659,13 @@ export namespace Prisma {
     connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
   }
 
-  export type ApplicationCreateNestedManyWithoutProviderInput = {
+  export type UserCreateNestedOneWithoutProviderInput = {
+    create?: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProviderInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ApplicationUncheckedCreateNestedManyWithoutProviderInput = {
     create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
     createMany?: ApplicationCreateManyProviderInputEnvelope
@@ -14383,23 +15679,22 @@ export namespace Prisma {
     connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
   }
 
-  export type ApplicationUncheckedCreateNestedManyWithoutProviderInput = {
-    create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
-    createMany?: ApplicationCreateManyProviderInputEnvelope
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-  }
-
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
 
-  export type UserUpdateOneRequiredWithoutProviderNestedInput = {
-    create?: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
-    connectOrCreate?: UserCreateOrConnectWithoutProviderInput
-    upsert?: UserUpsertWithoutProviderInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProviderInput, UserUpdateWithoutProviderInput>, UserUncheckedUpdateWithoutProviderInput>
+  export type ApplicationUpdateManyWithoutProviderNestedInput = {
+    create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutProviderInput | ApplicationUpsertWithWhereUniqueWithoutProviderInput[]
+    createMany?: ApplicationCreateManyProviderInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutProviderInput | ApplicationUpdateWithWhereUniqueWithoutProviderInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutProviderInput | ApplicationUpdateManyWithWhereWithoutProviderInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
   export type ListingUpdateManyWithoutProviderNestedInput = {
@@ -14416,7 +15711,15 @@ export namespace Prisma {
     deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
   }
 
-  export type ApplicationUpdateManyWithoutProviderNestedInput = {
+  export type UserUpdateOneRequiredWithoutProviderNestedInput = {
+    create?: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProviderInput
+    upsert?: UserUpsertWithoutProviderInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProviderInput, UserUpdateWithoutProviderInput>, UserUncheckedUpdateWithoutProviderInput>
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutProviderNestedInput = {
     create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
     upsert?: ApplicationUpsertWithWhereUniqueWithoutProviderInput | ApplicationUpsertWithWhereUniqueWithoutProviderInput[]
@@ -14444,18 +15747,11 @@ export namespace Prisma {
     deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
   }
 
-  export type ApplicationUncheckedUpdateManyWithoutProviderNestedInput = {
-    create?: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput> | ApplicationCreateWithoutProviderInput[] | ApplicationUncheckedCreateWithoutProviderInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutProviderInput | ApplicationCreateOrConnectWithoutProviderInput[]
-    upsert?: ApplicationUpsertWithWhereUniqueWithoutProviderInput | ApplicationUpsertWithWhereUniqueWithoutProviderInput[]
-    createMany?: ApplicationCreateManyProviderInputEnvelope
-    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  export type ApplicationCreateNestedManyWithoutListingInput = {
+    create?: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput> | ApplicationCreateWithoutListingInput[] | ApplicationUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutListingInput | ApplicationCreateOrConnectWithoutListingInput[]
+    createMany?: ApplicationCreateManyListingInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    update?: ApplicationUpdateWithWhereUniqueWithoutProviderInput | ApplicationUpdateWithWhereUniqueWithoutProviderInput[]
-    updateMany?: ApplicationUpdateManyWithWhereWithoutProviderInput | ApplicationUpdateManyWithWhereWithoutProviderInput[]
-    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
   export type ProviderCreateNestedOneWithoutListingsInput = {
@@ -14464,11 +15760,11 @@ export namespace Prisma {
     connect?: ProviderWhereUniqueInput
   }
 
-  export type ApplicationCreateNestedManyWithoutListingInput = {
-    create?: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput> | ApplicationCreateWithoutListingInput[] | ApplicationUncheckedCreateWithoutListingInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutListingInput | ApplicationCreateOrConnectWithoutListingInput[]
-    createMany?: ApplicationCreateManyListingInputEnvelope
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  export type ReportCreateNestedManyWithoutListingInput = {
+    create?: XOR<ReportCreateWithoutListingInput, ReportUncheckedCreateWithoutListingInput> | ReportCreateWithoutListingInput[] | ReportUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ReportCreateOrConnectWithoutListingInput | ReportCreateOrConnectWithoutListingInput[]
+    createMany?: ReportCreateManyListingInputEnvelope
+    connect?: ReportWhereUniqueInput | ReportWhereUniqueInput[]
   }
 
   export type ReportCreateNestedManyWithoutListingInput = {
@@ -14508,14 +15804,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type ProviderUpdateOneRequiredWithoutListingsNestedInput = {
-    create?: XOR<ProviderCreateWithoutListingsInput, ProviderUncheckedCreateWithoutListingsInput>
-    connectOrCreate?: ProviderCreateOrConnectWithoutListingsInput
-    upsert?: ProviderUpsertWithoutListingsInput
-    connect?: ProviderWhereUniqueInput
-    update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutListingsInput, ProviderUpdateWithoutListingsInput>, ProviderUncheckedUpdateWithoutListingsInput>
-  }
-
   export type ApplicationUpdateManyWithoutListingNestedInput = {
     create?: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput> | ApplicationCreateWithoutListingInput[] | ApplicationUncheckedCreateWithoutListingInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutListingInput | ApplicationCreateOrConnectWithoutListingInput[]
@@ -14528,6 +15816,14 @@ export namespace Prisma {
     update?: ApplicationUpdateWithWhereUniqueWithoutListingInput | ApplicationUpdateWithWhereUniqueWithoutListingInput[]
     updateMany?: ApplicationUpdateManyWithWhereWithoutListingInput | ApplicationUpdateManyWithWhereWithoutListingInput[]
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type ProviderUpdateOneRequiredWithoutListingsNestedInput = {
+    create?: XOR<ProviderCreateWithoutListingsInput, ProviderUncheckedCreateWithoutListingsInput>
+    connectOrCreate?: ProviderCreateOrConnectWithoutListingsInput
+    upsert?: ProviderUpsertWithoutListingsInput
+    connect?: ProviderWhereUniqueInput
+    update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutListingsInput, ProviderUpdateWithoutListingsInput>, ProviderUncheckedUpdateWithoutListingsInput>
   }
 
   export type ReportUpdateManyWithoutListingNestedInput = {
@@ -14572,12 +15868,6 @@ export namespace Prisma {
     deleteMany?: ReportScalarWhereInput | ReportScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutApplicationsInput = {
-    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type ListingCreateNestedOneWithoutApplicationsInput = {
     create?: XOR<ListingCreateWithoutApplicationsInput, ListingUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: ListingCreateOrConnectWithoutApplicationsInput
@@ -14590,16 +15880,14 @@ export namespace Prisma {
     connect?: ProviderWhereUniqueInput
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
-  export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
+  export type UserCreateNestedOneWithoutApplicationsInput = {
     create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
-    upsert?: UserUpsertWithoutApplicationsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicationsInput, UserUpdateWithoutApplicationsInput>, UserUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type ListingUpdateOneRequiredWithoutApplicationsNestedInput = {
@@ -14616,6 +15904,14 @@ export namespace Prisma {
     upsert?: ProviderUpsertWithoutApplicationsInput
     connect?: ProviderWhereUniqueInput
     update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutApplicationsInput, ProviderUpdateWithoutApplicationsInput>, ProviderUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
+    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
+    upsert?: UserUpsertWithoutApplicationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicationsInput, UserUpdateWithoutApplicationsInput>, UserUncheckedUpdateWithoutApplicationsInput>
   }
 
   export type ApplicantSkillCreateNestedManyWithoutSkillInput = {
@@ -14758,18 +16054,18 @@ export namespace Prisma {
     update?: XOR<XOR<QualificationUpdateToOneWithWhereWithoutApplicantQualificationsInput, QualificationUpdateWithoutApplicantQualificationsInput>, QualificationUncheckedUpdateWithoutApplicantQualificationsInput>
   }
 
-  export type ListingCreateNestedOneWithoutReportsInput = {
-    create?: XOR<ListingCreateWithoutReportsInput, ListingUncheckedCreateWithoutReportsInput>
-    connectOrCreate?: ListingCreateOrConnectWithoutReportsInput
+  export type ListingCreateNestedOneWithoutReportInput = {
+    create?: XOR<ListingCreateWithoutReportInput, ListingUncheckedCreateWithoutReportInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutReportInput
     connect?: ListingWhereUniqueInput
   }
 
-  export type ListingUpdateOneRequiredWithoutReportsNestedInput = {
-    create?: XOR<ListingCreateWithoutReportsInput, ListingUncheckedCreateWithoutReportsInput>
-    connectOrCreate?: ListingCreateOrConnectWithoutReportsInput
-    upsert?: ListingUpsertWithoutReportsInput
+  export type ListingUpdateOneRequiredWithoutReportNestedInput = {
+    create?: XOR<ListingCreateWithoutReportInput, ListingUncheckedCreateWithoutReportInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutReportInput
+    upsert?: ListingUpsertWithoutReportInput
     connect?: ListingWhereUniqueInput
-    update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutReportsInput, ListingUpdateWithoutReportsInput>, ListingUncheckedUpdateWithoutReportsInput>
+    update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutReportInput, ListingUpdateWithoutReportInput>, ListingUncheckedUpdateWithoutReportInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -14989,25 +16285,57 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type ApplicantProfileCreateWithoutUserInput = {
+    phone?: string | null
+    dob?: Date | string | null
+    bio?: string | null
+    qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
+  }
+
+  export type ApplicantProfileUncheckedCreateWithoutUserInput = {
+    applicant_id?: number
+    phone?: string | null
+    dob?: Date | string | null
+    bio?: string | null
+    qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
+  }
+
+  export type ApplicantProfileCreateOrConnectWithoutUserInput = {
+    where: ApplicantProfileWhereUniqueInput
+    create: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
+  }
+
   export type ApplicationCreateWithoutUserInput = {
     availability?: string | null
     motivation?: string | null
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
     listing: ListingCreateNestedOneWithoutApplicationsInput
     provider: ProviderCreateNestedOneWithoutApplicationsInput
   }
 
   export type ApplicationUncheckedCreateWithoutUserInput = {
     application_id?: number
-    listing_id: number
     provider_id: number
     availability?: string | null
     motivation?: string | null
     status?: string
+    listing_id: number
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ApplicationCreateOrConnectWithoutUserInput = {
@@ -15023,8 +16351,8 @@ export namespace Prisma {
     provider_name: string
     profile?: string | null
     onboarded?: boolean
-    listings?: ListingCreateNestedManyWithoutProviderInput
     applications?: ApplicationCreateNestedManyWithoutProviderInput
+    listings?: ListingCreateNestedManyWithoutProviderInput
   }
 
   export type ProviderUncheckedCreateWithoutUserInput = {
@@ -15032,8 +16360,8 @@ export namespace Prisma {
     provider_name: string
     profile?: string | null
     onboarded?: boolean
-    listings?: ListingUncheckedCreateNestedManyWithoutProviderInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutProviderInput
+    listings?: ListingUncheckedCreateNestedManyWithoutProviderInput
   }
 
   export type ProviderCreateOrConnectWithoutUserInput = {
@@ -15041,26 +16369,32 @@ export namespace Prisma {
     create: XOR<ProviderCreateWithoutUserInput, ProviderUncheckedCreateWithoutUserInput>
   }
 
-  export type ApplicantProfileCreateWithoutUserInput = {
-    phone?: string | null
-    dob?: Date | string | null
-    bio?: string | null
-    skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
-    qualifications?: ApplicantQualificationCreateNestedManyWithoutApplicantInput
-  }
-
-  export type ApplicantProfileUncheckedCreateWithoutUserInput = {
-    applicant_id?: number
-    phone?: string | null
-    dob?: Date | string | null
-    bio?: string | null
-    skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
-    qualifications?: ApplicantQualificationUncheckedCreateNestedManyWithoutApplicantInput
-  }
-
-  export type ApplicantProfileCreateOrConnectWithoutUserInput = {
-    where: ApplicantProfileWhereUniqueInput
+  export type ApplicantProfileUpsertWithoutUserInput = {
+    update: XOR<ApplicantProfileUpdateWithoutUserInput, ApplicantProfileUncheckedUpdateWithoutUserInput>
     create: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
+    where?: ApplicantProfileWhereInput
+  }
+
+  export type ApplicantProfileUpdateToOneWithWhereWithoutUserInput = {
+    where?: ApplicantProfileWhereInput
+    data: XOR<ApplicantProfileUpdateWithoutUserInput, ApplicantProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ApplicantProfileUpdateWithoutUserInput = {
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
+  }
+
+  export type ApplicantProfileUncheckedUpdateWithoutUserInput = {
+    applicant_id?: IntFieldUpdateOperationsInput | number
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
   export type ApplicationUpsertWithWhereUniqueWithoutUserInput = {
@@ -15085,13 +16419,18 @@ export namespace Prisma {
     NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
     application_id?: IntFilter<"Application"> | number
     user_id?: IntFilter<"Application"> | number
-    listing_id?: IntFilter<"Application"> | number
     provider_id?: IntFilter<"Application"> | number
     availability?: StringNullableFilter<"Application"> | string | null
     motivation?: StringNullableFilter<"Application"> | string | null
     status?: StringFilter<"Application"> | string
+    listing_id?: IntFilter<"Application"> | number
     created_at?: DateTimeFilter<"Application"> | Date | string
     updated_at?: DateTimeFilter<"Application"> | Date | string
+    availability?: StringNullableFilter<"Application"> | string | null
+    motivation?: StringNullableFilter<"Application"> | string | null
+    cvFilePath?: StringNullableFilter<"Application"> | string | null
+    cvOriginalFilename?: StringNullableFilter<"Application"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
   }
 
   export type ProviderUpsertWithoutUserInput = {
@@ -15109,8 +16448,8 @@ export namespace Prisma {
     provider_name?: StringFieldUpdateOperationsInput | string
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    listings?: ListingUpdateManyWithoutProviderNestedInput
     applications?: ApplicationUpdateManyWithoutProviderNestedInput
+    listings?: ListingUpdateManyWithoutProviderNestedInput
   }
 
   export type ProviderUncheckedUpdateWithoutUserInput = {
@@ -15118,55 +16457,27 @@ export namespace Prisma {
     provider_name?: StringFieldUpdateOperationsInput | string
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    listings?: ListingUncheckedUpdateManyWithoutProviderNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutProviderNestedInput
-  }
-
-  export type ApplicantProfileUpsertWithoutUserInput = {
-    update: XOR<ApplicantProfileUpdateWithoutUserInput, ApplicantProfileUncheckedUpdateWithoutUserInput>
-    create: XOR<ApplicantProfileCreateWithoutUserInput, ApplicantProfileUncheckedCreateWithoutUserInput>
-    where?: ApplicantProfileWhereInput
-  }
-
-  export type ApplicantProfileUpdateToOneWithWhereWithoutUserInput = {
-    where?: ApplicantProfileWhereInput
-    data: XOR<ApplicantProfileUpdateWithoutUserInput, ApplicantProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicantProfileUpdateWithoutUserInput = {
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
-    qualifications?: ApplicantQualificationUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type ApplicantProfileUncheckedUpdateWithoutUserInput = {
-    applicant_id?: IntFieldUpdateOperationsInput | number
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
-    qualifications?: ApplicantQualificationUncheckedUpdateManyWithoutApplicantNestedInput
+    listings?: ListingUncheckedUpdateManyWithoutProviderNestedInput
   }
 
   export type UserCreateWithoutApplicantInput = {
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
     applications?: ApplicationCreateNestedManyWithoutUserInput
     provider?: ProviderCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApplicantInput = {
     user_id?: number
-    firebase_uid: string
-    email: string
     name: string
     surname: string
     role: string
+    email: string
+    firebase_uid: string
     applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     provider?: ProviderUncheckedCreateNestedOneWithoutUserInput
   }
@@ -15174,24 +16485,6 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutApplicantInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutApplicantInput, UserUncheckedCreateWithoutApplicantInput>
-  }
-
-  export type ApplicantSkillCreateWithoutApplicantInput = {
-    skill: SkillCreateNestedOneWithoutApplicantSkillsInput
-  }
-
-  export type ApplicantSkillUncheckedCreateWithoutApplicantInput = {
-    id?: number
-    skill_id: number
-  }
-
-  export type ApplicantSkillCreateOrConnectWithoutApplicantInput = {
-    where: ApplicantSkillWhereUniqueInput
-    create: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput>
-  }
-
-  export type ApplicantSkillCreateManyApplicantInputEnvelope = {
-    data: ApplicantSkillCreateManyApplicantInput | ApplicantSkillCreateManyApplicantInput[]
   }
 
   export type ApplicantQualificationCreateWithoutApplicantInput = {
@@ -15216,6 +16509,24 @@ export namespace Prisma {
     data: ApplicantQualificationCreateManyApplicantInput | ApplicantQualificationCreateManyApplicantInput[]
   }
 
+  export type ApplicantSkillCreateWithoutApplicantInput = {
+    skill: SkillCreateNestedOneWithoutApplicantSkillsInput
+  }
+
+  export type ApplicantSkillUncheckedCreateWithoutApplicantInput = {
+    id?: number
+    skill_id: number
+  }
+
+  export type ApplicantSkillCreateOrConnectWithoutApplicantInput = {
+    where: ApplicantSkillWhereUniqueInput
+    create: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput>
+  }
+
+  export type ApplicantSkillCreateManyApplicantInputEnvelope = {
+    data: ApplicantSkillCreateManyApplicantInput | ApplicantSkillCreateManyApplicantInput[]
+  }
+
   export type UserUpsertWithoutApplicantInput = {
     update: XOR<UserUpdateWithoutApplicantInput, UserUncheckedUpdateWithoutApplicantInput>
     create: XOR<UserCreateWithoutApplicantInput, UserUncheckedCreateWithoutApplicantInput>
@@ -15228,49 +16539,24 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutApplicantInput = {
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
     applications?: ApplicationUpdateManyWithoutUserNestedInput
     provider?: ProviderUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApplicantInput = {
     user_id?: IntFieldUpdateOperationsInput | number
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     surname?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
     applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     provider?: ProviderUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput = {
-    where: ApplicantSkillWhereUniqueInput
-    update: XOR<ApplicantSkillUpdateWithoutApplicantInput, ApplicantSkillUncheckedUpdateWithoutApplicantInput>
-    create: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput>
-  }
-
-  export type ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput = {
-    where: ApplicantSkillWhereUniqueInput
-    data: XOR<ApplicantSkillUpdateWithoutApplicantInput, ApplicantSkillUncheckedUpdateWithoutApplicantInput>
-  }
-
-  export type ApplicantSkillUpdateManyWithWhereWithoutApplicantInput = {
-    where: ApplicantSkillScalarWhereInput
-    data: XOR<ApplicantSkillUpdateManyMutationInput, ApplicantSkillUncheckedUpdateManyWithoutApplicantInput>
-  }
-
-  export type ApplicantSkillScalarWhereInput = {
-    AND?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
-    OR?: ApplicantSkillScalarWhereInput[]
-    NOT?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
-    id?: IntFilter<"ApplicantSkill"> | number
-    applicant_id?: IntFilter<"ApplicantSkill"> | number
-    skill_id?: IntFilter<"ApplicantSkill"> | number
   }
 
   export type ApplicantQualificationUpsertWithWhereUniqueWithoutApplicantInput = {
@@ -15300,95 +16586,56 @@ export namespace Prisma {
     year_completed?: IntNullableFilter<"ApplicantQualification"> | number | null
   }
 
-  export type UserCreateWithoutProviderInput = {
-    firebase_uid: string
-    email: string
-    name: string
-    surname: string
-    role: string
-    applications?: ApplicationCreateNestedManyWithoutUserInput
-    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
+  export type ApplicantSkillUpsertWithWhereUniqueWithoutApplicantInput = {
+    where: ApplicantSkillWhereUniqueInput
+    update: XOR<ApplicantSkillUpdateWithoutApplicantInput, ApplicantSkillUncheckedUpdateWithoutApplicantInput>
+    create: XOR<ApplicantSkillCreateWithoutApplicantInput, ApplicantSkillUncheckedCreateWithoutApplicantInput>
   }
 
-  export type UserUncheckedCreateWithoutProviderInput = {
-    user_id?: number
-    firebase_uid: string
-    email: string
-    name: string
-    surname: string
-    role: string
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
+  export type ApplicantSkillUpdateWithWhereUniqueWithoutApplicantInput = {
+    where: ApplicantSkillWhereUniqueInput
+    data: XOR<ApplicantSkillUpdateWithoutApplicantInput, ApplicantSkillUncheckedUpdateWithoutApplicantInput>
   }
 
-  export type UserCreateOrConnectWithoutProviderInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
+  export type ApplicantSkillUpdateManyWithWhereWithoutApplicantInput = {
+    where: ApplicantSkillScalarWhereInput
+    data: XOR<ApplicantSkillUpdateManyMutationInput, ApplicantSkillUncheckedUpdateManyWithoutApplicantInput>
   }
 
-  export type ListingCreateWithoutProviderInput = {
-    listname: string
-    list_type: string
-    nqf_level?: number | null
-    description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
-    status?: string
-    applications?: ApplicationCreateNestedManyWithoutListingInput
-    reports?: ReportCreateNestedManyWithoutListingInput
-  }
-
-  export type ListingUncheckedCreateWithoutProviderInput = {
-    listings_id?: number
-    listname: string
-    list_type: string
-    nqf_level?: number | null
-    description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
-    status?: string
-    applications?: ApplicationUncheckedCreateNestedManyWithoutListingInput
-    reports?: ReportUncheckedCreateNestedManyWithoutListingInput
-  }
-
-  export type ListingCreateOrConnectWithoutProviderInput = {
-    where: ListingWhereUniqueInput
-    create: XOR<ListingCreateWithoutProviderInput, ListingUncheckedCreateWithoutProviderInput>
-  }
-
-  export type ListingCreateManyProviderInputEnvelope = {
-    data: ListingCreateManyProviderInput | ListingCreateManyProviderInput[]
+  export type ApplicantSkillScalarWhereInput = {
+    AND?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
+    OR?: ApplicantSkillScalarWhereInput[]
+    NOT?: ApplicantSkillScalarWhereInput | ApplicantSkillScalarWhereInput[]
+    id?: IntFilter<"ApplicantSkill"> | number
+    applicant_id?: IntFilter<"ApplicantSkill"> | number
+    skill_id?: IntFilter<"ApplicantSkill"> | number
   }
 
   export type ApplicationCreateWithoutProviderInput = {
-    availability?: string | null
-    motivation?: string | null
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
-    user: UserCreateNestedOneWithoutApplicationsInput
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
     listing: ListingCreateNestedOneWithoutApplicationsInput
+    user: UserCreateNestedOneWithoutApplicationsInput
   }
 
   export type ApplicationUncheckedCreateWithoutProviderInput = {
     application_id?: number
     user_id: number
-    listing_id: number
-    availability?: string | null
-    motivation?: string | null
     status?: string
+    listing_id: number
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ApplicationCreateOrConnectWithoutProviderInput = {
@@ -15400,36 +16647,90 @@ export namespace Prisma {
     data: ApplicationCreateManyProviderInput | ApplicationCreateManyProviderInput[]
   }
 
-  export type UserUpsertWithoutProviderInput = {
-    update: XOR<UserUpdateWithoutProviderInput, UserUncheckedUpdateWithoutProviderInput>
+  export type ListingCreateWithoutProviderInput = {
+    listname: string
+    list_type: string
+    nqf_level?: number | null
+    description?: string | null
+    status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
+    applications?: ApplicationCreateNestedManyWithoutListingInput
+    Report?: ReportCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingUncheckedCreateWithoutProviderInput = {
+    listings_id?: number
+    listname: string
+    list_type: string
+    nqf_level?: number | null
+    description?: string | null
+    status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
+    applications?: ApplicationUncheckedCreateNestedManyWithoutListingInput
+    Report?: ReportUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutProviderInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutProviderInput, ListingUncheckedCreateWithoutProviderInput>
+  }
+
+  export type ListingCreateManyProviderInputEnvelope = {
+    data: ListingCreateManyProviderInput | ListingCreateManyProviderInput[]
+  }
+
+  export type UserCreateWithoutProviderInput = {
+    name: string
+    surname: string
+    role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutProviderInput = {
+    user_id?: number
+    name: string
+    surname: string
+    role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProviderInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
-    where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutProviderInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutProviderInput, UserUncheckedUpdateWithoutProviderInput>
+  export type ApplicationUpsertWithWhereUniqueWithoutProviderInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutProviderInput, ApplicationUncheckedUpdateWithoutProviderInput>
+    create: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput>
   }
 
-  export type UserUpdateWithoutProviderInput = {
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    surname?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
-    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
+  export type ApplicationUpdateWithWhereUniqueWithoutProviderInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutProviderInput, ApplicationUncheckedUpdateWithoutProviderInput>
   }
 
-  export type UserUncheckedUpdateWithoutProviderInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    surname?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
-    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
+  export type ApplicationUpdateManyWithWhereWithoutProviderInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutProviderInput>
   }
 
   export type ListingUpsertWithWhereUniqueWithoutProviderInput = {
@@ -15453,43 +16754,95 @@ export namespace Prisma {
     OR?: ListingScalarWhereInput[]
     NOT?: ListingScalarWhereInput | ListingScalarWhereInput[]
     listings_id?: IntFilter<"Listing"> | number
-    provider_id?: IntFilter<"Listing"> | number
     listname?: StringFilter<"Listing"> | string
     list_type?: StringFilter<"Listing"> | string
     nqf_level?: IntNullableFilter<"Listing"> | number | null
     description?: StringNullableFilter<"Listing"> | string | null
-    stipend?: FloatNullableFilter<"Listing"> | number | null
-    location?: StringNullableFilter<"Listing"> | string | null
-    duration?: StringNullableFilter<"Listing"> | string | null
-    requirements?: StringNullableFilter<"Listing"> | string | null
-    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
-    sector?: StringNullableFilter<"Listing"> | string | null
+    provider_id?: IntFilter<"Listing"> | number
     status?: StringFilter<"Listing"> | string
+    closing_date?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    duration?: StringNullableFilter<"Listing"> | string | null
+    location?: StringNullableFilter<"Listing"> | string | null
+    requirements?: StringNullableFilter<"Listing"> | string | null
+    stipend?: FloatNullableFilter<"Listing"> | number | null
+    sector?: StringNullableFilter<"Listing"> | string | null
+    cvUploadedAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
   }
 
-  export type ApplicationUpsertWithWhereUniqueWithoutProviderInput = {
+  export type UserUpsertWithoutProviderInput = {
+    update: XOR<UserUpdateWithoutProviderInput, UserUncheckedUpdateWithoutProviderInput>
+    create: XOR<UserCreateWithoutProviderInput, UserUncheckedCreateWithoutProviderInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProviderInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProviderInput, UserUncheckedUpdateWithoutProviderInput>
+  }
+
+  export type UserUpdateWithoutProviderInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    surname?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProviderInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    surname?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ApplicationCreateWithoutListingInput = {
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
+    provider: ProviderCreateNestedOneWithoutApplicationsInput
+    user: UserCreateNestedOneWithoutApplicationsInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutListingInput = {
+    application_id?: number
+    user_id: number
+    provider_id: number
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
+  }
+
+  export type ApplicationCreateOrConnectWithoutListingInput = {
     where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutProviderInput, ApplicationUncheckedUpdateWithoutProviderInput>
-    create: XOR<ApplicationCreateWithoutProviderInput, ApplicationUncheckedCreateWithoutProviderInput>
+    create: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput>
   }
 
-  export type ApplicationUpdateWithWhereUniqueWithoutProviderInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutProviderInput, ApplicationUncheckedUpdateWithoutProviderInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutProviderInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutProviderInput>
+  export type ApplicationCreateManyListingInputEnvelope = {
+    data: ApplicationCreateManyListingInput | ApplicationCreateManyListingInput[]
   }
 
   export type ProviderCreateWithoutListingsInput = {
     provider_name: string
     profile?: string | null
     onboarded?: boolean
-    user: UserCreateNestedOneWithoutProviderInput
     applications?: ApplicationCreateNestedManyWithoutProviderInput
+    user: UserCreateNestedOneWithoutProviderInput
   }
 
   export type ProviderUncheckedCreateWithoutListingsInput = {
@@ -15506,34 +16859,46 @@ export namespace Prisma {
     create: XOR<ProviderCreateWithoutListingsInput, ProviderUncheckedCreateWithoutListingsInput>
   }
 
-  export type ApplicationCreateWithoutListingInput = {
-    availability?: string | null
-    motivation?: string | null
+  export type ReportCreateWithoutListingInput = {
+    reason: string
+    details?: string | null
+    reported_by: string
     status?: string
     created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutApplicationsInput
-    provider: ProviderCreateNestedOneWithoutApplicationsInput
   }
 
-  export type ApplicationUncheckedCreateWithoutListingInput = {
-    application_id?: number
-    user_id: number
-    provider_id: number
-    availability?: string | null
-    motivation?: string | null
+  export type ReportUncheckedCreateWithoutListingInput = {
+    report_id?: number
+    reason: string
+    details?: string | null
+    reported_by: string
     status?: string
     created_at?: Date | string
-    updated_at?: Date | string
   }
 
-  export type ApplicationCreateOrConnectWithoutListingInput = {
+  export type ReportCreateOrConnectWithoutListingInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutListingInput, ReportUncheckedCreateWithoutListingInput>
+  }
+
+  export type ReportCreateManyListingInputEnvelope = {
+    data: ReportCreateManyListingInput | ReportCreateManyListingInput[]
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutListingInput = {
     where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutListingInput, ApplicationUncheckedUpdateWithoutListingInput>
     create: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput>
   }
 
-  export type ApplicationCreateManyListingInputEnvelope = {
-    data: ApplicationCreateManyListingInput | ApplicationCreateManyListingInput[]
+  export type ApplicationUpdateWithWhereUniqueWithoutListingInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutListingInput, ApplicationUncheckedUpdateWithoutListingInput>
+  }
+
+  export type ApplicationUpdateManyWithWhereWithoutListingInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutListingInput>
   }
 
   export type ReportCreateWithoutListingInput = {
@@ -15577,8 +16942,8 @@ export namespace Prisma {
     provider_name?: StringFieldUpdateOperationsInput | string
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    user?: UserUpdateOneRequiredWithoutProviderNestedInput
     applications?: ApplicationUpdateManyWithoutProviderNestedInput
+    user?: UserUpdateOneRequiredWithoutProviderNestedInput
   }
 
   export type ProviderUncheckedUpdateWithoutListingsInput = {
@@ -15588,22 +16953,6 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     onboarded?: BoolFieldUpdateOperationsInput | boolean
     applications?: ApplicationUncheckedUpdateManyWithoutProviderNestedInput
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutListingInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutListingInput, ApplicationUncheckedUpdateWithoutListingInput>
-    create: XOR<ApplicationCreateWithoutListingInput, ApplicationUncheckedCreateWithoutListingInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutListingInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutListingInput, ApplicationUncheckedUpdateWithoutListingInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutListingInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutListingInput>
   }
 
   export type ReportUpsertWithWhereUniqueWithoutListingInput = {
@@ -15635,65 +16984,39 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"Report"> | Date | string
   }
 
-  export type UserCreateWithoutApplicationsInput = {
-    firebase_uid: string
-    email: string
-    name: string
-    surname: string
-    role: string
-    provider?: ProviderCreateNestedOneWithoutUserInput
-    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutApplicationsInput = {
-    user_id?: number
-    firebase_uid: string
-    email: string
-    name: string
-    surname: string
-    role: string
-    provider?: ProviderUncheckedCreateNestedOneWithoutUserInput
-    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutApplicationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-  }
-
   export type ListingCreateWithoutApplicationsInput = {
     listname: string
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
     status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
     provider: ProviderCreateNestedOneWithoutListingsInput
-    reports?: ReportCreateNestedManyWithoutListingInput
+    Report?: ReportCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutApplicationsInput = {
     listings_id?: number
-    provider_id: number
     listname: string
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
+    provider_id: number
     status?: string
-    reports?: ReportUncheckedCreateNestedManyWithoutListingInput
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
+    Report?: ReportUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutApplicationsInput = {
@@ -15705,8 +17028,8 @@ export namespace Prisma {
     provider_name: string
     profile?: string | null
     onboarded?: boolean
-    user: UserCreateNestedOneWithoutProviderInput
     listings?: ListingCreateNestedManyWithoutProviderInput
+    user: UserCreateNestedOneWithoutProviderInput
   }
 
   export type ProviderUncheckedCreateWithoutApplicationsInput = {
@@ -15723,36 +17046,30 @@ export namespace Prisma {
     create: XOR<ProviderCreateWithoutApplicationsInput, ProviderUncheckedCreateWithoutApplicationsInput>
   }
 
-  export type UserUpsertWithoutApplicationsInput = {
-    update: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
+  export type UserCreateWithoutApplicationsInput = {
+    name: string
+    surname: string
+    role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileCreateNestedOneWithoutUserInput
+    provider?: ProviderCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApplicationsInput = {
+    user_id?: number
+    name: string
+    surname: string
+    role: string
+    email: string
+    firebase_uid: string
+    applicant?: ApplicantProfileUncheckedCreateNestedOneWithoutUserInput
+    provider?: ProviderUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApplicationsInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutApplicationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type UserUpdateWithoutApplicationsInput = {
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    surname?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    provider?: ProviderUpdateOneWithoutUserNestedInput
-    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutApplicationsInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
-    firebase_uid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    surname?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    provider?: ProviderUncheckedUpdateOneWithoutUserNestedInput
-    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ListingUpsertWithoutApplicationsInput = {
@@ -15771,34 +17088,34 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     provider?: ProviderUpdateOneRequiredWithoutListingsNestedInput
-    reports?: ReportUpdateManyWithoutListingNestedInput
+    Report?: ReportUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutApplicationsInput = {
     listings_id?: IntFieldUpdateOperationsInput | number
-    provider_id?: IntFieldUpdateOperationsInput | number
     listname?: StringFieldUpdateOperationsInput | string
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_id?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
-    reports?: ReportUncheckedUpdateManyWithoutListingNestedInput
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Report?: ReportUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ProviderUpsertWithoutApplicationsInput = {
@@ -15816,8 +17133,8 @@ export namespace Prisma {
     provider_name?: StringFieldUpdateOperationsInput | string
     profile?: NullableStringFieldUpdateOperationsInput | string | null
     onboarded?: BoolFieldUpdateOperationsInput | boolean
-    user?: UserUpdateOneRequiredWithoutProviderNestedInput
     listings?: ListingUpdateManyWithoutProviderNestedInput
+    user?: UserUpdateOneRequiredWithoutProviderNestedInput
   }
 
   export type ProviderUncheckedUpdateWithoutApplicationsInput = {
@@ -15827,6 +17144,38 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     onboarded?: BoolFieldUpdateOperationsInput | boolean
     listings?: ListingUncheckedUpdateManyWithoutProviderNestedInput
+  }
+
+  export type UserUpsertWithoutApplicationsInput = {
+    update: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
+    create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type UserUpdateWithoutApplicationsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    surname?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUpdateOneWithoutUserNestedInput
+    provider?: ProviderUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApplicationsInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    surname?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firebase_uid?: StringFieldUpdateOperationsInput | string
+    applicant?: ApplicantProfileUncheckedUpdateOneWithoutUserNestedInput
+    provider?: ProviderUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicantSkillCreateWithoutSkillInput = {
@@ -15888,12 +17237,16 @@ export namespace Prisma {
   export type SkillCreateWithoutApplicantSkillsInput = {
     name: string
     nqf_level?: number | null
+    saqa_id?: string | null
+    sector?: string | null
   }
 
   export type SkillUncheckedCreateWithoutApplicantSkillsInput = {
     skill_id?: number
     name: string
     nqf_level?: number | null
+    saqa_id?: string | null
+    sector?: string | null
   }
 
   export type SkillCreateOrConnectWithoutApplicantSkillsInput = {
@@ -15943,12 +17296,16 @@ export namespace Prisma {
   export type SkillUpdateWithoutApplicantSkillsInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SkillUncheckedUpdateWithoutApplicantSkillsInput = {
     skill_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicantQualificationCreateWithoutQualificationInput = {
@@ -16014,12 +17371,18 @@ export namespace Prisma {
   export type QualificationCreateWithoutApplicantQualificationsInput = {
     name: string
     nqf_level: number
+    saqa_id?: string | null
+    sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationUncheckedCreateWithoutApplicantQualificationsInput = {
     qualification_id?: number
     name: string
     nqf_level: number
+    saqa_id?: string | null
+    sector?: string | null
+    originator?: string | null
   }
 
   export type QualificationCreateOrConnectWithoutApplicantQualificationsInput = {
@@ -16069,12 +17432,104 @@ export namespace Prisma {
   export type QualificationUpdateWithoutApplicantQualificationsInput = {
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type QualificationUncheckedUpdateWithoutApplicantQualificationsInput = {
     qualification_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     nqf_level?: IntFieldUpdateOperationsInput | number
+    saqa_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    originator?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ListingCreateWithoutReportInput = {
+    listname: string
+    list_type: string
+    nqf_level?: number | null
+    description?: string | null
+    status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
+    applications?: ApplicationCreateNestedManyWithoutListingInput
+    provider: ProviderCreateNestedOneWithoutListingsInput
+  }
+
+  export type ListingUncheckedCreateWithoutReportInput = {
+    listings_id?: number
+    listname: string
+    list_type: string
+    nqf_level?: number | null
+    description?: string | null
+    provider_id: number
+    status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
+    applications?: ApplicationUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutReportInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutReportInput, ListingUncheckedCreateWithoutReportInput>
+  }
+
+  export type ListingUpsertWithoutReportInput = {
+    update: XOR<ListingUpdateWithoutReportInput, ListingUncheckedUpdateWithoutReportInput>
+    create: XOR<ListingCreateWithoutReportInput, ListingUncheckedCreateWithoutReportInput>
+    where?: ListingWhereInput
+  }
+
+  export type ListingUpdateToOneWithWhereWithoutReportInput = {
+    where?: ListingWhereInput
+    data: XOR<ListingUpdateWithoutReportInput, ListingUncheckedUpdateWithoutReportInput>
+  }
+
+  export type ListingUpdateWithoutReportInput = {
+    listname?: StringFieldUpdateOperationsInput | string
+    list_type?: StringFieldUpdateOperationsInput | string
+    nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applications?: ApplicationUpdateManyWithoutListingNestedInput
+    provider?: ProviderUpdateOneRequiredWithoutListingsNestedInput
+  }
+
+  export type ListingUncheckedUpdateWithoutReportInput = {
+    listings_id?: IntFieldUpdateOperationsInput | number
+    listname?: StringFieldUpdateOperationsInput | string
+    list_type?: StringFieldUpdateOperationsInput | string
+    nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applications?: ApplicationUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingCreateWithoutReportsInput = {
@@ -16164,13 +17619,18 @@ export namespace Prisma {
   }
 
   export type ApplicationCreateManyUserInput = {
-    listing_id: number
     provider_id: number
     availability?: string | null
     motivation?: string | null
     status?: string
+    listing_id: number
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
   export type ApplicationUpdateWithoutUserInput = {
@@ -16179,34 +17639,45 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     listing?: ListingUpdateOneRequiredWithoutApplicationsNestedInput
     provider?: ProviderUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutUserInput = {
     application_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
     provider_id?: IntFieldUpdateOperationsInput | number
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     motivation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationUncheckedUpdateManyWithoutUserInput = {
     application_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
     provider_id?: IntFieldUpdateOperationsInput | number
     availability?: NullableStringFieldUpdateOperationsInput | string | null
     motivation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicantSkillCreateManyApplicantInput = {
-    skill_id: number
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicantQualificationCreateManyApplicantInput = {
@@ -16215,18 +17686,8 @@ export namespace Prisma {
     year_completed?: number | null
   }
 
-  export type ApplicantSkillUpdateWithoutApplicantInput = {
-    skill?: SkillUpdateOneRequiredWithoutApplicantSkillsNestedInput
-  }
-
-  export type ApplicantSkillUncheckedUpdateWithoutApplicantInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    skill_id?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type ApplicantSkillUncheckedUpdateManyWithoutApplicantInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    skill_id?: IntFieldUpdateOperationsInput | number
+  export type ApplicantSkillCreateManyApplicantInput = {
+    skill_id: number
   }
 
   export type ApplicantQualificationUpdateWithoutApplicantInput = {
@@ -16249,29 +17710,87 @@ export namespace Prisma {
     year_completed?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type ApplicantSkillUpdateWithoutApplicantInput = {
+    skill?: SkillUpdateOneRequiredWithoutApplicantSkillsNestedInput
+  }
+
+  export type ApplicantSkillUncheckedUpdateWithoutApplicantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    skill_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ApplicantSkillUncheckedUpdateManyWithoutApplicantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    skill_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ApplicationCreateManyProviderInput = {
+    user_id: number
+    status?: string
+    listing_id: number
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
+  }
+
   export type ListingCreateManyProviderInput = {
     listname: string
     list_type: string
     nqf_level?: number | null
     description?: string | null
-    stipend?: number | null
-    location?: string | null
-    duration?: string | null
-    requirements?: string | null
-    closing_date?: Date | string | null
-    cvUploadedAt?: Date | string | null
-    sector?: string | null
     status?: string
+    closing_date?: Date | string | null
+    duration?: string | null
+    location?: string | null
+    requirements?: string | null
+    stipend?: number | null
+    sector?: string | null
+    cvUploadedAt?: Date | string | null
   }
 
-  export type ApplicationCreateManyProviderInput = {
-    user_id: number
-    listing_id: number
-    availability?: string | null
-    motivation?: string | null
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
+  export type ApplicationUpdateWithoutProviderInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    listing?: ListingUpdateOneRequiredWithoutApplicationsNestedInput
+    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutProviderInput = {
+    application_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutProviderInput = {
+    application_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    listing_id?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ListingUpdateWithoutProviderInput = {
@@ -16279,16 +17798,16 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationUpdateManyWithoutListingNestedInput
-    reports?: ReportUpdateManyWithoutListingNestedInput
+    Report?: ReportUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutProviderInput = {
@@ -16297,16 +17816,16 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
-    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sector?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
+    sector?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applications?: ApplicationUncheckedUpdateManyWithoutListingNestedInput
-    reports?: ReportUncheckedUpdateManyWithoutListingNestedInput
+    Report?: ReportUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateManyWithoutProviderInput = {
@@ -16315,46 +17834,14 @@ export namespace Prisma {
     list_type?: StringFieldUpdateOperationsInput | string
     nqf_level?: NullableIntFieldUpdateOperationsInput | number | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
-    location?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableStringFieldUpdateOperationsInput | string | null
-    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     closing_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    requirements?: NullableStringFieldUpdateOperationsInput | string | null
+    stipend?: NullableFloatFieldUpdateOperationsInput | number | null
     sector?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ApplicationUpdateWithoutProviderInput = {
-    availability?: NullableStringFieldUpdateOperationsInput | string | null
-    motivation?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
-    listing?: ListingUpdateOneRequiredWithoutApplicationsNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateWithoutProviderInput = {
-    application_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
-    availability?: NullableStringFieldUpdateOperationsInput | string | null
-    motivation?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationUncheckedUpdateManyWithoutProviderInput = {
-    application_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    listing_id?: IntFieldUpdateOperationsInput | number
-    availability?: NullableStringFieldUpdateOperationsInput | string | null
-    motivation?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationCreateManyListingInput = {
@@ -16365,6 +17852,19 @@ export namespace Prisma {
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
+    availability?: string | null
+    motivation?: string | null
+    cvFilePath?: string | null
+    cvOriginalFilename?: string | null
+    cvUploadedAt?: Date | string | null
+  }
+
+  export type ReportCreateManyListingInput = {
+    reason: string
+    details?: string | null
+    reported_by: string
+    status?: string
+    created_at?: Date | string
   }
 
   export type ReportCreateManyListingInput = {
@@ -16381,8 +17881,13 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     provider?: ProviderUpdateOneRequiredWithoutApplicationsNestedInput
+    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutListingInput = {
@@ -16394,6 +17899,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ApplicationUncheckedUpdateManyWithoutListingInput = {
@@ -16405,6 +17915,37 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: NullableStringFieldUpdateOperationsInput | string | null
+    motivation?: NullableStringFieldUpdateOperationsInput | string | null
+    cvFilePath?: NullableStringFieldUpdateOperationsInput | string | null
+    cvOriginalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    cvUploadedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ReportUpdateWithoutListingInput = {
+    reason?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    reported_by?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReportUncheckedUpdateWithoutListingInput = {
+    report_id?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    reported_by?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReportUncheckedUpdateManyWithoutListingInput = {
+    report_id?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    reported_by?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReportUpdateWithoutListingInput = {

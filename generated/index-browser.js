@@ -123,11 +123,11 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   user_id: 'user_id',
-  firebase_uid: 'firebase_uid',
-  email: 'email',
   name: 'name',
   surname: 'surname',
-  role: 'role'
+  role: 'role',
+  email: 'email',
+  firebase_uid: 'firebase_uid'
 };
 
 exports.Prisma.ApplicantProfileScalarFieldEnum = {
@@ -148,37 +148,44 @@ exports.Prisma.ProviderScalarFieldEnum = {
 
 exports.Prisma.ListingScalarFieldEnum = {
   listings_id: 'listings_id',
-  provider_id: 'provider_id',
   listname: 'listname',
   list_type: 'list_type',
   nqf_level: 'nqf_level',
   description: 'description',
-  stipend: 'stipend',
-  location: 'location',
-  duration: 'duration',
-  requirements: 'requirements',
+  provider_id: 'provider_id',
+  status: 'status',
   closing_date: 'closing_date',
-  cvUploadedAt: 'cvUploadedAt',
+  duration: 'duration',
+  location: 'location',
+  requirements: 'requirements',
+  stipend: 'stipend',
   sector: 'sector',
-  status: 'status'
+  cvUploadedAt: 'cvUploadedAt'
 };
 
 exports.Prisma.ApplicationScalarFieldEnum = {
   application_id: 'application_id',
   user_id: 'user_id',
-  listing_id: 'listing_id',
   provider_id: 'provider_id',
   availability: 'availability',
   motivation: 'motivation',
   status: 'status',
+  listing_id: 'listing_id',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  availability: 'availability',
+  motivation: 'motivation',
+  cvFilePath: 'cvFilePath',
+  cvOriginalFilename: 'cvOriginalFilename',
+  cvUploadedAt: 'cvUploadedAt'
 };
 
 exports.Prisma.SkillScalarFieldEnum = {
   skill_id: 'skill_id',
   name: 'name',
-  nqf_level: 'nqf_level'
+  nqf_level: 'nqf_level',
+  saqa_id: 'saqa_id',
+  sector: 'sector'
 };
 
 exports.Prisma.ApplicantSkillScalarFieldEnum = {
@@ -190,7 +197,10 @@ exports.Prisma.ApplicantSkillScalarFieldEnum = {
 exports.Prisma.QualificationScalarFieldEnum = {
   qualification_id: 'qualification_id',
   name: 'name',
-  nqf_level: 'nqf_level'
+  nqf_level: 'nqf_level',
+  saqa_id: 'saqa_id',
+  sector: 'sector',
+  originator: 'originator'
 };
 
 exports.Prisma.ApplicantQualificationScalarFieldEnum = {

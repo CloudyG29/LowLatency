@@ -153,9 +153,9 @@ h2 {
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 12px;
-  }
+}
 
-  /* ─── BASE BADGE STYLING ─── */
+/* ─── BASE BADGE STYLING ─── */
 .competition-badge {
     display: inline-flex;
     align-items: center;
@@ -167,40 +167,40 @@ h2 {
     white-space: nowrap;
     width: fit-content;
     letter-spacing: 0.3px;
-  }
-  
-  /* ─── DYNAMIC COLORS BASED ON LEVEL ─── */
-  
-  /* Low: 1-10 applicants (Soft Green) */
-  .competition-badge--low {
+}
+
+/* ─── DYNAMIC COLORS BASED ON LEVEL ─── */
+
+/* Low: 1-10 applicants (Soft Green) */
+.competition-badge--low {
     background-color: #e6f4ea;
     color: #1e8e3e;
     border: 1px solid #ceead6;
-  }
-  
-  /* Moderate: 11-30 applicants (Soft Yellow/Orange) */
-  .competition-badge--moderate {
+}
+
+/* Moderate: 11-30 applicants (Soft Yellow/Orange) */
+.competition-badge--moderate {
     background-color: #fff8e1;
     color: #f57f17;
     border: 1px solid #ffecb3;
-  }
-  
-  /* High: 31-75 applicants (Soft Red/Orange) */
-  .competition-badge--high {
+}
+
+/* High: 31-75 applicants (Soft Red/Orange) */
+.competition-badge--high {
     background-color: #fbe9e7;
     color: #d84315;
     border: 1px solid #ffccbc;
-  }
-  
-  /* Very High: 76+ applicants (Bold Red) */
-  .competition-badge--very-high {
+}
+
+/* Very High: 76+ applicants (Bold Red) */
+.competition-badge--very-high {
     background-color: #fce8e6;
     color: #c5221f;
     border: 1px solid #fad2cf;
-  }
-  
-  /* ─── EXTRA STYLING FOR BUTTON & APPLIED STATE ─── */
-  .already-applied {
+}
+
+/* ─── EXTRA STYLING FOR BUTTON & APPLIED STATE ─── */
+.already-applied {
     display: inline-block;
     margin-top: 10px;
     padding: 8px 16px;
@@ -209,8 +209,8 @@ h2 {
     border-radius: 6px;
     font-weight: 500;
     font-size: 14px;
-  }
-  
+}
+
 .apply-btn {
     background: linear-gradient(90deg, #38ef7d, #11998e);
     color: white;
@@ -653,12 +653,9 @@ h2 {
     border-radius: 8px;
     padding: 24px;
     margin-top: 20px;
-
     width: 100%;
     max-width: 550px;
-
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -707,7 +704,7 @@ h2 {
 
 /* --- The Upload Button --- */
 .cv-upload-section .btn-primary {
-    background-color: #00c6ff; /* Your theme green */
+    background-color: #00c6ff;
     color: #111111;
     border: none;
     border-radius: 6px;
@@ -720,7 +717,7 @@ h2 {
 }
 
 .cv-upload-section .btn-primary:hover {
-    background-color: #017696; /* Slightly darker green on hover */
+    background-color: #017696;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(56, 227, 239, 0.629);
 }
@@ -734,7 +731,7 @@ h2 {
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
-    min-height: 20px; /* Prevents the layout from jumping when text appears */
+    min-height: 20px;
 }
 
 /* --- The Current CV Name Display --- */
@@ -748,6 +745,7 @@ h2 {
     border-radius: 4px;
     border-left: 3px solid #00c6ff;
 }
+
 /* Hide it if it's completely empty */
 #currentCvDisplay:empty {
     display: none;
@@ -759,7 +757,7 @@ h2 {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 52, 96, 0.7); /* matches your theme */
+    background: rgba(15, 52, 96, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -774,97 +772,94 @@ h2 {
     pointer-events: none;
 }
 
-/* From Uiverse.io by PriyanshuGupta28 */ 
+/* From Uiverse.io by PriyanshuGupta28 */
 .spinner {
     position: relative;
     width: 20px;
     height: 20px;
-  }
-  
-  .spinner div {
+}
+
+.spinner div {
     position: absolute;
     width: 50%;
     height: 150%;
     background: #000000;
     transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
     animation: spinner-fzua35 1s calc(var(--delay) * 1s) infinite ease;
-  }
-  
-  .spinner div:nth-child(1) {
+}
+
+.spinner div:nth-child(1) {
     --delay: 0.1;
     --rotation: 36;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(2) {
+}
+
+.spinner div:nth-child(2) {
     --delay: 0.2;
     --rotation: 72;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(3) {
+}
+
+.spinner div:nth-child(3) {
     --delay: 0.3;
     --rotation: 108;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(4) {
+}
+
+.spinner div:nth-child(4) {
     --delay: 0.4;
     --rotation: 144;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(5) {
+}
+
+.spinner div:nth-child(5) {
     --delay: 0.5;
     --rotation: 180;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(6) {
+}
+
+.spinner div:nth-child(6) {
     --delay: 0.6;
     --rotation: 216;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(7) {
+}
+
+.spinner div:nth-child(7) {
     --delay: 0.7;
     --rotation: 252;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(8) {
+}
+
+.spinner div:nth-child(8) {
     --delay: 0.8;
     --rotation: 288;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(9) {
+}
+
+.spinner div:nth-child(9) {
     --delay: 0.9;
     --rotation: 324;
     --translation: 150;
-  }
-  
-  .spinner div:nth-child(10) {
+}
+
+.spinner div:nth-child(10) {
     --delay: 1;
     --rotation: 360;
     --translation: 150;
-  }
-  
-  @keyframes spinner-fzua35 {
-    0%, 10%, 20%, 30%, 50%, 60%, 70%, 80%, 90%, 100% {
-      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
-    }
-  
-    50% {
-      transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
-    }
-  }
+}
 
+@keyframes spinner-fzua35 {
+    0%, 10%, 20%, 30%, 50%, 60%, 70%, 80%, 90%, 100% {
+        transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+    }
+    50% {
+        transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+    }
+}
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
 
-    /* --- Layout Reset --- */
     body {
         padding: 10px;
     }
@@ -874,7 +869,6 @@ h2 {
         width: 100%;
     }
 
-    /* --- Sidebar → Top Navbar --- */
     .sidebar {
         position: relative;
         width: 100%;
@@ -906,7 +900,6 @@ h2 {
         font-size: 0.85rem;
     }
 
-    /* --- Cards --- */
     .opportunity-card,
     .application-card,
     .profile-card {
@@ -919,7 +912,6 @@ h2 {
         align-items: flex-start;
     }
 
-    /* --- Text Scaling --- */
     .header h1 {
         font-size: 1.4rem;
     }
@@ -932,13 +924,11 @@ h2 {
         font-size: 0.8rem;
     }
 
-    /* --- Buttons --- */
     .apply-btn {
         font-size: 0.85rem;
         padding: 8px;
     }
 
-    /* --- Profile Layout --- */
     .top-card {
         flex-direction: column;
         text-align: center;
@@ -949,12 +939,10 @@ h2 {
         height: 60px;
     }
 
-    /* --- Grid → Stack --- */
     .card-grid {
         grid-template-columns: 1fr;
     }
 
-    /* --- Forms --- */
     .form-grid {
         grid-template-columns: 1fr;
     }
@@ -963,39 +951,38 @@ h2 {
         grid-column: span 1;
     }
 
-    /* --- Modal --- */
     .modal-content {
         width: 95%;
         padding: 20px;
     }
 
-    /* --- CV Section --- */
     .cv-upload-section {
         max-width: 100%;
     }
+}
+
 /* View Details Button Styles */
-    .view-details-btn {
-      background: linear-gradient(90deg, #007bff, #0056b3);
-      color: hsl(197, 77%, 68%);
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+.view-details-btn {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: hsl(197, 77%, 68%);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-    .view-details-btn:hover {
-      background: linear-gradient(90deg, #0056b3, #003d80);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
+.view-details-btn:hover {
+    background: linear-gradient(90deg, #0056b3, #003d80);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
 
-    .view-details-btn:active {
-      transform: translateY(0);
-    }
+.view-details-btn:active {
+    transform: translateY(0);
 }
 
 /* Notification Card */

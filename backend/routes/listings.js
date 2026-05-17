@@ -307,7 +307,6 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    // 1. Snapshot listing name before deleting
     const listing = await prisma.listing.findUnique({
       where: { listings_id: parseInt(id) },
       select: { listname: true }
@@ -315,7 +314,6 @@ router.delete("/:id", async (req, res) => {
 
     const listingName = listing?.listname || "Unknown";
 
-    // 2. Preserve reports — nullify listing_id so they survive for archive
     try {
       await prisma.report.updateMany({
         where: { listing_id: parseInt(id) },
@@ -327,14 +325,12 @@ router.delete("/:id", async (req, res) => {
       });
     } catch (_) {}
 
-    // 3. Delete applications
     try {
       await prisma.application.deleteMany({
         where: { listing_id: parseInt(id) },
       });
     } catch (_) {}
 
-    // 4. Delete listing
     await prisma.listing.delete({
       where: { listings_id: parseInt(id) },
     });
@@ -361,12 +357,60 @@ router.put("/applications/:id/status", async (req, res) => {
       },
       data: { status },
     });
-
     res.status(200).json(application);
   } catch (error) {
     console.error("Application status update error:", error);
     res.status(500).json({ error: "Internal server error." });
   }
+});
+
+/* =========================
+   UPDATE LISTING (Any status -> back to PENDING)
+========================= */
+
+router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const { listname, list_type, nqf_level, location, stipend, duration, requirements, description, closing_date } = req.body;
+    
+    try {
+        const existing = await prisma.listing.findUnique({
+            where: { listings_id: parseInt(id) }
+        });
+        
+        if (!existing) {
+            return res.status(404).json({ error: "Listing not found" });
+        }
+        
+        const newStatus = 'pending';
+        
+        const updated = await prisma.listing.update({
+            where: { listings_id: parseInt(id) },
+            data: {
+                listname,
+                list_type,
+                nqf_level: parseInt(nqf_level),
+                location,
+                stipend: parseFloat(stipend),
+                duration,
+                requirements,
+                description,
+                closing_date: new Date(closing_date),
+                status: newStatus
+            }
+        });
+        
+        let message = 'Listing updated successfully';
+        if (existing.status === 'approved') {
+            message = 'Listing updated. It will be reviewed by admin before becoming visible to applicants again.';
+        } else if (existing.status === 'rejected') {
+            message = 'Listing resubmitted. Admin will review your changes.';
+        }
+        
+        res.json({ updated, message });
+    } catch (error) {
+        console.error("Error updating listing:", error);
+        res.status(500).json({ error: "Failed to update listing" });
+    }
 });
 
 /* =========================
