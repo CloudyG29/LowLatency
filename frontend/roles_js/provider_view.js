@@ -220,6 +220,47 @@ async function displayApplications() {
       '<div class="empty-state">Error loading applications.</div>';
   }
 }
+async function displayOpportunities() {
+  const container = document.getElementById("myOpportunities");
+  container.innerHTML =
+    '<div class="empty-state"> Loading opportunities...</div>';
+  try {
+    showLoader();
+    const response = await fetch(
+      `/api/listings/provider?email=${currentUser.email}`,
+    );
+    const listings = await response.json();
+
+    if (listings.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state">You have not posted any opportunities yet.</div>';
+      hideLoader();
+      return;
+    }
+
+    container.innerHTML = "";
+    listings.forEach((opp) => {
+      const div = document.createElement("div");
+      div.className = "opportunity-card";
+      div.innerHTML = `
+        <h3>${opp.listname}</h3>
+        <p><strong>Type:</strong> ${opp.list_type}</p>
+        <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
+        <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
+        <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
+        <p><strong>Requirements:</strong> ${opp.requirements || "N/A"}</p>
+        <p><strong>Closing Date:</strong> ${opp.closing_date ? new Date(opp.closing_date).toDateString() : "N/A"}</p>
+        <p><strong>Status:</strong> <span class="status-badge status-${opp.status}">${opp.status}</span></p>
+      `;
+      container.appendChild(div);
+      hideLoader();
+    });
+  } catch (error) {
+    hideLoader();
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities.</div>';
+  }
+}
 // --- Loader Controls ---
 function showLoader() {
   document.getElementById("loader").classList.remove("hidden");
