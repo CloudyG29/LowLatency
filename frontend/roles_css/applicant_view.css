@@ -1355,3 +1355,30 @@ h2 {
         margin: 0;
     }
 }
+
+/* Default state of the save button */
+.save-listing-btn {
+    background: transparent;
+    border: 1px solid #a0aec0;
+    color: #a0aec0;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.save-listing-btn:hover {
+    border-color: white;
+    color: white;
+}
+
+/* THE SAVED STATE (When the JS adds the class) */
+.save-listing-btn.saved {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border-color: transparent;
+    color: white;
+}

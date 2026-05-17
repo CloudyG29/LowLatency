@@ -531,12 +531,9 @@ async function fetchOpportunities(type = "") {
       const isSaved = listing.isSaved;
 
       const saveButtonHtml = `
-        <button 
-          class="save-btn ${isSaved ? 'saved' : ''}" 
-          onclick="toggleFavorite(${listingId}, this)"
-          style="background: transparent; border: 1px solid #4a5568; color: #a0aec0; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: 10px;"
-        >
-          ${isSaved ? 'Saved' : 'Save'}
+        <button class="save-listing-btn ${isSaved ? 'favorited' : ''}" onclick="toggleFavorite(this, '${listingId}')">
+        <i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+        ${isSaved ? 'Saved' : 'Save'}
         </button>
       `;
 
@@ -761,10 +758,10 @@ async function markAsRead(notificationId) {
   }
 }
 
-async function toggleFavorite(listingId) {
+// 1. Add buttonElement right here as the first parameter!
+async function toggleFavorite(buttonElement, listingId) {
   try {
     // 1. Grab the currently authenticated user directly from Firebase
-    // Note: If you are using Firebase v9 modular, this might be `auth.currentUser` instead.
     const user = firebase.auth().currentUser;
 
     // 2. Safety check: Make sure someone is actually logged in
@@ -781,22 +778,21 @@ async function toggleFavorite(listingId) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userId: user.uid, // <-- Use the uid from the 'user' variable we just checked
-        listingId: listingId
+        userId: user.uid,
+        listingId: parseInt(listingId, 10)
       })
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
-      buttonElement.classList.add("favorited");
-      buttonElement.innerHTML = "Saved";
     }
+
+    // 4. UI Update: Now the function knows exactly which button to change!
+    buttonElement.classList.add("favorited");
+    buttonElement.innerHTML = "Saved";
 
     const result = await response.json();
     console.log("Success:", result);
-
-    // Optional: Update your UI here (e.g., change the heart button color)
 
   } catch (error) {
     console.error("Error saving listing:", error);
