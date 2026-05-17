@@ -27,7 +27,8 @@ app.use("/api/listings", listRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/qualifications", qualificationsRoute);
 app.use("/api/reports", reportRoutes);  
-
+app.use("/api/user", userRoutes);
+app.use("/api/profile", profileRoutes);
 // Serve HTML files
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "index.html"));
