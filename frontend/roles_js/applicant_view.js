@@ -789,8 +789,8 @@ async function toggleFavorite(listingId) {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     } else {
-      buttonElement.classList.add('favorited');
-      buttonElement.innerHTML = 'Saved';
+      buttonElement.classList.add("favorited");
+      buttonElement.innerHTML = "Saved";
     }
 
     const result = await response.json();
