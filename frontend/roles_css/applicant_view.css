@@ -5,9 +5,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    background: linear-gradient(135deg, #0d1117, #111827, #0f2040);
     color: white;
     padding: 30px 20px;
 }
@@ -110,6 +110,12 @@ body {
     color: white;
 }
 
+.nav-links > li > a.active {
+    background: rgba(0, 198, 255, 0.12);
+    color: #00c6ff;
+    border-left: 3px solid #00c6ff;
+}
+
 /* Icon Styling */
 .nav-links > li > a .icon {
     min-width: 40px; /* Gives icon a fixed box so they all align perfectly */
@@ -183,17 +189,18 @@ h2 {
 
 /* Opportunity card CSS */
 .opportunity-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     backdrop-filter: blur(10px);
     padding: 25px;
     border-radius: 16px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .opportunity-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0, 114, 255, 0.2);
+    border-color: rgba(0, 198, 255, 0.35);
+    box-shadow: 0 15px 30px rgba(0, 114, 255, 0.18);
 }
 
 .opportunity-card h3 {
@@ -281,18 +288,20 @@ h2 {
     background: linear-gradient(90deg, #38ef7d, #11998e);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 28px;
     border-radius: 8px;
     cursor: pointer;
     margin-top: 15px;
     font-weight: bold;
-    width: 100%;
+    width: auto;
+    min-width: 160px;
     font-size: 0.95rem;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
 }
 
 .apply-btn:hover {
-    opacity: 0.85;
+    opacity: 0.88;
+    transform: translateY(-1px);
 }
 
 .already-applied {
@@ -315,8 +324,8 @@ h2 {
 }
 
 .application-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     backdrop-filter: blur(10px);
     padding: 20px 25px;
     border-radius: 16px;
@@ -326,7 +335,13 @@ h2 {
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    width: 70vw;
+    width: 100%;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.application-card:hover {
+    border-color: rgba(0, 198, 255, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .application-info h3 {
@@ -389,7 +404,7 @@ h2 {
     background: transparent;
     padding: 30px;
     border-radius: 12px;
-    max-width: 70vw;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -401,13 +416,13 @@ h2 {
 
 /* --- Card Styles --- */
 .profile-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     backdrop-filter: blur(10px);
     border-radius: 12px;
     padding: 25px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Display Bio */
@@ -1020,13 +1035,13 @@ h2 {
 ================================ */
 
 .opportunity-preview-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 18px;
     padding: 22px;
     margin-bottom: 18px;
     backdrop-filter: blur(12px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -1072,12 +1087,13 @@ h2 {
 .opportunity-pill {
     padding: 7px 16px;
     border-radius: 20px;
-    background: rgba(0, 198, 255, 0.12);
-    color: #63b3ed;
-    border: 1px solid rgba(0, 198, 255, 0.25);
-    font-size: 0.8rem;
-    font-weight: bold;
+    background: rgba(99, 179, 237, 0.15);
+    color: #90cdf4;
+    border: 1px solid rgba(99, 179, 237, 0.35);
+    font-size: 0.78rem;
+    font-weight: 700;
     white-space: nowrap;
+    letter-spacing: 0.5px;
 }
 
 .opportunity-actions {
@@ -1328,26 +1344,7 @@ h2 {
     color: #a0aec0;
 }
 
-.sidebar-toggle {
-    /* Position it nicely at the top left of the main content */
-    margin: 20px 0 20px 20px;
-    background-color: #272d33;
-    color: #a0aec0;
-    border: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 1001; /* Keeps it above the sidebar (which is 1000) */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-    color: black;
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
-    transform: scale(1.05);
-}
+/* Sidebar toggle is styled within .sidebar-header — see above */
 
 /* Optional: If you want the button fixed to the top left of the screen at all times */
 @media (max-width: 768px) {

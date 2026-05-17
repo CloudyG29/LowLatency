@@ -5,9 +5,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    background: linear-gradient(135deg, #0d1117, #111827, #0f2040);
     color: white;
     padding: 30px 20px;
 }
@@ -106,6 +106,12 @@ body {
     color: white;
 }
 
+.nav-links > li > a.active {
+    background: rgba(56, 239, 125, 0.1);
+    color: #38ef7d;
+    border-left: 3px solid #38ef7d;
+}
+
 /* Icon Styling */
 .nav-links > li > a .icon {
     min-width: 40px; /* Gives icon a fixed box so they all align perfectly */
@@ -192,19 +198,25 @@ h2 {
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     backdrop-filter: blur(10px);
     padding: 25px;
     border-radius: 16px;
 }
 
 .opportunity-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     padding: 20px;
     border-radius: 16px;
     margin-bottom: 15px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.opportunity-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 239, 125, 0.3);
 }
 
 .opportunity-card h3 {
@@ -387,8 +399,8 @@ textarea {
 }
 
 .applications-sidebar {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 24px;
     padding: 20px;
     height: 78vh;
@@ -397,8 +409,8 @@ textarea {
 }
 
 .application-details-panel {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 24px;
     padding: 28px;
     min-height: 78vh;
@@ -410,8 +422,8 @@ textarea {
 }
 
 .dashboard-application-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 18px;
     padding: 18px;
     margin-bottom: 16px;
@@ -497,8 +509,8 @@ textarea {
 }
 
 .selected-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
     padding: 22px;
 }

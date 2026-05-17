@@ -5,9 +5,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    background: linear-gradient(135deg, #0d1117, #111827, #0f2040);
     color: white;
     padding: 30px 20px;
 }
@@ -106,6 +106,12 @@ body {
     color: white;
 }
 
+.nav-links > li > a.active {
+    background: rgba(240, 147, 251, 0.12);
+    color: #f093fb;
+    border-left: 3px solid #f093fb;
+}
+
 /* Icon Styling */
 .nav-links > li > a .icon {
     min-width: 40px; /* Gives icon a fixed box so they all align perfectly */
@@ -163,12 +169,18 @@ body {
 }
 
 .stat-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.13);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 16px;
     text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(240, 147, 251, 0.12);
 }
 
 .stat-card h3 {
@@ -216,8 +228,8 @@ body {
 }
 
 .section {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
     backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: 25px;
