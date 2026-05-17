@@ -748,6 +748,24 @@ async function markAsRead(notificationId) {
   }
 }
 
+async function toggleFavorite(listingId, buttonElement) {
+  const userEmail = localStorage.getItem("email");
+  
+  try {
+    const response = await fetch('/api/favorites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userEmail, listingId })
+    });
+
+    if (response.ok) {
+      buttonElement.classList.add('favorited');
+      buttonElement.innerHTML = 'Saved';
+    }
+  } catch (error) {
+    console.error("Error saving listing:", error);
+  }
+}
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
 if (typeof module !== 'undefined' && module.exports) {

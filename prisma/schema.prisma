@@ -127,3 +127,13 @@ model Report {
   created_at  DateTime @default(now())
   Listing     Listing  @relation(fields: [listing_id], references: [listings_id], onUpdate: NoAction)
 }
+
+model SavedListing {
+  id          Int      @id @default(autoincrement())
+  userId      String  
+  listingId   Int
+  listing     Listing  @relation(fields: [listingId], references: [listings_id])
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, listingId]) 
+}
