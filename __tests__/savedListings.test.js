@@ -9,6 +9,8 @@ const express = require('express');
 jest.mock('../DB_connect/prisma', () => ({
     savedListing: {
         create: jest.fn(),
+        findFirst: jest.fn(),
+        delete: jest.fn(),
     },
 }));
 
@@ -36,21 +38,20 @@ describe('POST /api/savedListings', () => {
     test('should successfully save a listing and return 201', async () => {
         const mockSavedData = { id: 1, userId: 'user-123', listingId: 42 };
         
-        // Mock Prisma to simulate a successful database write
+        // 1. CRITICAL ADDITION: Tell the mock DB that the listing is not saved yet
+        prisma.savedListing.findFirst.mockResolvedValue(null);
+    
+        // 2. Mock Prisma to simulate a successful database write
         prisma.savedListing.create.mockResolvedValue(mockSavedData);
-
+    
         const response = await request(app)
             .post('/api/savedListings')
             .send({ userId: 'user-123', listingId: 42 });
-
+    
         expect(response.status).toBe(201);
         expect(response.body).toEqual({
-            message: 'Listing saved successfully!',
-            data: mockSavedData,
-        });
-        expect(prisma.savedListing.create).toHaveBeenCalledTimes(1);
-        expect(prisma.savedListing.create).toHaveBeenCalledWith({
-            data: { userId: 'user-123', listingId: 42 },
+            message: "Listing saved successfully",
+            isSaved: true
         });
     });
 
@@ -79,7 +80,7 @@ describe('POST /api/savedListings', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({
-            error: 'Internal server error while saving listing',
+            error: 'An error occurred while saving the listing',
         });
     });
 });

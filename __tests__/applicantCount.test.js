@@ -344,20 +344,18 @@ describe("Favorites Button Rendering", () => {
     test("renders 'Save' when listing is not saved", async () => {
         mockFetch([makeListing({ isSaved: false })]);
         await fetchOpportunities();
-        const saveBtn = document.querySelector(".save-btn");
-
+        const saveBtn = document.querySelector(".save-listing-btn");
         expect(saveBtn).not.toBeNull();
         expect(saveBtn.textContent).toContain("Save");
-        expect(saveBtn.classList.contains("saved")).toBe(false);
+        expect(saveBtn.classList.contains("favorited")).toBe(false);
     });
 
     test("renders 'Saved' when listing is already saved", async () => {
         mockFetch([makeListing({ isSaved: true })]);
         await fetchOpportunities();
-        const saveBtn = document.querySelector(".save-btn");
-
+        const saveBtn = document.querySelector(".save-listing-btn");
         expect(saveBtn.textContent).toContain("Saved");
-        expect(saveBtn.classList.contains("saved")).toBe(true);
+        expect(saveBtn.classList.contains("favorited")).toBe(true);
     });
 });
 
@@ -399,7 +397,7 @@ describe("toggleFavorite()", () => {
 
         // 2. Call the function
         const listingId = 42;
-        await toggleFavorite(listingId, mockButton);
+        await toggleFavorite(mockButton, 42);
 
         // 3. Verify fetch was called with the exact right data
         expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -420,25 +418,25 @@ describe("toggleFavorite()", () => {
                 currentUser: { uid: "test-uid" }
             }))
         };
-    
+
         // 2. Fetch Mock WITH status: 200 included!
-        global.fetch = jest.fn().mockResolvedValue({ 
+        global.fetch = jest.fn().mockResolvedValue({
             ok: true,
-            status: 200, 
-            json: async () => ({ message: "Success" }) 
+            status: 200,
+            json: async () => ({ message: "Success" })
         });
-    
+
         const listingId = 42;
-    
+
         // 3. Create the button
         document.body.innerHTML = `
             <button id="favorite-btn-${listingId}" class="save-btn">Saved</button>
         `;
         const mockButton = document.getElementById(`favorite-btn-${listingId}`);
-    
+
         // 4. Run the function (Make sure this has BOTH arguments!)
         await toggleFavorite(listingId, mockButton);
-    
+
         // 5. The checks
         expect(mockButton.classList.contains("Saved")).toBe(false);
         expect(mockButton.innerHTML).toContain("Saved");
