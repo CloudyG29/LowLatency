@@ -29,7 +29,12 @@ jobs:
 
       - run: npm ci
 
-      - run: npx prisma generate
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          PRISMA_TELEMETRY_DISABLED: 1
+          PRISMA_DISABLE_UPDATE_CHECK: 1
+        
       - run: npm run lint --if-present
       - run: npm run type-check --if-present
 
