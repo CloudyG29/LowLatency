@@ -1,348 +1,144 @@
-let currentUser = null;
-
-async function guardProviderPage() {
-  return new Promise((resolve) => {
-    firebase.auth().onAuthStateChanged(async (user) => {
-      try {
-        if (!user) {
-          window.location.assign("/login");
-          return resolve(false);
-        }
-
-        const token = await user.getIdToken();
-
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          await firebase.auth().signOut().catch(() => {});
-          window.location.assign("/login");
-          return resolve(false);
-        }
-
-        const data = await response.json();
-
-        if (data.role !== "Provider") {
-          window.location.assign("/login");
-          return resolve(false);
-        }
-
-        currentUser = user;
-        resolve(true);
-      } catch (error) {
-        console.error("Provider guard failed:", error);
-        window.location.assign("/login");
-        resolve(false);
-      }
-    });
-  });
-}
-
-/* =========================
-   OPPORTUNITIES
-========================= */
-
-async function postOpportunity() {
-  if (!currentUser) return;
-
-  const msg = document.getElementById("msg");
-  if (!msg) return;
-
-  const listname = document.getElementById("listname")?.value;
-  const list_type = document.getElementById("list_type")?.value;
-  const nqf_level = document.getElementById("nqf_level")?.value;
-  const description = document.getElementById("description")?.value;
-  const requirements = document.getElementById("requirements")?.value;
-  const closing_date = document.getElementById("closing_date")?.value;
-  const stipend = document.getElementById("stipend")?.value;
-  const location = document.getElementById("location")?.value;
-  const duration = document.getElementById("duration")?.value;
-
-  if (!listname || !list_type || !stipend || !location || !duration || !requirements || !nqf_level || !closing_date) {
-    msg.innerText = "Please fill in all fields before posting a job";
-    msg.style.color = "#fc8181";
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/listings/post", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        listname,
-        list_type,
-        nqf_level,
-        description,
-        requirements,
-        closing_date,
-        stipend,
-        location,
-        duration,
-        email: currentUser.email,
-      }),
-    });
-
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-
-    msg.innerText = "Posted! Waiting for admin approval.";
-    msg.style.color = "#68d391";
-
-    document.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (el.id !== "list_type") el.value = "";
-    });
-
-    displayOpportunities();
-  } catch (error) {
-    msg.innerText = "Error: " + error.message;
-    msg.style.color = "#fc8181";
-  }
-}
-
-async function displayOpportunities() {
-  const container = document.getElementById("myOpportunities");
-  if (!container) return;
-
-  container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
-
-  try {
-    showLoader();
-
-    const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
-    const listings = await response.json();
-
-    if (listings.length === 0) {
-      container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
-      hideLoader();
-      return;
+{
+  "name": "prisma-client-f9d5c4b0560193eeab56c566bc2d9ddba90982b40d0b09d79699a6fd435b2be5",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "browser": "default.js",
+  "exports": {
+    "./client": {
+      "require": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "import": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json",
+    ".": {
+      "require": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "import": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "default": "./index.js"
+    },
+    "./extension": {
+      "types": "./extension.d.ts",
+      "require": "./extension.js",
+      "import": "./extension.js",
+      "default": "./extension.js"
+    },
+    "./index-browser": {
+      "types": "./index.d.ts",
+      "require": "./index-browser.js",
+      "import": "./index-browser.js",
+      "default": "./index-browser.js"
+    },
+    "./index": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./edge": {
+      "types": "./edge.d.ts",
+      "require": "./edge.js",
+      "import": "./edge.js",
+      "default": "./edge.js"
+    },
+    "./runtime/client": {
+      "types": "./runtime/client.d.ts",
+      "node": {
+        "require": "./runtime/client.js",
+        "default": "./runtime/client.js"
+      },
+      "require": "./runtime/client.js",
+      "import": "./runtime/client.mjs",
+      "default": "./runtime/client.mjs"
+    },
+    "./runtime/wasm-compiler-edge": {
+      "types": "./runtime/wasm-compiler-edge.d.ts",
+      "require": "./runtime/wasm-compiler-edge.js",
+      "import": "./runtime/wasm-compiler-edge.mjs",
+      "default": "./runtime/wasm-compiler-edge.mjs"
+    },
+    "./runtime/index-browser": {
+      "types": "./runtime/index-browser.d.ts",
+      "require": "./runtime/index-browser.js",
+      "import": "./runtime/index-browser.mjs",
+      "default": "./runtime/index-browser.mjs"
+    },
+    "./generator-build": {
+      "require": "./generator-build/index.js",
+      "import": "./generator-build/index.js",
+      "default": "./generator-build/index.js"
+    },
+    "./sql": {
+      "require": {
+        "types": "./sql.d.ts",
+        "node": "./sql.js",
+        "default": "./sql.js"
+      },
+      "import": {
+        "types": "./sql.d.ts",
+        "node": "./sql.mjs",
+        "default": "./sql.mjs"
+      },
+      "default": "./sql.js"
+    },
+    "./*": "./*"
+  },
+  "version": "7.8.0",
+  "sideEffects": false,
+  "dependencies": {
+    "@prisma/client-runtime-utils": "7.8.0"
+  },
+  "imports": {
+    "#wasm-compiler-loader": {
+      "edge-light": "./wasm-edge-light-loader.mjs",
+      "workerd": "./wasm-worker-loader.mjs",
+      "worker": "./wasm-worker-loader.mjs",
+      "default": "./wasm-worker-loader.mjs"
+    },
+    "#main-entry-point": {
+      "require": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "import": {
+        "node": "./index.js",
+        "edge-light": "./edge.js",
+        "workerd": "./edge.js",
+        "worker": "./edge.js",
+        "browser": "./index-browser.js",
+        "default": "./index.js"
+      },
+      "default": "./index.js"
     }
-
-    container.innerHTML = "";
-
-    listings.forEach((opp) => {
-      const div = document.createElement("div");
-      div.className = "opportunity-card";
-
-      div.innerHTML = `
-        <h3>${opp.listname}</h3>
-        <p><strong>Type:</strong> ${opp.list_type}</p>
-        <p><strong>Location:</strong> ${opp.location || "N/A"}</p>
-        <p><strong>Stipend:</strong> ${opp.stipend || "N/A"}</p>
-        <p><strong>Duration:</strong> ${opp.duration || "N/A"}</p>
-        <p><strong>Requirements:</strong> ${opp.requirements || "N/A"}</p>
-        <p><strong>Closing Date:</strong> ${opp.closing_date ? new Date(opp.closing_date).toDateString() : "N/A"}</p>
-        <p><strong>Status:</strong> <span class="status-badge status-${opp.status}">${opp.status}</span></p>
-        <button class="btn-edit" data-id="${opp.listings_id}" data-status="${opp.status}">Edit</button>
-      `;
-
-      container.appendChild(div);
-    });
-
-    hideLoader();
-  } catch (error) {
-    hideLoader();
-    container.innerHTML = '<div class="empty-state">Error loading opportunities.</div>';
   }
 }
-
-/* =========================
-   APPLICATIONS
-========================= */
-
-async function displayApplications() {
-  const container = document.getElementById("applicationsList");
-  if (!container) return;
-
-  container.innerHTML = '<div class="empty-state">Loading applications...</div>';
-
-  try {
-    showLoader();
-
-    const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
-    const applications = await response.json();
-
-    if (applications.length === 0) {
-      container.innerHTML = '<div class="empty-state">No applications received yet.</div>';
-      hideLoader();
-      return;
-    }
-
-    container.innerHTML = "";
-
-    applications.forEach((app) => {
-      const div = document.createElement("div");
-      div.className = "opportunity-card";
-
-      div.innerHTML = `
-        <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
-        <p><strong>Email:</strong> ${app.user.email}</p>
-        <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
-        <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
-        ${app.status === "pending" ? `
-          <button class="btn-hire" data-id="${app.application_id}">Hire</button>
-          <button class="btn-reject" data-id="${app.application_id}">Reject</button>
-        ` : ""}
-      `;
-
-      container.appendChild(div);
-    });
-
-    hideLoader();
-  } catch (error) {
-    hideLoader();
-    container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
-  }
-}
-
-/* =========================
-   EDIT LISTINGS
-========================= */
-
-async function openEditModal(listingId) {
-  try {
-    showLoader();
-
-    const response = await fetch(`/api/listings/${listingId}`);
-    const listing = await response.json();
-
-    document.getElementById("editListingId").value = listing.listings_id;
-    document.getElementById("editListname").value = listing.listname;
-    document.getElementById("editListType").value = listing.list_type;
-    document.getElementById("editNqfLevel").value = listing.nqf_level;
-    document.getElementById("editLocation").value = listing.location || "";
-    document.getElementById("editStipend").value = listing.stipend;
-    document.getElementById("editDuration").value = listing.duration || "";
-    document.getElementById("editRequirements").value = listing.requirements || "";
-    document.getElementById("editDescription").value = listing.description || "";
-
-    if (listing.closing_date) {
-      document.getElementById("editClosingDate").value =
-        new Date(listing.closing_date).toISOString().split("T")[0];
-    }
-
-    openModal("editListingModal");
-    hideLoader();
-  } catch (error) {
-    hideLoader();
-    alert("Failed to load listing");
-  }
-}
-
-async function saveListingEdits() {
-  const listingId = document.getElementById("editListingId").value;
-
-  const updatedData = {
-    listname: document.getElementById("editListname").value,
-    list_type: document.getElementById("editListType").value,
-    nqf_level: parseInt(document.getElementById("editNqfLevel").value),
-    location: document.getElementById("editLocation").value,
-    stipend: parseFloat(document.getElementById("editStipend").value),
-    duration: document.getElementById("editDuration").value,
-    requirements: document.getElementById("editRequirements").value,
-    description: document.getElementById("editDescription").value,
-    closing_date: document.getElementById("editClosingDate").value,
-  };
-
-  try {
-    showLoader();
-
-    const response = await fetch(`/api/listings/${listingId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedData),
-    });
-
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Update failed");
-
-    alert("Listing updated successfully!");
-    closeModal("editListingModal");
-
-    displayOpportunities();
-    hideLoader();
-  } catch (error) {
-    hideLoader();
-    alert(error.message);
-  }
-}
-
-/* =========================
-   MODALS
-========================= */
-
-function openModal(modalId) {
-  document.getElementById(modalId).classList.add("active");
-}
-
-function closeModal(modalId) {
-  document.getElementById(modalId).classList.remove("active");
-}
-
-/* =========================
-   LOADER
-========================= */
-
-function showLoader() {
-  document.getElementById("loader")?.classList.remove("hidden");
-}
-
-function hideLoader() {
-  document.getElementById("loader")?.classList.add("hidden");
-}
-
-/* =========================
-   CLICK HANDLER (CLEAN)
-========================= */
-
-document.addEventListener("click", async (event) => {
-  const editBtn = event.target.closest(".btn-edit");
-  if (editBtn) {
-    const id = editBtn.dataset.id;
-    const status = editBtn.dataset.status;
-
-    if (status === "approved" || status === "rejected") {
-      if (!confirm("Editing will require admin review again. Continue?")) return;
-    }
-
-    openEditModal(id);
-    return;
-  }
-
-  const hireBtn = event.target.closest(".btn-hire");
-  if (hireBtn) {
-    await fetch(`/api/listings/applications/${hireBtn.dataset.id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "hired" }),
-    });
-
-    displayApplications();
-    return;
-  }
-
-  const rejectBtn = event.target.closest(".btn-reject");
-  if (rejectBtn) {
-    await fetch(`/api/listings/applications/${rejectBtn.dataset.id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "rejected" }),
-    });
-
-    displayApplications();
-  }
-});
-
-/* =========================
-   INIT
-========================= */
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const allowed = await guardProviderPage();
-  if (!allowed) return;
-
-  displayOpportunities();
-});
