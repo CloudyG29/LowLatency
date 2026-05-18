@@ -661,7 +661,7 @@
             <div class="card-title">Take Action</div>
             
             <div class="action-buttons">
-              <button class="btn-delete-listing" onclick="deleteReport()">
+              <button class="btn-delete-listing" onclick="deleteListing()">
                 🗑 Delete Listing
                 <span style="font-weight:400;font-size:0.8rem;opacity:0.8;">— removes it from applicant site</span>
               </button>
@@ -691,39 +691,42 @@
     }
 
     async function deleteListing() {
-    // 1. FIX: Change .listing to .Listing (capital L)
-    const listing = reportData?.Listing; 
-    
-    if (!listing) {
+      const listing = reportData?.Listing;
+
+      if (!listing) {
         showToast('Listing already deleted.', 'error');
         return;
-    }
-    if (!confirm(`Delete "${listing.listname}"? This cannot be undone.`)) return;
+      }
+      if (!confirm(`Delete "${listing.listname}"? This cannot be undone.`)) return;
 
-    try {
+      try {
         const headers = await getAuthHeaders();
-        
-        // 2. POTENTIAL FIX: Check the ID property! 
-        // Your old code had listing.listings_id (plural 's'). 
-        // In Prisma, it is usually singular (listing_id) or just (id).
-        // I have changed it to listing_id here based on your backend code.
-        const listingId = listing.listings_id || listing.id || listing.listing_id; 
 
-        const res = await fetch(`/api/listings/${listingId}`, {
-            method: 'DELETE',
-            headers,
-            body: JSON.stringify({ report_id: reportData.report_id })
+        // 1. UPDATE LISTING STATUS TO DELETED
+        const listingRes = await fetch(`/api/listings/${listing.listings_id}/status`, {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify({ status: 'deleted' })
         });
-        
-        if (!res.ok) throw new Error('Delete failed');
-        
-        showToast('Listing deleted successfully.', 'success');
+
+        if (!listingRes.ok) throw new Error('Failed to update listing status');
+
+        // 2. UPDATE REPORT STATUS TO RESOLVED
+        const reportRes = await fetch(`/api/reports/${reportData.report_id}/status`, {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify({ status: 'resolved' })
+        });
+
+        if (!reportRes.ok) throw new Error('Failed to resolve report');
+
+        showToast('Listing marked as deleted!', 'success');
         setTimeout(() => window.location.href = '/admin', 1500);
-    } catch (err) {
+      } catch (err) {
         showToast('Failed to delete listing.', 'error');
-        console.error(err);
+        console.error("Error details:", err);
+      }
     }
-}
 
     async function dismissReport() {
       try {
