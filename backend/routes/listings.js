@@ -303,12 +303,16 @@ router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const { report_id } = req.body;
 
+  console.log(`HARD DELETE INITIATED FOR LISTING ID: ${id}`);
+
   try {
-    await prisma.listing.update({
-      where: { listings_id: parseInt(id) },
-      data: { status: "deleted" }
+    // 1. First, we must delete any applications attached to this listing.
+    // If we don't, Prisma will throw a Foreign Key error and crash!
+    await prisma.application.deleteMany({
+        where: { listing_id: parseInt(id) }
     });
 
+    // 2. Resolve the report BEFORE deleting the listing
     if (report_id) {
       await prisma.report.update({
         where: { report_id: parseInt(report_id) },
@@ -316,7 +320,12 @@ router.delete("/:id", async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Listing removed." });
+    // 3. Now it is safe to permanently delete the actual listing
+    await prisma.listing.delete({
+      where: { listings_id: parseInt(id) }
+    });
+
+    res.status(200).json({ message: "Listing permanently removed." });
   } catch (error) {
     console.error("Error in DELETE /:id:", error);
     res.status(500).json({ error: "Internal server error.", details: error.message });
