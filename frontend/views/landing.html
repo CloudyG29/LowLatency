@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillBridge — Connecting Talent with Opportunity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg2: #111827;
+            --surface: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.10);
+            --border2: rgba(255, 255, 255, 0.14);
+            --text: #e2e8f0;
+            --muted: #718096;
+            --accent-b: #00c6ff;
+            --accent-b2: #0072ff;
+            --accent-g: #38ef7d;
+            --accent-g2: #11998e;
+            --accent-p: #f093fb;
+            --accent-p2: #f5576c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Background mesh ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0, 198, 255, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(56, 239, 125, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 50% 50%, rgba(15, 32, 64, 0.8) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 60px;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-b2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border2);
+            color: var(--text);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent-b);
+            color: var(--accent-b);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-b2));
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 40px 60px;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 198, 255, 0.08);
+            border: 1px solid rgba(0, 198, 255, 0.2);
+            border-radius: 999px;
+            padding: 6px 18px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent-b);
+            margin-bottom: 28px;
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .hero-eyebrow .flag {
+            font-size: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -1px;
+            max-width: 900px;
+            margin-bottom: 24px;
+            animation: fadeUp 0.7s 0.1s ease both;
+        }
+
+        .hero h1 .grad-blue {
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-b2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 .grad-green {
+            background: linear-gradient(90deg, var(--accent-g), var(--accent-g2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--muted);
+            max-width: 560px;
+            line-height: 1.7;
+            margin-bottom: 44px;
+            animation: fadeUp 0.7s 0.2s ease both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeUp 0.7s 0.3s ease both;
+        }
+
+        .btn-hero-primary {
+            padding: 15px 36px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+        }
+
+        .btn-hero-ghost {
+            padding: 15px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 72px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeUp 0.7s 0.4s ease both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .num {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-g));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat .lbl {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* ─── SECTION SHARED ─── */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-wrap {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent-b);
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section-sub {
+            font-size: 1rem;
+            color: var(--muted);
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        /* ─── HOW IT WORKS ─── */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .how-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 28px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .how-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 198, 255, 0.3);
+        }
+
+        .how-step {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-b);
+            margin-bottom: 16px;
+        }
+
+        .how-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .how-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .how-card p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* ─── ROLES ─── */
+        .roles-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .role-card {
+            border-radius: 20px;
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .role-card .btn {
+            position: relative;
+            z-index: 2;
+        }
+
+        .role-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .role-applicant {
+            background: rgba(0, 198, 255, 0.06);
+            border: 1px solid rgba(0, 198, 255, 0.2);
+        }
+
+        .role-applicant::before {
+            background: linear-gradient(135deg, var(--accent-b), var(--accent-b2));
+        }
+
+        .role-provider {
+            background: rgba(56, 239, 125, 0.06);
+            border: 1px solid rgba(56, 239, 125, 0.2);
+        }
+
+        .role-provider::before {
+            background: linear-gradient(135deg, var(--accent-g), var(--accent-g2));
+        }
+
+        .role-admin {
+            background: rgba(240, 147, 251, 0.06);
+            border: 1px solid rgba(240, 147, 251, 0.2);
+        }
+
+        .role-admin::before {
+            background: linear-gradient(135deg, var(--accent-p), var(--accent-p2));
+        }
+
+        .role-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .role-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .role-applicant h3 {
+            color: var(--accent-b);
+        }
+
+        .role-provider h3 {
+            color: var(--accent-g);
+        }
+
+        .role-admin h3 {
+            color: var(--accent-p);
+        }
+
+        .role-card p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .role-perks {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .role-perks li {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .perk-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .role-applicant .perk-dot {
+            background: var(--accent-b);
+        }
+
+        .role-provider .perk-dot {
+            background: var(--accent-g);
+        }
+
+        .role-admin .perk-dot {
+            background: var(--accent-p);
+        }
+
+        .btn-applicant {
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-b2));
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-provider {
+            background: linear-gradient(90deg, var(--accent-g), var(--accent-g2));
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-admin-role {
+            background: linear-gradient(90deg, var(--accent-p), var(--accent-p2));
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-applicant:hover,
+        .btn-provider:hover,
+        .btn-admin-role:hover {
+            opacity: 0.88;
+            transform: translateY(-2px);
+        }
+
+        /* ─── FEATURES ─── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 28px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border2);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .fi-blue {
+            background: rgba(0, 198, 255, 0.12);
+        }
+
+        .fi-green {
+            background: rgba(56, 239, 125, 0.12);
+        }
+
+        .fi-purple {
+            background: rgba(240, 147, 251, 0.12);
+        }
+
+        .fi-orange {
+            background: rgba(246, 201, 14, 0.12);
+        }
+
+        .feature-text h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .feature-text p {
+            font-size: 0.87rem;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        /* ─── CTA BANNER ─── */
+        .cta-banner {
+            margin: 0 40px 100px;
+            max-width: 1060px;
+            margin-left: auto;
+            margin-right: auto;
+            background: linear-gradient(135deg, rgba(0, 198, 255, 0.1), rgba(56, 239, 125, 0.08));
+            border: 1px solid rgba(0, 198, 255, 0.2);
+            border-radius: 24px;
+            padding: 64px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(0, 198, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .cta-text h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .cta-text p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            max-width: 420px;
+            line-height: 1.6;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 14px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 40px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-b), var(--accent-b2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-copy {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── HAMBURGER ─── */
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: 1px solid var(--border2);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav {
+                padding: 16px 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-mobile-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 60px 24px 40px;
+            }
+
+            .hero-stats {
+                gap: 32px;
+            }
+
+            .section-wrap {
+                padding: 72px 24px;
+            }
+
+            .how-grid,
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 48px 28px;
+                margin: 0 24px 60px;
+            }
+
+            .cta-text p {
+                max-width: 100%;
+            }
+
+            .cta-actions {
+                justify-content: center;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 24px;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">SkillBridge</div>
+        <div class="nav-cta">
+            <a href="/login" class="btn btn-ghost">Login</a>
+            <a href="/index" class="btn btn-primary">Get Started</a>
+        </div>
+        <button class="nav-mobile-toggle" onclick="this.nextElementSibling?.classList.toggle('open')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-eyebrow">
+            <span class="flag">🇿🇦</span> Built for South Africa
+        </div>
+        <h1>
+            Your Skills Are Your<br>
+            <span class="grad-blue">Bridge</span> to a<br>
+            <span class="grad-green">Better Future</span>
+        </h1>
+        <p class="hero-sub">
+            SkillBridge connects South African talent with learnerships, internships, and opportunities — making the
+            path from skill to career shorter than ever.
+        </p>
+        <div class="hero-cta">
+            <a href="/signup-applicant" class="btn btn-primary btn-hero-primary">Find Opportunities</a>
+            <a href="/signup-provider" class="btn btn-ghost btn-hero-ghost">Post Opportunities</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="num">500+</div>
+                <div class="lbl">Opportunities</div>
+            </div>
+            <div class="hero-stat">
+                <div class="num">2 000+</div>
+                <div class="lbl">Applicants</div>
+            </div>
+            <div class="hero-stat">
+                <div class="num">150+</div>
+                <div class="lbl">Providers</div>
+            </div>
+            <div class="hero-stat">
+                <div class="num">9</div>
+                <div class="lbl">Provinces</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+        <div class="section-wrap">
+            <div class="reveal">
+                <p class="section-label">How It Works</p>
+                <h2 class="section-title">From signup to<br>hired in three steps</h2>
+                <p class="section-sub">We've made the process as frictionless as possible so you can focus on what
+                    matters — your career.</p>
+            </div>
+            <div class="how-grid">
+                <div class="how-card reveal">
+                    <div class="how-step">Step 01</div>
+                    <div class="how-icon">🎓</div>
+                    <h3>Create Your Profile</h3>
+                    <p>Sign up as an applicant, upload your CV, and fill in your skills and NQF level. It takes less
+                        than five minutes.</p>
+                </div>
+                <div class="how-card reveal">
+                    <div class="how-step">Step 02</div>
+                    <div class="how-icon">🔍</div>
+                    <h3>Browse & Apply</h3>
+                    <p>Explore learnerships and internships filtered by type, location, and NQF level. Apply with a
+                        single click.</p>
+                </div>
+                <div class="how-card reveal">
+                    <div class="how-step">Step 03</div>
+                    <div class="how-icon">🚀</div>
+                    <h3>Get Hired</h3>
+                    <p>Providers review your application, shortlist candidates, and reach out. Track every status update
+                        in real time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROLES -->
+    <section id="roles" class="roles-section">
+        <div class="section-wrap">
+            <div class="reveal">
+                <p class="section-label">Who It's For</p>
+                <h2 class="section-title">One platform.<br>Three roles.</h2>
+                <p class="section-sub">Whether you're looking for work, posting opportunities, or managing the platform
+                    — SkillBridge has a dedicated experience for you.</p>
+            </div>
+            <div class="roles-grid">
+
+                <div class="role-card role-applicant reveal">
+                    <span class="role-emoji">🎓</span>
+                    <h3>Applicant</h3>
+                    <p>You're looking for a learnership, internship, or entry-level job. SkillBridge puts the right
+                        opportunities in front of you.</p>
+                    <ul class="role-perks">
+                        <li><span class="perk-dot"></span>Browse hundreds of verified opportunities</li>
+                        <li><span class="perk-dot"></span>Track application status in real time</li>
+                        <li><span class="perk-dot"></span>Build a professional profile</li>
+                        <li><span class="perk-dot"></span>Upload your CV once, apply everywhere</li>
+                    </ul>
+                    <a href="/signup-applicant" class="btn btn-applicant"
+                        style="display:inline-block;padding:12px 26px;border-radius:9px;text-decoration:none;">Get
+                        Started →</a>
+                </div>
+
+                <div class="role-card role-provider reveal">
+                    <span class="role-emoji">🏢</span>
+                    <h3>Provider</h3>
+                    <p>You have opportunities to offer. Post learnerships, manage applications, and find the right
+                        candidates fast.</p>
+                    <ul class="role-perks">
+                        <li><span class="perk-dot"></span>Post opportunities in minutes</li>
+                        <li><span class="perk-dot"></span>Review and shortlist applicants</li>
+                        <li><span class="perk-dot"></span>Built-in analytics dashboard</li>
+                        <li><span class="perk-dot"></span>NQF-level filtering</li>
+                    </ul>
+                    <a href="/signup-provider" class="btn btn-provider"
+                        style="display:inline-block;padding:12px 26px;border-radius:9px;text-decoration:none;">Post
+                        Opportunities →</a>
+                </div>
+
+                <div class="role-card role-admin reveal">
+                    <span class="role-emoji">🛡️</span>
+                    <h3>Admin</h3>
+                    <p>You keep the platform running. Review listings, manage users, handle reports, and monitor
+                        platform health.</p>
+                    <ul class="role-perks">
+                        <li><span class="perk-dot"></span>Approve or reject listings</li>
+                        <li><span class="perk-dot"></span>Manage applicants and providers</li>
+                        <li><span class="perk-dot"></span>Handle reported opportunities</li>
+                        <li><span class="perk-dot"></span>Full analytics and exports</li>
+                    </ul>
+                    <a href="/signup-admin" class="btn btn-admin-role"
+                        style="display:inline-block;padding:12px 26px;border-radius:9px;text-decoration:none;">Admin
+                        Access →</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+        <div class="section-wrap">
+            <div class="reveal">
+                <p class="section-label">Platform Features</p>
+                <h2 class="section-title">Everything you need,<br>nothing you don't</h2>
+                <p class="section-sub">Designed with South African job seekers and businesses in mind — built for
+                    real-world conditions.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-blue"><i class="fa-solid fa-shield-halved" style="color:#00c6ff"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>NQF Level Matching</h4>
+                        <p>Opportunities are tagged with NQF levels so applicants only see roles that match their
+                            qualifications, reducing wasted applications.</p>
+                    </div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-green"><i class="fa-solid fa-chart-line" style="color:#38ef7d"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Real-Time Analytics</h4>
+                        <p>Providers get a live dashboard showing application volume, shortlisting rates, and placement
+                            success — exportable to CSV.</p>
+                    </div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-purple"><i class="fa-solid fa-bell" style="color:#f093fb"></i></div>
+                    <div class="feature-text">
+                        <h4>Application Notifications</h4>
+                        <p>Applicants receive instant notifications when their status changes — pending, shortlisted,
+                            hired, or rejected.</p>
+                    </div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-orange"><i class="fa-solid fa-flag" style="color:#f6c90e"></i></div>
+                    <div class="feature-text">
+                        <h4>Reporting & Moderation</h4>
+                        <p>Applicants can flag suspicious listings. Admins review, investigate, and take action —
+                            keeping the platform trustworthy.</p>
+                    </div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-blue"><i class="fa-solid fa-file-lines" style="color:#00c6ff"></i></div>
+                    <div class="feature-text">
+                        <h4>CV Management</h4>
+                        <p>Upload your CV once and it's attached to every application automatically. No more
+                            re-uploading files for each role.</p>
+                    </div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon fi-green"><i class="fa-solid fa-lock" style="color:#38ef7d"></i></div>
+                    <div class="feature-text">
+                        <h4>Secure Authentication</h4>
+                        <p>Powered by Firebase — email/password and Google sign-in with role-based access control,
+                            keeping every account protected.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <div class="cta-banner reveal">
+        <div class="cta-text">
+            <h2>Ready to bridge the gap?</h2>
+            <p>Join thousands of South Africans already using SkillBridge to find opportunities and build their careers.
+            </p>
+        </div>
+        <div class="cta-actions">
+            <a href="/signup-applicant" class="btn btn-primary btn-hero-primary">Find Opportunities</a>
+            <a href="/signup-provider" class="btn btn-ghost btn-hero-ghost">Post a Listing</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">SkillBridge</div>
+        <p class="footer-copy">© 2026 SkillBridge — Empowering South Africa's workforce 🇿🇦</p>
+        <ul class="footer-links">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup-applicant">Sign Up</a></li>
+            <li><a href="/index">Role Picker</a></li>
+        </ul>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Role picker selectRole compat
+        function selectRole(role) {
+            localStorage.setItem('userRole', role);
+        }
+    </script>
+</body>
+
+</html>

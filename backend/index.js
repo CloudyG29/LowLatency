@@ -7,7 +7,7 @@ const cron = require("node-cron");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../frontend"), { index: false }));
 app.use(cors());
 app.use(express.json());
 
@@ -39,7 +39,15 @@ app.use("/api/profile", profileRoutes);
 
 // Serve HTML files for different routes
 app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/views", "landing.html"));
+});
+
+app.get("/index", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend", "index.html"));
+});
+
+app.get("/get-started", (req, res) => {
+  res.redirect("/index");
 });
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "login.html"));
@@ -73,11 +81,6 @@ app.get("/provider-onboarding", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "provider-onboarding.html"));
 });
 
-app.get("/forgot-password", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../frontend/views", "provider-onboarding.html"),
-  );
-});
 app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/views", "forgot-password.html"));
 });

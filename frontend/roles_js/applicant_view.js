@@ -679,7 +679,6 @@ async function submitApplicationFromModal() {
     );
     if (!proceed) return;
   }
-  const cvName = userData.cvName || null;
 
   if (!motivation) {
     alert("Please add a short motivation before applying.");
@@ -691,25 +690,36 @@ async function submitApplicationFromModal() {
     return;
   }
 
-  await submitApplication(listingId, motivation, availability, cvName);
+  // NEW: Grab the actual file from the DOM 
+  // (Change "applicationCvFile" if your HTML input ID is different)
+  const fileInput = document.getElementById("applicationCvFile"); 
+  const file = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
+  
+  // Set the cvName to the new file name, or fallback to the saved one
+  const cvName = file ? file.name : (userData.cvName || null);
+
+  // Pass ALL variables (including the file object) to submitApplication
+  await submitApplication(listingId, motivation, availability, cvName, file, userData);
+  
   closeModal("applicationModal");
 }
 
-async function submitApplication(listingId, motivation, availability, cvName) {
-  const email = currentUser?.email || JSON.parse(localStorage.getItem('userData') || '{}').email;
+async function submitApplication(listingId, motivation, availability, cvName, file, userData) {
+  const email = userData.email;
 
   try {
     showLoader();
 
-    const response = await fetch("/api/listings/apply", {
+    // Step 1: Submit text details to the database
+    const applyRes = await fetch("/api/listings/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         listing_id: listingId,
         email: email,
-        motivation: motivation.trim(),
-        availability: availability.trim(),
-        cv_name: cvName || null
+        motivation: motivation,
+        availability: availability,
+        cv_name: cvName
       })
     });
 
@@ -718,27 +728,33 @@ async function submitApplication(listingId, motivation, availability, cvName) {
 
     const applicationId = applyData.application.application_id;
 
-    // Step 2: Upload the CV against the new application_id
-    const formData = new FormData();
-    formData.append("cv", file);
-    formData.append("email", userData.email);
+    // Step 2: Upload the actual CV file (ONLY if they selected a new one)
+    if (file) {
+      const formData = new FormData();
+      formData.append("cv", file); 
+      formData.append("email", email);
 
-    const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
-      method: "POST",
-      body: formData,
-    });
+      const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!cvRes.ok) {
-      const cvData = await cvRes.json();
-      throw new Error(cvData.error || "CV upload failed");
+      if (!cvRes.ok) {
+        const cvData = await cvRes.json();
+        throw new Error(cvData.error || "CV upload failed");
+      }
     }
 
-    msgBox.innerHTML =
-      "<span style='color:green;'>Applied successfully!</span>";
+    // Success Actions
+    alert("Applied successfully!");
+    
     setTimeout(() => {
-      closeModal("applyModal");
-      fetchOpportunities(document.getElementById("listTypeFilter").value);
+      const filterEl = document.getElementById("listTypeFilter");
+      if (filterEl && typeof fetchOpportunities === "function") {
+         fetchOpportunities(filterEl.value);
+      }
     }, 1200);
+
   } catch (error) {
     console.error(error);
     alert(error.message);
