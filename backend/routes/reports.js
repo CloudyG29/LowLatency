@@ -118,4 +118,20 @@ router.patch("/:id/status", async (req, res) => {
   }
 });
 
+// Delete a report permanently
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    await prisma.report.delete({
+      where: { report_id: parseInt(id) }
+    });
+    res.json({ message: "Report deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting report:", error);
+    // If the report doesn't exist, Prisma throws a specific error, but a 500 covers us generally here
+    res.status(500).json({ error: "Failed to delete report", details: error.message });
+  }
+});
+
 module.exports = router;

@@ -346,7 +346,7 @@ async function displayReports() {
             html += `
                 <tr>
                     <td><span style="color:#38bdf8;font-weight:600;">#${report.report_id}</span></td>
-                    <td><strong>${escapeHtml(report.listing?.listname || 'Deleted')}</strong></td>
+                    <td><strong>${escapeHtml(report.Listing?.listname || 'Deleted')}</strong></td>
                     <td>${escapeHtml(report.reported_by)}</td>
                     <td><span class="badge-reason" style="background:#7c2d12;color:#fca5a5;padding:4px 10px;border-radius:20px;font-size:0.7rem;">${escapeHtml(report.reason)}</span></td>
                     <td><span class="${statusClass}">${statusText}</span></td>

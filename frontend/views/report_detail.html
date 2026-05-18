@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Report Detail - SkillBridge Admin</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -21,12 +26,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       position: sticky;
       top: 0;
       z-index: 100;
       backdrop-filter: blur(10px);
     }
+
     .logo {
       font-size: 1.4rem;
       font-weight: 800;
@@ -35,11 +41,13 @@
       -webkit-text-fill-color: transparent;
       letter-spacing: 1px;
     }
+
     .nav-right {
       display: flex;
       align-items: center;
       gap: 16px;
     }
+
     .back-btn {
       background: #334155;
       color: #94a3b8;
@@ -51,7 +59,11 @@
       text-decoration: none;
       transition: background 0.2s;
     }
-    .back-btn:hover { background: #475569; color: #e2e8f0; }
+
+    .back-btn:hover {
+      background: #475569;
+      color: #e2e8f0;
+    }
 
     /* ── Layout ── */
     .container {
@@ -66,41 +78,56 @@
       padding: 80px 20px;
       color: #64748b;
     }
+
     .spinner {
-      width: 36px; height: 36px;
+      width: 36px;
+      height: 36px;
       border: 3px solid #334155;
       border-top-color: #38bdf8;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin: 0 auto 16px;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* ── Page Header ── */
     .page-header {
       margin-bottom: 32px;
     }
+
     .breadcrumb {
       font-size: 0.8rem;
       color: #64748b;
       margin-bottom: 12px;
     }
+
     .breadcrumb a {
       color: #38bdf8;
       text-decoration: none;
     }
-    .breadcrumb a:hover { text-decoration: underline; }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
     .report-title-row {
       display: flex;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
     }
+
     .report-title-row h1 {
       font-size: 1.8rem;
       font-weight: 800;
       color: #f1f5f9;
     }
+
     .badge {
       display: inline-block;
       padding: 4px 14px;
@@ -110,19 +137,39 @@
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .badge-reason  { background: #7c2d12; color: #fca5a5; }
-    .badge-pending   { background: #78350f22; color: #f59e0b; border: 1px solid #f59e0b; }
-    .badge-resolved  { background: #06402622; color: #10b981; border: 1px solid #10b981; }
-    .badge-dismissed { background: #31274822; color: #a78bfa; border: 1px solid #a78bfa; }
+
+    .badge-reason {
+      background: #7c2d12;
+      color: #fca5a5;
+    }
+
+    .badge-pending {
+      background: #78350f22;
+      color: #f59e0b;
+      border: 1px solid #f59e0b;
+    }
+
+    .badge-resolved {
+      background: #06402622;
+      color: #10b981;
+      border: 1px solid #10b981;
+    }
+
+    .badge-dismissed {
+      background: #31274822;
+      color: #a78bfa;
+      border: 1px solid #a78bfa;
+    }
 
     /* ── Cards ── */
     .card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
       padding: 28px 32px;
       margin-bottom: 20px;
     }
+
     .card-title {
       font-size: 0.7rem;
       text-transform: uppercase;
@@ -138,12 +185,14 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
+
     .info-item {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 10px;
       padding: 14px 16px;
     }
+
     .info-item .lbl {
       font-size: 0.65rem;
       text-transform: uppercase;
@@ -151,6 +200,7 @@
       color: #64748b;
       margin-bottom: 6px;
     }
+
     .info-item .val {
       font-size: 0.95rem;
       font-weight: 600;
@@ -160,8 +210,8 @@
 
     /* ── Details Box ── */
     .details-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 10px;
       padding: 20px;
       color: #94a3b8;
@@ -182,12 +232,14 @@
       flex-direction: column;
       gap: 0;
     }
+
     .timeline-item {
       display: flex;
       gap: 16px;
       padding-bottom: 20px;
       position: relative;
     }
+
     .timeline-item:not(:last-child)::before {
       content: '';
       position: absolute;
@@ -197,6 +249,7 @@
       width: 2px;
       background: #334155;
     }
+
     .timeline-dot {
       width: 32px;
       height: 32px;
@@ -209,17 +262,34 @@
       flex-shrink: 0;
       z-index: 1;
     }
-    .timeline-dot.red    { background: #7f1d1d; }
-    .timeline-dot.blue   { background: #1e3a5f; }
-    .timeline-dot.green  { background: #064e3b; }
-    .timeline-dot.purple { background: #3b0764; }
-    .timeline-content { padding-top: 4px; }
+
+    .timeline-dot.red {
+      background: #7f1d1d;
+    }
+
+    .timeline-dot.blue {
+      background: #1e3a5f;
+    }
+
+    .timeline-dot.green {
+      background: #064e3b;
+    }
+
+    .timeline-dot.purple {
+      background: #3b0764;
+    }
+
+    .timeline-content {
+      padding-top: 4px;
+    }
+
     .timeline-content .tl-title {
       font-weight: 600;
       color: #e2e8f0;
       font-size: 0.9rem;
       margin-bottom: 2px;
     }
+
     .timeline-content .tl-sub {
       font-size: 0.8rem;
       color: #64748b;
@@ -227,22 +297,28 @@
 
     /* ── Action Section ── */
     .action-card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
       padding: 28px 32px;
       margin-bottom: 20px;
     }
-    .action-card .card-title { margin-bottom: 8px; }
+
+    .action-card .card-title {
+      margin-bottom: 8px;
+    }
+
     .action-card p {
       color: #64748b;
       font-size: 0.88rem;
       margin-bottom: 20px;
     }
+
     .action-buttons {
       display: flex;
       gap: 14px;
     }
+
     .btn-delete-listing {
       flex: 2;
       background: #dc2626;
@@ -259,8 +335,15 @@
       justify-content: center;
       gap: 8px;
     }
-    .btn-delete-listing:hover { background: #b91c1c; }
-    .btn-delete-listing:active { transform: scale(0.98); }
+
+    .btn-delete-listing:hover {
+      background: #b91c1c;
+    }
+
+    .btn-delete-listing:active {
+      transform: scale(0.98);
+    }
+
     .btn-dismiss {
       flex: 1;
       background: transparent;
@@ -273,7 +356,10 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-    .btn-dismiss:hover { background: rgba(16,185,129,0.1); }
+
+    .btn-dismiss:hover {
+      background: rgba(16, 185, 129, 0.1);
+    }
 
     /* ── Resolved Banner ── */
     .resolved-banner {
@@ -287,6 +373,7 @@
       color: #10b981;
       font-weight: 600;
     }
+
     .dismissed-banner {
       background: #3b076422;
       border: 1px solid #a78bfa;
@@ -298,7 +385,10 @@
       color: #a78bfa;
       font-weight: 600;
     }
-    .banner-icon { font-size: 1.5rem; }
+
+    .banner-icon {
+      font-size: 1.5rem;
+    }
 
     /* ── Toast ── */
     .toast {
@@ -316,22 +406,51 @@
       transition: transform 0.3s ease;
       z-index: 9999;
       white-space: nowrap;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
-    .toast.show  { transform: translateX(-50%) translateY(0); }
-    .toast.success { border-color: #10b981; color: #10b981; }
-    .toast.error   { border-color: #f87171; color: #f87171; }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      border-color: #10b981;
+      color: #10b981;
+    }
+
+    .toast.error {
+      border-color: #f87171;
+      color: #f87171;
+    }
 
     @media (max-width: 640px) {
-      .navbar { padding: 14px 20px; }
-      .container { padding: 0 16px 60px; }
-      .card { padding: 20px; }
-      .info-grid { grid-template-columns: 1fr 1fr; }
-      .listing-preview { grid-template-columns: 1fr; }
-      .action-buttons { flex-direction: column; }
+      .navbar {
+        padding: 14px 20px;
+      }
+
+      .container {
+        padding: 0 16px 60px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .listing-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar">
@@ -380,11 +499,30 @@
       });
     }
 
+    async function deleteReport() {
+      if (!confirm("Are you sure you want to permanently delete this report? This cannot be undone.")) return;
+
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`/api/reports/${reportId}`, {
+          method: 'DELETE',
+          headers
+        });
+
+        if (!res.ok) throw new Error('Failed to delete report');
+
+        showToast('Report deleted completely.', 'success');
+        setTimeout(() => window.location.href = '/admin', 1500); // Send back to table
+      } catch (err) {
+        showToast('Failed to delete report.', 'error');
+      }
+    }
+
     async function loadReport() {
       try {
-        const headers  = await getAuthHeaders();
+        const headers = await getAuthHeaders();
         const response = await fetch(`/api/reports/${reportId}`, { headers });
-        reportData     = await response.json();
+        reportData = await response.json();
 
         if (!response.ok) throw new Error(reportData.error || 'Failed to load report');
 
@@ -398,8 +536,8 @@
     }
 
     function renderReport() {
-      const r           = reportData;
-      const listing     = r.listing;
+      const r = reportData;
+      const listing = r.listing;
       const statusClass = `badge-${r.status}`;
       const listingName = listing?.listname || 'Listing Deleted';
       const providerName = listing?.provider?.provider_name || '—';
@@ -412,9 +550,9 @@
             <a href="/admin">Admin Dashboard</a> › <a href="/admin" onclick="history.back();return false;">Reports</a> › Report #${r.report_id}
           </div>
           <div class="report-title-row">
-            <h1>Report #${r.report_id}</h1>
-            <span class="badge badge-reason">${r.reason}</span>
-            <span class="badge ${statusClass}">${r.status}</span>
+              <h1>Report #${r.report_id}</h1>
+              <span class="badge badge-reason">${r.reason}</span>
+              <span class="badge ${statusClass}">${r.status}</span>
           </div>
         </div>
 
@@ -523,7 +661,7 @@
             <div class="card-title">Take Action</div>
             
             <div class="action-buttons">
-              <button class="btn-delete-listing" onclick="deleteListing()">
+              <button class="btn-delete-listing" onclick="deleteReport()">
                 🗑 Delete Listing
                 <span style="font-weight:400;font-size:0.8rem;opacity:0.8;">— removes it from applicant site</span>
               </button>
@@ -563,10 +701,10 @@
       try {
         const headers = await getAuthHeaders();
         const res = await fetch(`/api/listings/${listing.listings_id}`, {
-  method: 'DELETE',
-  headers,
-  body: JSON.stringify({ report_id: reportData.report_id })
-});
+          method: 'DELETE',
+          headers,
+          body: JSON.stringify({ report_id: reportData.report_id })
+        });
         if (!res.ok) throw new Error('Delete failed');
         showToast('Listing deleted successfully.', 'success');
         setTimeout(() => window.location.href = '/admin', 1500);
@@ -593,4 +731,5 @@
     loadReport();
   </script>
 </body>
+
 </html>
