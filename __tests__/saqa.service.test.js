@@ -47,7 +47,7 @@ describe('saqa.service', () => {
       const $ = await promise;
 
       expect(axios.post).toHaveBeenCalledTimes(2);
-      expect($.find('table').length).toBe(1);
+      expect($('table').length).toBe(1);
 
       jest.useRealTimers();
     });
@@ -73,6 +73,8 @@ describe('saqa.service', () => {
 
   describe('fetchAllQualifications', () => {
     test('collects qualifications across pages until no more results', async () => {
+      jest.useFakeTimers();
+
       axios.post
         .mockResolvedValueOnce({
           data:
@@ -85,7 +87,9 @@ describe('saqa.service', () => {
             '<html><body><p>Displaying 21 to 40 of 41 results</p><table><tr><th></th></tr></table></body></html>',
         });
 
-      const results = await fetchAllQualifications(1);
+      const promise = fetchAllQualifications(1);
+      await jest.runAllTimersAsync();
+      const results = await promise;
 
       expect(results).toEqual([
         {
@@ -97,11 +101,15 @@ describe('saqa.service', () => {
         },
       ]);
       expect(axios.post).toHaveBeenCalledTimes(2);
+
+      jest.useRealTimers();
     });
   });
 
   describe('fetchAllUnitStandards', () => {
     test('collects unit standards until the empty page stops the loop', async () => {
+      jest.useFakeTimers();
+
       axios.post
         .mockResolvedValueOnce({
           data:
@@ -113,7 +121,9 @@ describe('saqa.service', () => {
           data: '<html><body><p>Displaying 21 to 40 of 21 results</p><table><tr><th></th></tr></table></body></html>',
         });
 
-      const results = await fetchAllUnitStandards(1);
+      const promise = fetchAllUnitStandards(1);
+      await jest.runAllTimersAsync();
+      const results = await promise;
 
       expect(results).toEqual([
         {
@@ -124,6 +134,8 @@ describe('saqa.service', () => {
         },
       ]);
       expect(axios.post).toHaveBeenCalledTimes(2);
+
+      jest.useRealTimers();
     });
   });
 });

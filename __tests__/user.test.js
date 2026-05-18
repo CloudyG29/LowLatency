@@ -156,4 +156,238 @@ describe('getUserRole', () => {
 
     expect(res.status).toHaveBeenCalledWith(500);
   });
+
+  test('should return 400 when email query parameter is missing', async () => {
+    const req = { query: {} };
+    const res = mockRes();
+
+    await getUserRole(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Missing email query parameter.' });
+  });
+});
+
+describe('getProviderOnboarded', () => {
+  test('should return onboarded status for valid provider', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Provider',
+      provider: {
+        onboarded: true,
+        provider_name: '  Test Provider  ',
+        profile: 'Test profile'
+      }
+    });
+
+    const req = { query: { email: 'provider@test.com' } };
+    const res = mockRes();
+
+    // Need to add this function to exports
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      onboarded: true,
+      provider_name: 'Test Provider',
+      profile: 'Test profile'
+    });
+  });
+
+  test('should return 404 when provider not found', async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+
+    const req = { query: { email: 'noprovider@test.com' } };
+    const res = mockRes();
+
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Provider not found.' });
+  });
+
+  test('should return 404 when user is not a provider', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Applicant',
+      provider: null
+    });
+
+    const req = { query: { email: 'applicant@test.com' } };
+    const res = mockRes();
+
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  test('should return 400 when email query parameter is missing', async () => {
+    const req = { query: {} };
+    const res = mockRes();
+
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Missing email query parameter.' });
+  });
+
+  test('should return 500 on database error', async () => {
+    prisma.user.findUnique.mockRejectedValue(new Error('DB Error'));
+
+    const req = { query: { email: 'test@test.com' } };
+    const res = mockRes();
+
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  test('should handle missing profile gracefully', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Provider',
+      provider: {
+        onboarded: false,
+        provider_name: 'Provider',
+        profile: null
+      }
+    });
+
+    const req = { query: { email: 'provider@test.com' } };
+    const res = mockRes();
+
+    const { getProviderOnboarded } = require('../backend/routes/user');
+    await getProviderOnboarded(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      onboarded: false,
+      provider_name: 'Provider',
+      profile: ''
+    });
+  });
+});
+
+describe('completeProviderOnboarding', () => {
+  test('should complete onboarding for valid provider', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Provider',
+      provider: {
+        provider_id: 1,
+        provider_name: 'Old Name',
+        profile: 'Old Profile',
+        onboarded: false
+      }
+    });
+
+    prisma.provider.update = jest.fn().mockResolvedValue({
+      provider_id: 1,
+      provider_name: 'New Provider',
+      profile: 'New Profile',
+      onboarded: true
+    });
+
+    const req = {
+      body: {
+        email: 'provider@test.com',
+        provider_name: 'New Provider',
+        profile: 'New Profile'
+      }
+    };
+    const res = mockRes();
+
+    const { completeProviderOnboarding } = require('../backend/routes/user');
+    await completeProviderOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Onboarding completed successfully' });
+  });
+
+  test('should return 404 when provider not found', async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+
+    const req = {
+      body: {
+        email: 'noprovider@test.com',
+        provider_name: 'Name',
+        profile: 'Profile'
+      }
+    };
+    const res = mockRes();
+
+    const { completeProviderOnboarding } = require('../backend/routes/user');
+    await completeProviderOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Provider not found' });
+  });
+
+  test('should return 404 when user is not a provider', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Applicant',
+      provider: null
+    });
+
+    const req = {
+      body: {
+        email: 'applicant@test.com',
+        provider_name: 'Name',
+        profile: 'Profile'
+      }
+    };
+    const res = mockRes();
+
+    const { completeProviderOnboarding } = require('../backend/routes/user');
+    await completeProviderOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  test('should return 500 on database error', async () => {
+    prisma.user.findUnique.mockRejectedValue(new Error('DB Error'));
+
+    const req = {
+      body: {
+        email: 'provider@test.com',
+        provider_name: 'Name',
+        profile: 'Profile'
+      }
+    };
+    const res = mockRes();
+
+    const { completeProviderOnboarding } = require('../backend/routes/user');
+    await completeProviderOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+
+  test('should use existing profile when not provided', async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      role: 'Provider',
+      provider: {
+        provider_id: 1,
+        provider_name: 'Old Name',
+        profile: 'Existing Profile',
+        onboarded: false
+      }
+    });
+
+    prisma.provider.update = jest.fn().mockResolvedValue({});
+
+    const req = {
+      body: {
+        email: 'provider@test.com',
+        provider_name: 'New Provider'
+        // profile not provided
+      }
+    };
+    const res = mockRes();
+
+    const { completeProviderOnboarding } = require('../backend/routes/user');
+    await completeProviderOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
 });
