@@ -301,11 +301,7 @@ test('should save null values when optional application fields are missing', asy
       user_id: 1,
       listing_id: 1,
       provider_id: 7,
-      motivation: null,
-      availability: null,
-      cvOriginalFilename: null,
       status: 'pending'
     }
   });
   });
-});

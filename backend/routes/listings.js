@@ -21,18 +21,6 @@ async function postListing(req, res) {
     requirements,
     closing_date,
   } = req.body;
-  const {
-    listname,
-    list_type,
-    nqf_level,
-    description,
-    email,
-    stipend,
-    location,
-    duration,
-    requirements,
-    closing_date,
-  } = req.body;
 
   try {
     const user = await prisma.user.findUnique({

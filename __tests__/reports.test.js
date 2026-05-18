@@ -3,6 +3,21 @@ const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'dummy-key-for-testing';
+
+// 2. Mock Supabase so it doesn't make real network requests during tests
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => ({
+    storage: {
+      from: jest.fn(() => ({
+        upload: jest.fn(),
+        getPublicUrl: jest.fn(),
+        remove: jest.fn()
+      }))
+    }
+  }))
+}));
+
 const request = require('supertest');
 const app = require('../backend/index');
 const prisma = require('../DB_connect/prisma');

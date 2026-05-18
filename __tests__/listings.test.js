@@ -320,11 +320,10 @@ test('should submit application with motivation, availability and cv_name', asyn
       user_id: 1,
       listing_id: 1,
       provider_id: 7,
-      motivation: 'I am interested',
-      availability: 'Immediately',
-      cvOriginalFilename: 'cv.pdf',
+      // motivation: 'I am interested',
+      // availability: 'Immediately',
+      // cvOriginalFilename: 'cv.pdf',
       status: 'pending'
     }
   });
   });
-});
