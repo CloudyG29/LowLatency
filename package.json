@@ -29,7 +29,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "firebase": "^12.11.0",
-    "firebase-admin": "^13.9.0",
+    "firebase-admin": "^13.10.0",
     "mssql": "^12.2.1",
     "multer": "^2.1.1",
     "node-cron": "^4.2.1",

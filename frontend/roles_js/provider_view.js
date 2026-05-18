@@ -82,14 +82,12 @@ async function postOpportunity() {
       }),
     });
 
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
 
     msg.innerText = "Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
-    document
-      .querySelectorAll("input, textarea")
-      .forEach((el) => (el.value = ""));
+    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
     displayOpportunities();
   } catch (error) {
     msg.innerText = error.message;
@@ -97,105 +95,6 @@ async function postOpportunity() {
   }
 }
 
-async function displayApplications() {
-  const container = document.getElementById("applicationsList");
-  container.innerHTML =
-    '<div class="empty-state">Loading applications...</div>';
-  try {
-    showLoader();
-    const response = await fetch(
-      `/api/listings/provider-applications?email=${currentUser.email}`,
-    );
-    const applications = await response.json();
-
-    if (applications.length === 0) {
-      hideLoader();
-      container.innerHTML =
-        '<div class="empty-state">No applications received yet.</div>';
-      return;
-    }
-
-    container.innerHTML = "";
-    applications.forEach((app) => {
-      const div = document.createElement("div");
-      div.className = "opportunity-card";
-      div.innerHTML = `
-        <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
-        <p><strong>Email:</strong> ${app.user.email}</p>
-        <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
-        <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
-        <div class="action-buttons">
-          ${
-            app.cvFilePath
-              ? `
-            <button class="btn-view-cv" data-id="${app.application_id}">📄 View CV</button>
-          `
-              : `
-            <span class="no-cv">No CV uploaded</span>
-          `
-          }
-          ${
-            app.status === "pending"
-              ? `
-            <button class="btn-hire" data-id="${app.application_id}">Hire</button>
-            <button class="btn-reject" data-id="${app.application_id}">Reject</button>
-          `
-              : ""
-          }
-        </div>
-      `;
-      container.appendChild(div);
-    });
-
-    hideLoader();
-
-    // View CV buttons
-    document.querySelectorAll(".btn-view-cv").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const appId = btn.dataset.id;
-        try {
-          btn.textContent = "Loading...";
-          const res = await fetch(`/api/listings/${appId}/cv`);
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
-          window.open(data.url, "_blank");
-        } catch (err) {
-          alert("Could not load CV: " + err.message);
-        } finally {
-          btn.textContent = "📄 View CV";
-        }
-      });
-    });
-
-    // Hire buttons
-    document.querySelectorAll(".btn-hire").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "hired" }),
-        });
-        displayApplications();
-      });
-    });
-
-    // Reject buttons
-    document.querySelectorAll(".btn-reject").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "rejected" }),
-        });
-        displayApplications();
-      });
-    });
-  } catch (error) {
-    hideLoader();
-    container.innerHTML =
-      '<div class="empty-state">Error loading applications.</div>';
-  }
-}
 async function displayOpportunities() {
   const container = document.getElementById("myOpportunities");
   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
@@ -206,11 +105,11 @@ async function displayOpportunities() {
     const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
     const listings = await response.json();
 
-        if (listings.length === 0) {
-            container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
-            hideLoader();
-            return;
-        }
+    if (listings.length === 0) {
+      container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
+      hideLoader();
+      return;
+    }
 
     container.innerHTML = "";
 
@@ -236,6 +135,174 @@ async function displayOpportunities() {
   }
 }
 
+async function displayApplications() {
+  const listContainer = document.getElementById("applicationsList");
+  const detailsContainer = document.getElementById("selectedApplicationDetails");
+  const emptyState = document.getElementById("emptyApplicationState");
+
+  listContainer.innerHTML = '<div class="empty-state">Loading applications...</div>';
+
+  try {
+    showLoader();
+
+    const response = await fetch(`/api/listings/provider-applications?email=${currentUser.email}`);
+    const applications = await response.json();
+
+    // --- DASHBOARD STATS ---
+    document.getElementById("totalApplications").textContent = applications.length;
+
+    document.getElementById("pendingApplications").textContent =
+      applications.filter((app) => app.status === "pending").length;
+
+    // ADDED: count shortlisted applications
+    document.getElementById("shortlistedApplications").textContent =
+      applications.filter((app) => app.status === "shortlisted").length;
+
+    document.getElementById("hiredApplications").textContent =
+      applications.filter((app) => app.status === "hired").length;
+
+    if (applications.length === 0) {
+      listContainer.innerHTML = '<div class="empty-state">No applications received yet.</div>';
+      return;
+    }
+
+    listContainer.innerHTML = "";
+
+    applications.forEach((app, index) => {
+      const status = app.status || "pending";
+
+      const card = document.createElement("div");
+      card.className = "dashboard-application-card";
+
+      card.innerHTML = `
+        <div class="dashboard-application-card-top">
+          <div>
+            <h3>${app.user.name || "N/A"} ${app.user.surname || ""}</h3>
+            <p>${app.user.email || "No email"}</p>
+          </div>
+
+          <span class="status-badge status-${status}">
+            ${status}
+          </span>
+        </div>
+
+        <div class="dashboard-application-meta">
+          <p>${app.listing.listname || "N/A"}</p>
+          <span>${new Date(app.created_at).toDateString()}</span>
+        </div>
+      `;
+
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".dashboard-application-card")
+          .forEach((c) => c.classList.remove("selected"));
+
+        card.classList.add("selected");
+        emptyState.style.display = "none";
+
+        detailsContainer.innerHTML = `
+          <div class="selected-application-wrapper">
+
+            <div class="selected-app-header">
+              <div>
+                <h2>${app.user.name || "N/A"} ${app.user.surname || ""}</h2>
+                <p>${app.user.email || "No email provided"}</p>
+              </div>
+
+              <span class="status-badge status-${status}">
+                ${status}
+              </span>
+            </div>
+
+            <div class="selected-app-grid">
+
+              <div class="selected-card">
+                <h3>Applicant Details</h3>
+
+                <p><strong>Phone:</strong> ${app.user.applicant?.phone || "N/A"}</p>
+                <p><strong>CV:</strong> ${app.cv_name || "No CV submitted"}</p>
+                <p><strong>Availability:</strong> ${app.availability || "Not provided"}</p>
+              </div>
+
+              <div class="selected-card">
+                <h3>Opportunity</h3>
+
+                <p><strong>Title:</strong> ${app.listing.listname || "N/A"}</p>
+                <p><strong>Type:</strong> ${app.listing.list_type || "N/A"}</p>
+                <p><strong>Location:</strong> ${app.listing.location || "N/A"}</p>
+              </div>
+
+            </div>
+
+            <div class="selected-card motivation-card">
+              <h3>Motivation</h3>
+
+              <p>
+                ${app.motivation || "No motivation submitted."}
+              </p>
+            </div>
+
+            <div class="selected-card">
+              <h3>Opportunity Description</h3>
+
+              <p>${app.listing.description || "No description available."}</p>
+            </div>
+
+            ${status === "pending" ? `
+              <div class="selected-actions">
+
+                <!-- ADDED: shortlist action -->
+                <button class="btn-shortlist action-btn" data-id="${app.application_id}">
+                  Shortlist Applicant
+                </button>
+
+                <button class="btn-hire action-btn" data-id="${app.application_id}">
+                  Hire Applicant
+                </button>
+
+                <button class="btn-reject action-btn" data-id="${app.application_id}">
+                  Reject Applicant
+                </button>
+
+              </div>
+            ` : ""}
+          </div>
+        `;
+
+        // ADDED: shortlist button event
+        document.querySelectorAll(".btn-shortlist").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "shortlisted");
+          });
+        });
+
+        document.querySelectorAll(".btn-hire").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "hired");
+          });
+        });
+
+        document.querySelectorAll(".btn-reject").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            await updateApplicationStatus(btn.dataset.id, "rejected");
+          });
+        });
+      });
+
+      listContainer.appendChild(card);
+
+      if (index === 0) {
+        card.click();
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    listContainer.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
+  } finally {
+    hideLoader();
+  }
+}
+
 async function updateApplicationStatus(applicationId, status) {
   try {
     showLoader();
@@ -255,89 +322,6 @@ async function updateApplicationStatus(applicationId, status) {
   }
 }
 
-// Edit Listing Functions
-async function openEditModal(listingId) {
-    try {
-        showLoader();
-        const response = await fetch(`/api/listings/${listingId}`);
-        const listing = await response.json();
-        
-        document.getElementById('editListingId').value = listing.listings_id;
-        document.getElementById('editListname').value = listing.listname;
-        document.getElementById('editListType').value = listing.list_type;
-        document.getElementById('editNqfLevel').value = listing.nqf_level;
-        document.getElementById('editLocation').value = listing.location || '';
-        document.getElementById('editStipend').value = listing.stipend;
-        document.getElementById('editDuration').value = listing.duration || '';
-        document.getElementById('editRequirements').value = listing.requirements || '';
-        document.getElementById('editDescription').value = listing.description || '';
-        
-        if (listing.closing_date) {
-            const date = new Date(listing.closing_date).toISOString().split('T')[0];
-            document.getElementById('editClosingDate').value = date;
-        }
-        
-        openModal('editListingModal');
-        hideLoader();
-    } catch (error) {
-        hideLoader();
-        console.error('Error loading listing:', error);
-        alert('Failed to load listing details');
-    }
-}
-
-async function saveListingEdits() {
-    const listingId = document.getElementById('editListingId').value;
-    const updatedData = {
-        listname: document.getElementById('editListname').value,
-        list_type: document.getElementById('editListType').value,
-        nqf_level: parseInt(document.getElementById('editNqfLevel').value),
-        location: document.getElementById('editLocation').value,
-        stipend: parseFloat(document.getElementById('editStipend').value),
-        duration: document.getElementById('editDuration').value,
-        requirements: document.getElementById('editRequirements').value,
-        description: document.getElementById('editDescription').value,
-        closing_date: document.getElementById('editClosingDate').value
-    };
-    
-    try {
-        showLoader();
-        const response = await fetch(`/api/listings/${listingId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData)
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Update failed');
-        }
-        
-        if (data.message) {
-            alert(data.message);
-        } else {
-            alert('Listing updated successfully!');
-        }
-        
-        closeModal('editListingModal');
-        displayOpportunities();
-        hideLoader();
-    } catch (error) {
-        hideLoader();
-        alert(error.message);
-    }
-}
-
-function openModal(modalId) {
-    document.getElementById(modalId).classList.add('active');
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
-}
-
-// Loader Controls
 function showLoader() {
   document.getElementById("loader").classList.remove("hidden");
 }
@@ -406,83 +390,71 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 if (typeof module !== "undefined" && module.exports) {
     module.exports = { 
-        guardProviderPage,
-        displayOpportunities,
-        displayApplications
+      guardProviderPage,
+      displayOpportunities,
+      displayApplications
     };
 }
-
 firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        currentUser = user;
-        displayOpportunities();
-    } else {
-        window.location.href = "/login";
-    }
+  if (user) {
+    currentUser = user;
+    displayOpportunities();
+  } else {
+    window.location.href = "/login";
+  }
 });
 
 document.addEventListener("click", async (event) => {
-    // IF the user clicked an EDIT button
-    if (event.target.closest(".btn-edit")) {
-        const btn = event.target.closest(".btn-edit");
-        const listingId = btn.getAttribute('data-id');
-        const currentStatus = btn.getAttribute('data-status');
-        
-        if (currentStatus === 'approved') {
-            const confirmEdit = confirm(
-                'Admin has already approved your listing.\n\n' +
-                'The edited version will need to be reviewed by admin again before it becomes visible to applicants.\n\n' +
-                'Click OK to continue editing.'
-            );
-            if (confirmEdit) {
-                openEditModal(listingId);
-            }
-        } else if (currentStatus === 'rejected') {
-            const confirmEdit = confirm(
-                'This listing was rejected.\n\n' +
-                'You can edit and resubmit for admin review.\n\n' +
-                'Click OK to continue editing.'
-            );
-            if (confirmEdit) {
-                openEditModal(listingId);
-            }
-        } else {
-            openEditModal(listingId);
-        }
-        return;
-    }
-    
-    if (event.target.closest(".btn-hire")) {
-        const btn = event.target.closest(".btn-hire");
-        showLoader();
-        try {
-            await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "hired" }),
-            });
-            displayApplications();
-        } catch (error) {
-            console.error("Error updating status:", error);
-        } finally {
-            hideLoader();
-        }
-    }
+  
+  // IF the user clicked a HIRE button
+  if (event.target.closest(".btn-hire")) {
+    const btn = event.target.closest(".btn-hire");
+    showLoader();
+    try {
+      const response = await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "hired" }),
+      });
 
-    if (event.target.closest(".btn-reject")) {
-        const btn = event.target.closest(".btn-reject");
-        showLoader();
-        try {
-            await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "rejected" }),
-            });
-            displayApplications();
-        } catch (error) {
-            console.error("Error updating status:", error);
-        } finally {
-            hideLoader();
-        }
+      // CRITICAL: Check if the backend actually succeeded (200 OK)
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Backend failed to process status change.");
+      }
+
+      displayApplications(); 
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("❌ Error: " + error.message); // This will show you the backend error now!
+    } finally {
+      hideLoader();
     }
+  }
+
+  // IF the user clicked a REJECT button
+  if (event.target.closest(".btn-reject")) {
+    const btn = event.target.closest(".btn-reject");
+    showLoader();
+    try {
+      const response = await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected" }),
+      });
+
+      // CRITICAL: Check if the backend actually succeeded (200 OK)
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Backend failed to process status change.");
+      }
+
+      displayApplications(); 
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("❌ Error: " + error.message);
+    } finally {
+      hideLoader();
+    }
+  }
 });
