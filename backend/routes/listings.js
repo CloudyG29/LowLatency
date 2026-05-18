@@ -1,8 +1,26 @@
+const prisma = require("../../DB_connect/prisma");
 const express = require("express");
 const router = express.Router();
-const prisma = require("../../DB_connect/prisma");
-
+const {
+  uploadCV,
+  getCVUrl,
+  deleteCV,
+} = require("../../DB_connect/storage_service");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 async function postListing(req, res) {
+  const {
+    listname,
+    list_type,
+    nqf_level,
+    description,
+    email,
+    stipend,
+    location,
+    duration,
+    requirements,
+    closing_date,
+  } = req.body;
   const {
     listname,
     list_type,
@@ -202,9 +220,7 @@ router.post("/apply", async (req, res) => {
         user_id: user.user_id,
         listing_id: parseInt(listing_id),
         provider_id: listing.provider_id,
-        motivation: motivation || null,
-        availability: availability || null,
-        cvOriginalFilename: cv_name || null,
+
         status: "pending",
       },
     });
@@ -442,5 +458,73 @@ router.get("/:id", async (req, res) => {
 ========================= */
 
 router.post("/post", postListing);
+router.get("/:id/cv", async (req, res) => {
+  try {
+    const application = await prisma.application.findUnique({
+      where: { application_id: parseInt(req.params.id) },
+      select: { cvFilePath: true },
+    });
+
+    if (!application?.cvFilePath) {
+      return res
+        .status(404)
+        .json({ error: "No CV found for this application." });
+    }
+
+    const signedUrl = await getCVUrl(application.cvFilePath);
+    res.json({ url: signedUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+router.post("/:id/cv", upload.single("cv"), async (req, res) => {
+  try {
+    const applicationId = parseInt(req.params.id);
+    const { email } = req.body; // 👈 get email from body instead
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(404).json({ error: "User not found." });
+
+    const filePath = await uploadCV(
+      req.file.buffer,
+      req.file.mimetype,
+      user.user_id, // 👈 use DB user_id instead of Firebase uid
+      applicationId,
+    );
+
+    await prisma.application.update({
+      where: { application_id: applicationId },
+      data: {
+        cvFilePath: filePath,
+        cvOriginalFilename: req.file.originalname,
+        cvUploadedAt: new Date(),
+      },
+    });
+
+    res.json({ success: true, message: "CV uploaded successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/:id/cv", async (req, res) => {
+  try {
+    const application = await prisma.application.findUnique({
+      where: { application_id: parseInt(req.params.id) },
+      select: { cvFilePath: true },
+    });
+
+    if (!application?.cvFilePath) {
+      return res
+        .status(404)
+        .json({ error: "No CV found for this application" });
+    }
+
+    const signedUrl = await getCVUrl(application.cvFilePath);
+    res.json({ url: signedUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;

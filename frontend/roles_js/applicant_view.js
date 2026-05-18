@@ -13,15 +13,21 @@ async function guardApplicantPage() {
 
         const token = await user.getIdToken();
 
-        const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `/api/user/role?email=${encodeURIComponent(user.email)}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
-          await firebase.auth().signOut().catch(() => { });
+          await firebase
+            .auth()
+            .signOut()
+            .catch(() => {});
           window.location.assign("/login");
           return resolve(false);
         }
@@ -47,18 +53,21 @@ async function guardApplicantPage() {
 
 // DATABASE FUNCTIONS
 async function renderApplications() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const container = document.getElementById("applicationsList");
   if (!container) return;
 
   container.innerHTML = '<div class="empty-state"> Loading...</div>';
   try {
     showLoader();
-    const response = await fetch(`/api/listings/my-applications?email=${userData.email}`);
+    const response = await fetch(
+      `/api/listings/my-applications?email=${userData.email}`,
+    );
     const applications = await response.json();
 
     if (applications.length === 0) {
-      container.innerHTML = '<div class="empty-state"> You have not applied to any opportunities yet.</div>';
+      container.innerHTML =
+        '<div class="empty-state"> You have not applied to any opportunities yet.</div>';
       hideLoader();
       return;
     }
@@ -79,41 +88,47 @@ async function renderApplications() {
     });
     hideLoader();
   } catch (error) {
-    container.innerHTML = '<div class="empty-state">Error loading applications.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
     hideLoader();
   }
 }
 
 function renderProfile() {
   showLoader();
-  let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  let userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
-  document.getElementById('displayFirstName').textContent = userData.name || 'Not set';
-  document.getElementById('displayLastName').textContent = userData.surname || 'Not set';
-  document.getElementById('displayEmail').textContent = userData.email || 'Not set';
+  document.getElementById("displayFirstName").textContent =
+    userData.name || "Not set";
+  document.getElementById("displayLastName").textContent =
+    userData.surname || "Not set";
+  document.getElementById("displayEmail").textContent =
+    userData.email || "Not set";
 
-  const fullName = `${userData.name || ''} ${userData.surname || ''}`.trim();
-  document.getElementById('topName').textContent = fullName !== '' ? fullName : 'Not set';
-  document.getElementById('topRole').textContent = userData.role || 'Applicant';
+  const fullName = `${userData.name || ""} ${userData.surname || ""}`.trim();
+  document.getElementById("topName").textContent =
+    fullName !== "" ? fullName : "Not set";
+  document.getElementById("topRole").textContent = userData.role || "Applicant";
 
   const applicantData = userData.applicant || {};
-  const bioText = (applicantData && applicantData.bio) ? applicantData.bio : '';
+  const bioText = applicantData && applicantData.bio ? applicantData.bio : "";
 
-  if (bioText.trim() !== '') {
-    document.getElementById('displayBio').textContent = bioText;
+  if (bioText.trim() !== "") {
+    document.getElementById("displayBio").textContent = bioText;
   } else {
-    document.getElementById('displayBio').textContent = 'No professional summary added yet.';
+    document.getElementById("displayBio").textContent =
+      "No professional summary added yet.";
   }
 
-  const firstNameInput = document.getElementById('editFirstName');
-  const lastNameInput = document.getElementById('editLastName');
-  const emailInput = document.getElementById('editEmail');
+  const firstNameInput = document.getElementById("editFirstName");
+  const lastNameInput = document.getElementById("editLastName");
+  const emailInput = document.getElementById("editEmail");
 
-  if (firstNameInput) firstNameInput.value = userData.name || '';
-  if (lastNameInput) lastNameInput.value = userData.surname || '';
-  if (emailInput) emailInput.value = userData.email || '';
+  if (firstNameInput) firstNameInput.value = userData.name || "";
+  if (lastNameInput) lastNameInput.value = userData.surname || "";
+  if (emailInput) emailInput.value = userData.email || "";
 
-  const currentCvDisplay = document.getElementById('currentCvDisplay');
+  const currentCvDisplay = document.getElementById("currentCvDisplay");
   if (currentCvDisplay) {
     if (userData.cvName) {
       currentCvDisplay.innerHTML = `Current file: ${userData.cvName}`;
@@ -196,49 +211,49 @@ function showTab(tabName) {
 
 // --- Modal Controls ---
 function openModal(modalId) {
-  document.getElementById(modalId).classList.add('active');
+  document.getElementById(modalId).classList.add("active");
 }
 
 function closeModal(modalId) {
-  document.getElementById(modalId).classList.remove('active');
+  document.getElementById(modalId).classList.remove("active");
 }
 
 // --- Education Modal ---
 function prepEducationInfoModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const container = document.getElementById('educationListContainer');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const container = document.getElementById("educationListContainer");
   const applicantData = userData.applicant || {};
   const educationList = applicantData.formattedQualifications || [];
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   if (educationList && educationList.length > 0) {
-    educationList.forEach(edu => {
+    educationList.forEach((edu) => {
       addEducationRow({
-        qualification_id: edu.qualification_id || '',
-        name: edu.degree || '',
-        nqf_level: edu.nqfLevel || edu.nqf_level || '',
-        institution: edu.institution || '',
-        year_completed: edu.graduationYear || edu.year_completed || ''
+        qualification_id: edu.qualification_id || "",
+        name: edu.degree || "",
+        nqf_level: edu.nqfLevel || edu.nqf_level || "",
+        institution: edu.institution || "",
+        year_completed: edu.graduationYear || edu.year_completed || "",
       });
     });
   } else {
     addEducationRow();
   }
 
-  openModal('educationInfoModal');
+  openModal("educationInfoModal");
 }
 
 async function saveEducationInfo() {
-  const educationEntries = document.getElementsByClassName('education-row');
+  const educationEntries = document.getElementsByClassName("education-row");
   let educationData = [];
 
   for (let entry of educationEntries) {
-    const institution = entry.querySelector('.qual-institution').value;
-    const nqfLevel = entry.querySelector('.qual-nqf').value;
-    const graduationYear = entry.querySelector('.qual-year').value;
-    const qualId = entry.querySelector('.qual-id').value;
-    const qualName = entry.querySelector('.qual-name').value;
+    const institution = entry.querySelector(".qual-institution").value;
+    const nqfLevel = entry.querySelector(".qual-nqf").value;
+    const graduationYear = entry.querySelector(".qual-year").value;
+    const qualId = entry.querySelector(".qual-id").value;
+    const qualName = entry.querySelector(".qual-name").value;
 
     if (institution && nqfLevel && graduationYear) {
       educationData.push({
@@ -246,7 +261,7 @@ async function saveEducationInfo() {
         nqf_level: parseInt(nqfLevel, 10),
         year_completed: parseInt(graduationYear, 10),
         qualification_id: qualId ? parseInt(qualId, 10) : null,
-        qualification_name: qualName || null
+        qualification_name: qualName || null,
       });
     }
   }
@@ -254,8 +269,8 @@ async function saveEducationInfo() {
   const success = await saveProfileChanges({ qualifications: educationData });
 
   if (success) {
-    closeModal('educationInfoModal');
-    alert('Education information updated successfully!');
+    closeModal("educationInfoModal");
+    alert("Education information updated successfully!");
     renderEducationDisplay();
   } else {
     alert("Failed to save Education info. Please try again.");
@@ -263,8 +278,8 @@ async function saveEducationInfo() {
 }
 
 function renderEducationDisplay() {
-  const container = document.getElementById('educationDisplayContainer');
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const container = document.getElementById("educationDisplayContainer");
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {};
   const educationList = applicantData.formattedQualifications || [];
 
@@ -288,11 +303,11 @@ function renderEducationDisplay() {
     return;
   }
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
-  educationList.forEach(edu => {
-    const block = document.createElement('div');
-    block.className = 'education-block';
+  educationList.forEach((edu) => {
+    const block = document.createElement("div");
+    block.className = "education-block";
     block.innerHTML = `
       <div class="card-grid">
         <div class="data-group">
@@ -301,7 +316,7 @@ function renderEducationDisplay() {
         </div>
         <div class="data-group">
           <span class="data-label">Degree / Qualification</span>
-          <span class="data-value">${edu.degree || 'NQF Level ' + edu.nqfLevel}</span>
+          <span class="data-value">${edu.degree || "NQF Level " + edu.nqfLevel}</span>
         </div>
         <div class="data-group">
           <span class="data-label">Graduation Year</span>
@@ -315,52 +330,52 @@ function renderEducationDisplay() {
 }
 
 function prepPersonalInfoModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {};
 
-  document.getElementById('editFirstName').value = userData.name || '';
-  document.getElementById('editLastName').value = userData.surname || '';
-  document.getElementById('editEmail').value = userData.email || '';
-  document.getElementById('editPhone').value = applicantData.phone || '';
+  document.getElementById("editFirstName").value = userData.name || "";
+  document.getElementById("editLastName").value = userData.surname || "";
+  document.getElementById("editEmail").value = userData.email || "";
+  document.getElementById("editPhone").value = applicantData.phone || "";
 
-  const dob = applicantData.dob ? applicantData.dob.split('T')[0] : '';
-  document.getElementById('editDob').value = dob;
+  const dob = applicantData.dob ? applicantData.dob.split("T")[0] : "";
+  document.getElementById("editDob").value = dob;
 
-  openModal('personalInfoModal');
+  openModal("personalInfoModal");
 }
 
 async function savePersonalInfo() {
   const updatedFields = {
-    name: document.getElementById('editFirstName').value,
-    surname: document.getElementById('editLastName').value,
-    phone: document.getElementById('editPhone').value,
-    dob: document.getElementById('editDob').value
+    name: document.getElementById("editFirstName").value,
+    surname: document.getElementById("editLastName").value,
+    phone: document.getElementById("editPhone").value,
+    dob: document.getElementById("editDob").value,
   };
 
   const success = await saveProfileChanges(updatedFields);
 
   if (success) {
-    closeModal('personalInfoModal');
-    alert('Profile updated successfully!');
+    closeModal("personalInfoModal");
+    alert("Profile updated successfully!");
   } else {
     alert("Failed to save Personal Info. Please try again.");
   }
 }
 
 function prepBioModal() {
-  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const applicantData = userData.applicant || {};
-  document.getElementById('editBioText').value = applicantData.bio || '';
-  openModal('bioModal');
+  document.getElementById("editBioText").value = applicantData.bio || "";
+  openModal("bioModal");
 }
 
 async function saveBio() {
-  const newBio = document.getElementById('editBioText').value;
+  const newBio = document.getElementById("editBioText").value;
   const success = await saveProfileChanges({ bio: newBio });
 
   if (success) {
-    closeModal('bioModal');
-    alert('Bio updated successfully!');
+    closeModal("bioModal");
+    alert("Bio updated successfully!");
   } else {
     alert("Failed to save bio. Please try again.");
   }
@@ -369,7 +384,7 @@ async function saveBio() {
 // The Master Save Function
 async function saveProfileChanges(fieldsToUpdate) {
   showLoader();
-  const firebaseUid = localStorage.getItem('firebase_uid');
+  const firebaseUid = localStorage.getItem("firebase_uid");
 
   if (!firebaseUid) {
     alert("User not logged in!");
@@ -378,9 +393,9 @@ async function saveProfileChanges(fieldsToUpdate) {
 
   try {
     const response = await fetch(`/api/profile/${firebaseUid}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fieldsToUpdate)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fieldsToUpdate),
     });
 
     if (!response.ok) {
@@ -389,13 +404,15 @@ async function saveProfileChanges(fieldsToUpdate) {
     }
 
     const freshProfileData = await response.json();
-    localStorage.setItem('userData', JSON.stringify(freshProfileData));
-    console.log("Successfully saved and synced to Local Storage!", freshProfileData);
+    localStorage.setItem("userData", JSON.stringify(freshProfileData));
+    console.log(
+      "Successfully saved and synced to Local Storage!",
+      freshProfileData,
+    );
     hideLoader();
 
     renderProfile();
     return true;
-
   } catch (error) {
     console.error("Error saving profile changes:", error);
     hideLoader();
@@ -404,14 +421,14 @@ async function saveProfileChanges(fieldsToUpdate) {
 }
 
 async function loadDataOnStartup() {
-  const firebaseUid = localStorage.getItem('firebase_uid');
+  const firebaseUid = localStorage.getItem("firebase_uid");
 
   try {
     showLoader();
     const response = await fetch(`/api/profile/${firebaseUid}`);
     const profileData = await response.json();
 
-    localStorage.setItem('userData', JSON.stringify(profileData));
+    localStorage.setItem("userData", JSON.stringify(profileData));
 
     const allowed = await guardApplicantPage();
     if (!allowed) return;
@@ -428,11 +445,12 @@ async function loadDataOnStartup() {
 }
 
 async function uploadCV() {
-  const fileInput = document.getElementById('cvFile');
-  const msgBox = document.getElementById('cvUploadMsg');
+  const fileInput = document.getElementById("cvFile");
+  const msgBox = document.getElementById("cvUploadMsg");
 
   if (fileInput.files.length === 0) {
-    msgBox.innerHTML = "<span style='color: red;'>Please select a file first.</span>";
+    msgBox.innerHTML =
+      "<span style='color: red;'>Please select a file first.</span>";
     return;
   }
 
@@ -440,40 +458,41 @@ async function uploadCV() {
   const maxSizeInBytes = 5 * 1024 * 1024;
 
   if (file.size > maxSizeInBytes) {
-    msgBox.innerHTML = "<span style='color: red;'>File is too large. Max size is 5MB.</span>";
+    msgBox.innerHTML =
+      "<span style='color: red;'>File is too large. Max size is 5MB.</span>";
     return;
   }
 
   msgBox.innerHTML = "<span style='color: blue;'>Uploading...</span>";
 
   setTimeout(() => {
-    msgBox.innerHTML = "<span style='color: green;'>CV Uploaded Successfully!</span>";
+    msgBox.innerHTML =
+      "<span style='color: green;'>CV Uploaded Successfully!</span>";
 
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    let userData = JSON.parse(localStorage.getItem("userData") || "{}");
     userData.cvName = file.name;
-    localStorage.setItem('userData', JSON.stringify(userData));
+    localStorage.setItem("userData", JSON.stringify(userData));
 
-    if (typeof renderProfile === 'function') {
+    if (typeof renderProfile === "function") {
       renderProfile();
     }
 
-    fileInput.value = '';
+    fileInput.value = "";
 
     setTimeout(() => {
-      msgBox.innerHTML = '';
+      msgBox.innerHTML = "";
     }, 3000);
   }, 1500);
 }
 
 // --- Loader Controls ---
 function showLoader() {
-  document.getElementById('loader').classList.remove('hidden');
+  document.getElementById("loader").classList.remove("hidden");
 }
 
 function hideLoader() {
-  document.getElementById('loader').classList.add('hidden');
+  document.getElementById("loader").classList.add("hidden");
 }
-
 
 function getCompetition(count) {
   let level, text;
@@ -504,7 +523,8 @@ async function fetchOpportunities(type = "") {
   const userEmail = userData.email || "";
 
   if (typeof window.showLoader === "function") window.showLoader();
-  container.innerHTML = '<div class="empty-state">Loading opportunities...</div>';
+  container.innerHTML =
+    '<div class="empty-state">Loading opportunities...</div>';
 
   try {
     let url = `/api/listings/approved?userEmail=${encodeURIComponent(userEmail)}`;
@@ -521,7 +541,8 @@ async function fetchOpportunities(type = "") {
     container.innerHTML = "";
 
     if (listings.length === 0) {
-      container.innerHTML = '<div class="empty-state">No available opportunities found for this category.</div>';
+      container.innerHTML =
+        '<div class="empty-state">No available opportunities found for this category.</div>';
       return;
     }
 
@@ -553,7 +574,8 @@ async function fetchOpportunities(type = "") {
         ? `<div class="already-applied">Already Applied</div>`
         : `<button class="apply-btn" onclick="applyForListing(${listing.listings_id}, ${listing.nqf_level || 0})">Apply Now</button>`
 
-      const applicantCount = listing.applicantCount ?? listing.applications?.length ?? 0;
+      const applicantCount =
+        listing.applicantCount ?? listing.applications?.length ?? 0;
       const competition = getCompetition(applicantCount);
 
       // Extract values from your competition object safely
@@ -599,7 +621,6 @@ async function fetchOpportunities(type = "") {
       `;
 
       container.appendChild(card);
-
       document.querySelectorAll('.view-opportunity-details-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const listingId = btn.getAttribute('data-id');
@@ -610,7 +631,8 @@ async function fetchOpportunities(type = "") {
 
   } catch (error) {
     console.error("Error fetching opportunities:", error);
-    container.innerHTML = '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
+    container.innerHTML =
+      '<div class="empty-state">Error loading opportunities. Please try again later.</div>';
   } finally {
     if (typeof window.hideLoader === "function") window.hideLoader();
   }
@@ -644,12 +666,11 @@ async function submitApplicationFromModal() {
   const applicantData = userData.applicant || {};
   const qualifications = applicantData.formattedQualifications || [];
 
-  // Find applicant's highest NQF level
-  const highestNqf = qualifications.reduce((max, q) => {
-    return q.nqf_level > max ? q.nqf_level : max;
-  }, 0);
+  const highestNqf = qualifications.reduce(
+    (max, q) => (q.nqf_level > max ? q.nqf_level : max),
+    0,
+  );
 
-  // Warn if they don't meet the requirement
   if (requiredNqf && highestNqf < requiredNqf) {
     const proceed = confirm(
       `This opportunity requires NQF Level ${requiredNqf}.\n` +
@@ -692,12 +713,32 @@ async function submitApplication(listingId, motivation, availability, cvName) {
       })
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Application failed");
+    const applyData = await applyRes.json();
+    if (!applyRes.ok) throw new Error(applyData.error || "Application failed");
 
-    alert("Applied successfully!");
-    fetchOpportunities();
+    const applicationId = applyData.application.application_id;
 
+    // Step 2: Upload the CV against the new application_id
+    const formData = new FormData();
+    formData.append("cv", file);
+    formData.append("email", userData.email);
+
+    const cvRes = await fetch(`/api/listings/${applicationId}/cv`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!cvRes.ok) {
+      const cvData = await cvRes.json();
+      throw new Error(cvData.error || "CV upload failed");
+    }
+
+    msgBox.innerHTML =
+      "<span style='color:green;'>Applied successfully!</span>";
+    setTimeout(() => {
+      closeModal("applyModal");
+      fetchOpportunities(document.getElementById("listTypeFilter").value);
+    }, 1200);
   } catch (error) {
     console.error(error);
     alert(error.message);
@@ -808,7 +849,7 @@ function toggleSidebar() {
 }
 
 // --- JEST TESTING EXPORTS & BROWSER STARTUP ---
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     renderProfile,
     saveProfileChanges,

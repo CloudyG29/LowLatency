@@ -8,7 +8,15 @@ async function guardProviderPage() {
           window.location.assign("/login");
           return resolve(false);
         }
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      try {
+        if (!user) {
+          window.location.assign("/login");
+          return resolve(false);
+        }
 
+        const token = await user.getIdToken();
         const token = await user.getIdToken();
 
         const response = await fetch(`/api/user/role?email=${encodeURIComponent(user.email)}`, {
@@ -87,7 +95,9 @@ async function postOpportunity() {
 
     msg.innerText = "Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
-    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
+    document
+      .querySelectorAll("input, textarea")
+      .forEach((el) => (el.value = ""));
     displayOpportunities();
   } catch (error) {
     msg.innerText = error.message;
@@ -95,6 +105,105 @@ async function postOpportunity() {
   }
 }
 
+async function displayApplications() {
+  const container = document.getElementById("applicationsList");
+  container.innerHTML =
+    '<div class="empty-state">Loading applications...</div>';
+  try {
+    showLoader();
+    const response = await fetch(
+      `/api/listings/provider-applications?email=${currentUser.email}`,
+    );
+    const applications = await response.json();
+
+    if (applications.length === 0) {
+      hideLoader();
+      container.innerHTML =
+        '<div class="empty-state">No applications received yet.</div>';
+      return;
+    }
+
+    container.innerHTML = "";
+    applications.forEach((app) => {
+      const div = document.createElement("div");
+      div.className = "opportunity-card";
+      div.innerHTML = `
+        <p><strong>${app.user.name} ${app.user.surname}</strong> applied for <strong>${app.listing.listname}</strong></p>
+        <p><strong>Email:</strong> ${app.user.email}</p>
+        <p><strong>Applied on:</strong> ${new Date(app.created_at).toDateString()}</p>
+        <p><strong>Status:</strong> <span class="status-badge status-${app.status}">${app.status}</span></p>
+        <div class="action-buttons">
+          ${
+            app.cvFilePath
+              ? `
+            <button class="btn-view-cv" data-id="${app.application_id}">📄 View CV</button>
+          `
+              : `
+            <span class="no-cv">No CV uploaded</span>
+          `
+          }
+          ${
+            app.status === "pending"
+              ? `
+            <button class="btn-hire" data-id="${app.application_id}">Hire</button>
+            <button class="btn-reject" data-id="${app.application_id}">Reject</button>
+          `
+              : ""
+          }
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    hideLoader();
+
+    // View CV buttons
+    document.querySelectorAll(".btn-view-cv").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const appId = btn.dataset.id;
+        try {
+          btn.textContent = "Loading...";
+          const res = await fetch(`/api/listings/${appId}/cv`);
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          window.open(data.url, "_blank");
+        } catch (err) {
+          alert("Could not load CV: " + err.message);
+        } finally {
+          btn.textContent = "📄 View CV";
+        }
+      });
+    });
+
+    // Hire buttons
+    document.querySelectorAll(".btn-hire").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "hired" }),
+        });
+        displayApplications();
+      });
+    });
+
+    // Reject buttons
+    document.querySelectorAll(".btn-reject").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "rejected" }),
+        });
+        displayApplications();
+      });
+    });
+  } catch (error) {
+    hideLoader();
+    container.innerHTML =
+      '<div class="empty-state">Error loading applications.</div>';
+  }
+}
 async function displayOpportunities() {
   const container = document.getElementById("myOpportunities");
   container.innerHTML = '<div class="empty-state"> Loading opportunities...</div>';
