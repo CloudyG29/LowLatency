@@ -299,44 +299,24 @@ router.patch("/:id/status", async (req, res) => {
 /* =========================
    DELETE LISTING
 ========================= */
-
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
+  const { report_id } = req.body;
 
   try {
-    // 1. Snapshot listing name before deleting
-    const listing = await prisma.listing.findUnique({
+    await prisma.listing.update({
       where: { listings_id: parseInt(id) },
-      select: { listname: true }
+      data: { status: "deleted" }
     });
 
-    const listingName = listing?.listname || "Unknown";
-
-    // 2. Preserve reports — nullify listing_id so they survive for archive
-    try {
-      await prisma.report.updateMany({
-        where: { listing_id: parseInt(id) },
-        data: {
-          status: "resolved",
-          listing_id: null,
-          details: `[Listing "${listingName}" was deleted by admin]`
-        },
+    if (report_id) {
+      await prisma.report.update({
+        where: { report_id: parseInt(report_id) },
+        data: { status: "resolved" }
       });
-    } catch (_) {}
+    }
 
-    // 3. Delete applications
-    try {
-      await prisma.application.deleteMany({
-        where: { listing_id: parseInt(id) },
-      });
-    } catch (_) {}
-
-    // 4. Delete listing
-    await prisma.listing.delete({
-      where: { listings_id: parseInt(id) },
-    });
-
-    res.status(200).json({ message: "Listing deleted." });
+    res.status(200).json({ message: "Listing removed." });
   } catch (error) {
     console.error("Error in DELETE /:id:", error);
     res.status(500).json({ error: "Internal server error.", details: error.message });
@@ -366,10 +346,61 @@ router.put("/applications/:id/status", async (req, res) => {
   }
 });
 
-/* =========================
-   GET SINGLE LISTING
-   MUST BE LAST GET ROUTE
-========================= */
+
+// UPDATE LISTING (Any status -> back to PENDING)
+
+
+router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const { listname, list_type, nqf_level, location, stipend, duration, requirements, description, closing_date } = req.body;
+    
+    try {
+        const existing = await prisma.listing.findUnique({
+            where: { listings_id: parseInt(id) }
+        });
+        
+        if (!existing) {
+            return res.status(404).json({ error: "Listing not found" });
+        }
+        
+        // After ANY edit, status goes back to 'pending'
+        const newStatus = 'pending';
+        
+        const updated = await prisma.listing.update({
+            where: { listings_id: parseInt(id) },
+            data: {
+                listname,
+                list_type,
+                nqf_level: parseInt(nqf_level),
+                location,
+                stipend: parseFloat(stipend),
+                duration,
+                requirements,
+                description,
+                closing_date: new Date(closing_date),
+                status: newStatus
+            }
+        });
+        
+        let message = 'Listing updated successfully';
+        if (existing.status === 'approved') {
+            message = 'Listing updated. It will be reviewed by admin before becoming visible to applicants again.';
+        } else if (existing.status === 'rejected') {
+            message = 'Listing resubmitted. Admin will review your changes.';
+        }
+        
+        res.json({ updated, message });
+    } catch (error) {
+        console.error("Error updating listing:", error);
+        res.status(500).json({ error: "Failed to update listing" });
+    }
+});
+
+
+
+// GET SINGLE LISTING
+  
+
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;

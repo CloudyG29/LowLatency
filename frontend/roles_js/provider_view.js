@@ -82,8 +82,8 @@ async function postOpportunity() {
       }),
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
 
     msg.innerText = "Posted! Waiting for admin approval.";
     msg.style.color = "#68d391";
@@ -105,11 +105,11 @@ async function displayOpportunities() {
     const response = await fetch(`/api/listings/provider?email=${currentUser.email}`);
     const listings = await response.json();
 
-    if (listings.length === 0) {
-      container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
-      hideLoader();
-      return;
-    }
+        if (listings.length === 0) {
+            container.innerHTML = '<div class="empty-state">You have not posted any opportunities yet.</div>';
+            hideLoader();
+            return;
+        }
 
     container.innerHTML = "";
 
@@ -322,6 +322,89 @@ async function updateApplicationStatus(applicationId, status) {
   }
 }
 
+// Edit Listing Functions
+async function openEditModal(listingId) {
+    try {
+        showLoader();
+        const response = await fetch(`/api/listings/${listingId}`);
+        const listing = await response.json();
+        
+        document.getElementById('editListingId').value = listing.listings_id;
+        document.getElementById('editListname').value = listing.listname;
+        document.getElementById('editListType').value = listing.list_type;
+        document.getElementById('editNqfLevel').value = listing.nqf_level;
+        document.getElementById('editLocation').value = listing.location || '';
+        document.getElementById('editStipend').value = listing.stipend;
+        document.getElementById('editDuration').value = listing.duration || '';
+        document.getElementById('editRequirements').value = listing.requirements || '';
+        document.getElementById('editDescription').value = listing.description || '';
+        
+        if (listing.closing_date) {
+            const date = new Date(listing.closing_date).toISOString().split('T')[0];
+            document.getElementById('editClosingDate').value = date;
+        }
+        
+        openModal('editListingModal');
+        hideLoader();
+    } catch (error) {
+        hideLoader();
+        console.error('Error loading listing:', error);
+        alert('Failed to load listing details');
+    }
+}
+
+async function saveListingEdits() {
+    const listingId = document.getElementById('editListingId').value;
+    const updatedData = {
+        listname: document.getElementById('editListname').value,
+        list_type: document.getElementById('editListType').value,
+        nqf_level: parseInt(document.getElementById('editNqfLevel').value),
+        location: document.getElementById('editLocation').value,
+        stipend: parseFloat(document.getElementById('editStipend').value),
+        duration: document.getElementById('editDuration').value,
+        requirements: document.getElementById('editRequirements').value,
+        description: document.getElementById('editDescription').value,
+        closing_date: document.getElementById('editClosingDate').value
+    };
+    
+    try {
+        showLoader();
+        const response = await fetch(`/api/listings/${listingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Update failed');
+        }
+        
+        if (data.message) {
+            alert(data.message);
+        } else {
+            alert('Listing updated successfully!');
+        }
+        
+        closeModal('editListingModal');
+        displayOpportunities();
+        hideLoader();
+    } catch (error) {
+        hideLoader();
+        alert(error.message);
+    }
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+// Loader Controls
 function showLoader() {
   document.getElementById("loader").classList.remove("hidden");
 }
@@ -390,55 +473,83 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 if (typeof module !== "undefined" && module.exports) {
     module.exports = { 
-      guardProviderPage,
-      displayOpportunities,
-      displayApplications
+        guardProviderPage,
+        displayOpportunities,
+        displayApplications
     };
 }
+
 firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user;
-    displayOpportunities();
-  } else {
-    window.location.href = "/login";
-  }
+    if (user) {
+        currentUser = user;
+        displayOpportunities();
+    } else {
+        window.location.href = "/login";
+    }
 });
 
 document.addEventListener("click", async (event) => {
-  
-  // IF the user clicked a HIRE button
-  if (event.target.closest(".btn-hire")) {
-    const btn = event.target.closest(".btn-hire"); // Gets the button even if they click an icon inside it
-    showLoader();
-    try {
-      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "hired" }),
-      });
-      displayApplications(); // Refresh the list
-    } catch (error) {
-      console.error("Error updating status:", error);
-    } finally {
-      hideLoader();
+    // IF the user clicked an EDIT button
+    if (event.target.closest(".btn-edit")) {
+        const btn = event.target.closest(".btn-edit");
+        const listingId = btn.getAttribute('data-id');
+        const currentStatus = btn.getAttribute('data-status');
+        
+        if (currentStatus === 'approved') {
+            const confirmEdit = confirm(
+                'Admin has already approved your listing.\n\n' +
+                'The edited version will need to be reviewed by admin again before it becomes visible to applicants.\n\n' +
+                'Click OK to continue editing.'
+            );
+            if (confirmEdit) {
+                openEditModal(listingId);
+            }
+        } else if (currentStatus === 'rejected') {
+            const confirmEdit = confirm(
+                'This listing was rejected.\n\n' +
+                'You can edit and resubmit for admin review.\n\n' +
+                'Click OK to continue editing.'
+            );
+            if (confirmEdit) {
+                openEditModal(listingId);
+            }
+        } else {
+            openEditModal(listingId);
+        }
+        return;
     }
-  }
+    
+    if (event.target.closest(".btn-hire")) {
+        const btn = event.target.closest(".btn-hire");
+        showLoader();
+        try {
+            await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "hired" }),
+            });
+            displayApplications();
+        } catch (error) {
+            console.error("Error updating status:", error);
+        } finally {
+            hideLoader();
+        }
+    }
 
-  // IF the user clicked a REJECT button
-  if (event.target.closest(".btn-reject")) {
-    const btn = event.target.closest(".btn-reject");
-    showLoader();
-    try {
-      await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected" }),
-      });
-      displayApplications(); // Refresh the list
-    } catch (error) {
-      console.error("Error updating status:", error);
-    } finally {
-      hideLoader();
+    if (event.target.closest(".btn-reject")) {
+        const btn = event.target.closest(".btn-reject");
+        showLoader();
+        try {
+            await fetch(`/api/listings/applications/${btn.dataset.id}/status`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "rejected" }),
+            });
+            displayApplications();
+        } catch (error) {
+            console.error("Error updating status:", error);
+        } finally {
+            hideLoader();
+        }
     }
-  }
 });

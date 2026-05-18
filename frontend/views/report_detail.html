@@ -563,8 +563,10 @@
       try {
         const headers = await getAuthHeaders();
         const res = await fetch(`/api/listings/${listing.listings_id}`, {
-          method: 'DELETE', headers
-        });
+  method: 'DELETE',
+  headers,
+  body: JSON.stringify({ report_id: reportData.report_id })
+});
         if (!res.ok) throw new Error('Delete failed');
         showToast('Listing deleted successfully.', 'success');
         setTimeout(() => window.location.href = '/admin', 1500);
