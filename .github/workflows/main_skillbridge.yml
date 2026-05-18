@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: '24.x'
 
+      - name: Install dependencies
+       run: npm ci # or npm install
+       
       - name: Generate Prisma Client
         run: npx prisma generate
         env:
