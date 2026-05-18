@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Provider Dashboard - SkillBridge</title>
   <link rel="stylesheet" href="../roles_css/provider_view.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .nqf-select {
       width: 100%;
@@ -33,43 +34,63 @@
 
 <body>
 
-  <!-- From Uiverse.io by PriyanshuGupta28 -->
-  <div id="loader" class="loader-overlay hidden">
-    <div class="spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+  <div class="loader-overlay hidden" id="loader">
+    <div class="spinner"></div>
   </div>
 
   <div class="layout">
 
-    <nav class="sidebar">
-      <h2>SkillBridge</h2>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+              <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="text-logo">SkillBridge</h2>
+      </div>
       <hr />
+  
       <ul class="nav-links">
-        <li><a href="#" onclick="showTab('post')">Post Opportunity</a></li>
-        <li><a href="#" onclick="showTab('manage')">My Opportunities</a></li>
-        <li><a href="#" onclick="showTab('applications')">Applications</a></li>
-        <li><a href="/login">Logout</a></li>
+          <li>
+              <a href="/dashboard">
+                  <i class="fa-solid fa-house icon"></i>
+                  <span class="text">Dashboard</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('post')">
+                  <i class="fa-solid fa-plus icon"></i>
+                  <span class="text">Post Opportunity</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('manage')">
+                  <i class="fa-solid fa-briefcase icon"></i>
+                  <span class="text">My Opportunities</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('applications')">
+                  <i class="fa-solid fa-file-lines icon"></i>
+                  <span class="text">Applications</span>
+              </a>
+          </li>
+          <li>
+              <a href="/login">
+                  <i class="fa-solid fa-right-from-bracket icon"></i>
+                  <span class="text">Logout</span>
+              </a>
+          </li>
       </ul>
-    </nav>
+  </nav>
 
-    <main class="container">
+    <main class="container" id="main-content">
       <div class="header">
         <h1>🏢 Provider Dashboard</h1>
         <p>Welcome!</p>
       </div>
 
       <!-- POST TAB -->
-      <div id="postTab" class="tab-content active">
+      <div id="postTab" class="tab-content active" style="display: none;">
         <h2>Post a New Opportunity</h2>
         <div class="card">
           <input id="listname" placeholder="Title *" required />
@@ -94,15 +115,72 @@
       </div>
 
       <!-- MANAGE TAB -->
-      <div id="manageTab" class="tab-content">
+      <div id="manageTab" class="tab-content" style="display: none;">
         <h2>My Opportunities</h2>
         <div id="myOpportunities"></div>
       </div>
 
       <!-- APPLICATIONS TAB -->
-      <div id="applicationsTab" class="tab-content">
-        <h2>Applications</h2>
-        <div id="applicationsList"></div>
+      <div id="applicationsTab" class="tab-content" style="display: none;">
+
+        <div class="applications-dashboard-header">
+          <div>
+            <h2>Applications Dashboard</h2>
+            <p>Manage applicants, review details, and track hiring decisions.</p>
+          </div>
+
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <span class="stat-number" id="totalApplications">0</span>
+              <span class="stat-label">Applications</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-number" id="pendingApplications">0</span>
+              <span class="stat-label">Pending</span>
+            </div>
+
+            <!-- ADDED: shows number of shortlisted applications -->
+            <div class="stat-card">
+              <span class="stat-number" id="shortlistedApplications">0</span>
+              <span class="stat-label">Shortlisted</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-number" id="hiredApplications">0</span>
+              <span class="stat-label">Hired</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="applications-dashboard-layout">
+
+          <!-- LEFT PANEL -->
+          <div class="applications-sidebar">
+
+            <div class="applications-toolbar">
+              <input 
+                type="text" 
+                id="applicationSearch"
+                placeholder="Search applicants..."
+              />
+            </div>
+
+            <div id="applicationsList" class="applications-list"></div>
+          </div>
+
+          <!-- RIGHT PANEL -->
+          <div class="application-details-panel">
+
+            <div id="emptyApplicationState" class="empty-details-state">
+              <h3>Select an Application</h3>
+              <p>Choose an applicant from the left panel to view full details.</p>
+            </div>
+
+            <div id="selectedApplicationDetails"></div>
+
+          </div>
+        </div>
       </div>
     </main>
   </div>

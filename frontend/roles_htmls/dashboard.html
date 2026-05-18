@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillBridge Dashboard</title>
+
+  <link rel="stylesheet" href="../roles_css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <div class="loader-overlay hidden" id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="dashboard-layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h2 class="text-logo">SkillBridge</h2>
+      </div>
+      <hr />
+
+      <ul class="nav-links">
+        <li>
+          <a href="/dashboard" class="active">
+            <i class="fa-solid fa-chart-line icon"></i>
+            <span class="text">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/provider?tab=post">
+            <i class="fa-solid fa-plus icon"></i>
+            <span class="text">Post Opportunities</span>
+          </a>
+        </li>
+        <li>
+          <a href="/provider?tab=manage">
+            <i class="fa-solid fa-briefcase icon"></i>
+            <span class="text">My Opportunities</span>
+          </a>
+        </li>
+        <li>
+          <a href="/provider?tab=applications">
+            <i class="fa-solid fa-file-lines icon"></i>
+            <span class="text">Applications</span>
+          </a>
+        </li>
+        <li>
+          <a href="/login">
+            <i class="fa-solid fa-right-from-bracket icon"></i>
+            <span class="text">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main-content" id="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Welcome back. Here’s what’s happening on SkillBridge.</p>
+        </div>
+
+        <button id="exportCsvBtn" class="export-btn">Export CSV</button>
+      </header>
+
+      <section class="cards-grid">
+        <div class="metric-card">
+          <p>Total Opportunities</p>
+          <h2 id="totalListings">0</h2>
+        </div>
+
+        <div class="metric-card">
+          <p>Total Applications</p>
+          <h2 id="totalApplications">0</h2>
+        </div>
+
+        <div class="metric-card">
+          <p>Shortlisted Applicants</p>
+          <h2 id="shortlistedApplicants">0</h2>
+        </div>
+
+        <div class="metric-card">
+          <p>Successful Placements</p>
+          <h2 id="successfulPlacements">0</h2>
+        </div>
+
+        <div class="metric-card">
+          <p>Average Placement Rate</p>
+          <h2><span id="averagePlacementRate">0</span>%</h2>
+        </div>
+      </section>
+
+      <section class="filters">
+        <select id="statusFilter">
+          <option value="all">All statuses</option>
+        </select>
+
+        <select id="opportunityFilter">
+          <option value="all">All opportunities</option>
+          <option value="nonZero">Only opportunities with applications</option>
+        </select>
+
+        <button id="resetFiltersBtn">Reset filters</button>
+      </section>
+
+      <section class="charts-grid">
+        <div class="chart-card">
+          <h3>Application Volume per Opportunity</h3>
+          <canvas id="opportunityChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Application Status Breakdown</h3>
+          <canvas id="statusChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Placement Success Rate by Sector</h3>
+          <canvas id="sectorChart"></canvas>
+        </div>
+      </section>
+
+      <section class="table-card">
+        <h3>Top Performing Opportunities</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Opportunity</th>
+              <th>Sector</th>
+              <th>Applications</th>
+              <th>Shortlisted</th>
+              <th>Placements</th>
+              <th>Success Rate</th>
+            </tr>
+          </thead>
+          <tbody id="topOpportunitiesTable"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="../roles_js/dashboard.js"></script>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const main = document.getElementById('main-content');
+      sidebar.classList.toggle('collapsed');
+      main.classList.toggle('expanded');
+    }
+  </script>
+</body>
+
+</html>

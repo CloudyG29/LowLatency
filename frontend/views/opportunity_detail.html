@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunity Details - SkillBridge</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0d1117, #111827, #0f2040);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: rgba(17, 24, 39, 0.95);
+      padding: 16px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .back-btn {
+      background: #334155;
+      color: #94a3b8;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background: #475569;
+      color: #e2e8f0;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 860px;
+      margin: 40px auto;
+      padding: 0 24px 60px;
+    }
+
+    /* ── Loading / Error ── */
+    .state-box {
+      text-align: center;
+      padding: 80px 20px;
+      color: #64748b;
+    }
+
+    .state-box .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #334155;
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── Header Card ── */
+    .header-card {
+      background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%);
+      border-radius: 20px 20px 0 0;
+      padding: 36px 40px 28px;
+    }
+
+    .listing-type-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .job-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .provider-line {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    /* ── Body Card ── */
+    .body-card {
+      background: rgba(255,255,255,0.07);
+      border-radius: 0 0 20px 20px;
+      padding: 32px 40px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-top: none;
+    }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .stat-pill {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-pill .val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .stat-pill .lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+    }
+
+    /* ── Info Grid ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+
+    .info-item .lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .info-item .val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .description-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 18px 20px;
+      color: #94a3b8;
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+
+    .req-list {
+      list-style: none;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .req-list li {
+      padding: 11px 18px;
+      color: #94a3b8;
+      font-size: 0.92rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .req-list li:last-child {
+      border-bottom: none;
+    }
+
+    .req-list li::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Action Buttons ── */
+    .action-row {
+      display: flex;
+      gap: 14px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #334155;
+    }
+
+    .btn-apply {
+      flex: 2;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 15px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-apply:hover {
+      background: #059669;
+    }
+
+    .btn-apply:active {
+      transform: scale(0.98);
+    }
+
+    .btn-apply:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .already-applied-badge {
+      flex: 2;
+      background: #1e3a2e;
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 15px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-report {
+      flex: 1;
+      background: transparent;
+      border: 1px solid #dc2626;
+      color: #f87171;
+      padding: 15px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-report:hover {
+      background: rgba(220, 38, 38, 0.1);
+    }
+
+    /* ── Modal ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .modal-box h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f87171;
+      margin-bottom: 6px;
+    }
+
+    .modal-box p {
+      color: #64748b;
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-box select,
+    .modal-box textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .modal-box select:focus,
+    .modal-box textarea:focus {
+      border-color: #38bdf8;
+    }
+
+    .modal-box textarea {
+      resize: vertical;
+    }
+
+    .modal-box select option {
+      background: #1e293b;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .btn-submit-report {
+      flex: 1;
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 11px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit-report:hover {
+      background: #b91c1c;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      background: #334155;
+      color: #94a3b8;
+      border: none;
+      padding: 11px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover {
+      background: #475569;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: transform 0.3s ease;
+      z-index: 9999;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      border-color: #10b981;
+      color: #10b981;
+    }
+
+    .toast.error {
+      border-color: #f87171;
+      color: #f87171;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 14px 20px;
+      }
+
+      .container {
+        padding: 0 16px 40px;
+      }
+
+      .header-card,
+      .body-card {
+        padding: 24px 20px;
+      }
+
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">SkillBridge</div>
+    <a href="/applicant" class="back-btn">← Back</a>
+  </nav>
+
+  <div class="container">
+    <div id="content">
+      <div class="state-box">
+        <div class="spinner"></div>
+        <p>Loading opportunity...</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../public/firebase.js"></script>
+  <script>
+    const listingId = window.location.pathname.split('/').pop();
+    let oppData = null;
+    let firebaseUser = null;
+
+    /* ── Helpers ── */
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    function getFirebaseUser() {
+      return new Promise(resolve =>
+        firebase.auth().onAuthStateChanged(u => resolve(u))
+      );
+    }
+
+    /* ── Load opportunity ── */
+    async function loadOpportunity() {
+      firebaseUser = await getFirebaseUser();
+
+      if (!firebaseUser) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const container = document.getElementById('content');
+
+      try {
+        const res = await fetch(
+          `/api/listings/${listingId}?userEmail=${encodeURIComponent(firebaseUser.email)}`
+        );
+        oppData = await res.json();
+
+        if (!res.ok) throw new Error(oppData.error || 'Failed to load');
+
+        renderPage();
+      } catch (err) {
+        container.innerHTML = `
+          <div class="state-box">
+            <p style="color:#f87171">⚠ ${err.message}</p>
+          </div>`;
+      }
+    }
+
+    function renderPage() {
+      const hasApplied = oppData.hasApplied;
+
+      const applySection = hasApplied
+        ? `<div class="already-applied-badge">✓ Already Applied</div>`
+        : `<button class="btn-apply" id="applyBtn" onclick="openApplicationModal()">Apply Now</button>`;
+
+      document.getElementById('content').innerHTML = `
+        <div class="header-card">
+          <span class="listing-type-badge">${oppData.list_type || 'Opportunity'}</span>
+          <h1 class="job-title">${oppData.listname}</h1>
+          <p class="provider-line">Posted by ${oppData.provider?.provider_name || 'Unknown Provider'}</p>
+        </div>
+
+        <div class="body-card">
+          <div class="stats-row">
+            <div class="stat-pill">
+              <div class="val">${oppData.location || '—'}</div>
+              <div class="lbl">Location</div>
+            </div>
+            <div class="stat-pill">
+              <div class="val">${oppData.stipend ? 'R' + Number(oppData.stipend).toLocaleString() : '—'}</div>
+              <div class="lbl">Stipend</div>
+            </div>
+            <div class="stat-pill">
+              <div class="val">${oppData.duration || '—'}</div>
+              <div class="lbl">Duration</div>
+            </div>
+            <div class="stat-pill">
+              <div class="val">${oppData.nqf_level ? 'NQF ' + oppData.nqf_level : '—'}</div>
+              <div class="lbl">NQF Level</div>
+            </div>
+          </div>
+
+          <div class="info-grid" style="grid-template-columns: 1fr;">
+            <div class="info-item">
+              <div class="lbl">Closing Date</div>
+              <div class="val">${oppData.closing_date ? new Date(oppData.closing_date).toDateString() : 'Open'}</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Requirements</div>
+            <ul class="req-list">
+              ${oppData.requirements
+          ? oppData.requirements.split(',').map(r => `<li>${r.trim()}</li>`).join('')
+          : '<li>No specific requirements listed</li>'}
+            </ul>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Description</div>
+            <div class="description-box">${oppData.description || 'No description provided.'}</div>
+          </div>
+
+          <div class="action-row" id="actionRow">
+            ${applySection}
+            <button class="btn-report" onclick="openReportModal()"> Report</button>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── Apply Modal & Submit ── */
+    function openApplicationModal() {
+      const modal = document.createElement('div');
+      modal.className = 'modal-backdrop';
+      modal.id = 'applicationModal';
+      
+      // We use oppData.nqf_level to show a warning if one exists
+      const nqfWarning = oppData.nqf_level 
+        ? `<div style="background: rgba(248, 113, 113, 0.1); border: 1px solid #f87171; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; color: #f87171;">
+            <strong>Note:</strong> This opportunity requires NQF Level ${oppData.nqf_level}. If you do not meet this requirement, your application may be rejected. Do you want to continue?
+           </div>` 
+        : '';
+
+      modal.innerHTML = `
+        <div class="modal-box">
+          <h3 style="color: #38bdf8;">Apply for ${oppData.listname}</h3>
+          <p>Please provide your application details below.</p>
+          
+          ${nqfWarning}
+
+          <textarea id="appMotivation" rows="4" placeholder="Motivation (Why are you a good fit?) *" required></textarea>
+          
+          <input type="text" id="appAvailability" placeholder="Availability (e.g., Immediately, 2 weeks) *" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-family: inherit; font-size: 0.9rem;" required />
+          
+          <input type="file" id="appCv" accept=".pdf,.doc,.docx" style="width: 100%; margin-bottom: 20px; color: #94a3b8; font-size: 0.9rem;" />
+
+          <div class="modal-btns">
+            <button class="btn-submit-report" style="background: #10b981;" onclick="submitApplication()">Submit Application</button>
+            <button class="btn-cancel" onclick="closeApplicationModal()">Cancel</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // Close on backdrop click
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeApplicationModal();
+      });
+    }
+
+    function closeApplicationModal() {
+      const m = document.getElementById('applicationModal');
+      if (m) m.remove();
+    }
+
+    async function submitApplication() {
+      const motivation = document.getElementById('appMotivation').value;
+      const availability = document.getElementById('appAvailability').value;
+      const cvFile = document.getElementById('appCv').files[0];
+
+      if (!motivation.trim() || !availability.trim()) {
+        showToast('Motivation and Availability are required.', 'error');
+        return;
+      }
+
+      closeApplicationModal();
+      
+      const btn = document.getElementById('applyBtn');
+      if (btn) { btn.textContent = 'Submitting…'; btn.disabled = true; }
+
+      try {
+        // If your backend expects a JSON object (based on your previous fix)
+        const res  = await fetch('/api/listings/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listing_id: parseInt(listingId),
+            email: firebaseUser.email,
+            motivation: motivation,
+            availability: availability,
+            cvOriginalFilename: cvFile ? cvFile.name : null
+          })
+        });
+        
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast('Application submitted successfully!', 'success');
+          const row = document.getElementById('actionRow');
+          if (row) {
+            row.innerHTML = `
+              <div class="already-applied-badge">✓ Already Applied</div>
+              <button class="btn-report" onclick="openReportModal()"> Report</button>
+            `;
+          }
+          oppData.hasApplied = true;
+        } else {
+          showToast(data.error || 'Application failed', 'error');
+          if (btn) { btn.textContent = 'Apply Now'; btn.disabled = false; }
+        }
+      } catch (err) {
+        showToast('Network error. Please try again.', 'error');
+        if (btn) { btn.textContent = 'Apply Now'; btn.disabled = false; }
+      }
+    }
+
+    /* ── Report Modal ── */
+    async function openReportModal() {
+      // Check if already reported
+      try {
+        const chk = await fetch(
+          `/api/reports/check?listing_id=${listingId}&email=${encodeURIComponent(firebaseUser.email)}`
+        );
+        const chkData = await chk.json();
+        if (chkData.hasReported) {
+          showToast('You already reported this listing.', 'error');
+          return;
+        }
+      } catch (_) { }
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-backdrop';
+      modal.id = 'reportModal';
+      modal.innerHTML = `
+        <div class="modal-box">
+          <h3>Report Opportunity</h3>
+          <p>Why are you reporting "${oppData?.listname || 'this listing'}"?</p>
+          <select id="reportReason">
+            <option value="">— Select a reason —</option>
+            <option value="Fraudulent">Fraudulent</option>
+            <option value="Misleading">Misleading</option>
+            <option value="Inappropriate">Inappropriate</option>
+            <option value="Spam">Spam</option>
+            <option value="Other">Other</option>
+          </select>
+          <textarea id="reportDetails" rows="4" placeholder="Please provide more details about this report *" required></textarea>
+          <div class="modal-btns">
+            <button class="btn-submit-report" onclick="submitReport()">Submit Report</button>
+            <button class="btn-cancel" onclick="closeReportModal()">Cancel</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // Close on backdrop click
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeReportModal();
+      });
+    }
+
+    function closeReportModal() {
+      const m = document.getElementById('reportModal');
+      if (m) m.remove();
+    }
+
+    async function submitReport() {
+      const reason = document.getElementById('reportReason')?.value;
+      const details = document.getElementById('reportDetails')?.value || '';
+
+      if (!reason) {
+        showToast('Please select a reason.', 'error');
+        return;
+      }
+
+      if (!details.trim()) {
+        showToast('Please provide details about your report.', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/reports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            listing_id: parseInt(listingId),
+            reason,
+            details,
+            reported_by: firebaseUser.email
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast('Report submitted. Thank you!', 'success');
+          closeReportModal();
+        } else {
+          showToast(data.error || 'Failed to submit report.', 'error');
+        }
+      } catch (_) {
+        showToast('Network error.', 'error');
+      }
+    }
+
+    loadOpportunity();
+  </script>
+</body>
+
+</html>
