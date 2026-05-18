@@ -180,3 +180,15 @@ async function loginWithGoogle() {
         throw error;
     }
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        registerUser, 
+        finalizeSession, 
+        cleanupFailedFirebaseUser, 
+        signUpWithGoogle, 
+        signUpWithEmail, 
+        loginAndRedirect, 
+        loginWithGoogle 
+    };
+}
