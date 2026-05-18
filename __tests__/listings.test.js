@@ -178,7 +178,7 @@ describe('DELETE /api/listings/:id', () => {
       .send({ report_id: 1 }); 
 
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe('Listing removed.');
+    expect(res.body.message).toBe('Listing marked as deleted.');
   });
 
   test('should return 500 on database error', async () => {
