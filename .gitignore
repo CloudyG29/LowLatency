@@ -4,4 +4,6 @@
 
 /generated/prisma
 coverage/
+generated/
 backend/generated/
+serviceAccountKey.json

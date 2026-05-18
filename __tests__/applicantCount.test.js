@@ -1,4 +1,4 @@
-const { getCompetition, fetchOpportunities } = require('../frontend/roles_js/applicant_view.js');
+const { getCompetition, fetchOpportunities, toggleFavorite } = require('../frontend/roles_js/applicant_view.js');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -109,7 +109,7 @@ describe("fetchOpportunities()", () => {
         global.hideLoader = jest.fn();
         window.showLoader = global.showLoader;
         window.hideLoader = global.hideLoader;
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        jest.spyOn(console, 'error').mockImplementation(() => { });
     });
 
     afterEach(() => {
@@ -258,9 +258,22 @@ describe("fetchOpportunities()", () => {
         expect(document.querySelector(".apply-btn")).toBeNull();
     });
 
-    test("shows Already applied when applications array is non-empty", async () => {
-        mockFetch([makeListing({ hasApplied: false, applications: [{ id: 99 }] })]);
+    test('shows Already applied when applications array contains the user', async () => {
+        // 1. Log a fake user into localStorage just for this test
+        const testEmail = "test@example.com";
+        localStorage.setItem("userData", JSON.stringify({ email: testEmail }));
+
+        // 2. Mock the fetch with an application that belongs to THIS exact user
+        mockFetch([
+            makeListing({
+                hasApplied: false,
+                applications: [{ email: testEmail }]
+            })
+        ]);
+
         await fetchOpportunities();
+
+        // 3. Now the DOM should successfully render the badge!
         expect(document.querySelector(".already-applied")).not.toBeNull();
     });
 
@@ -325,4 +338,128 @@ describe("fetchOpportunities()", () => {
         expect(document.querySelector(".competition-badge").getAttribute("role")).toBe("status");
     });
 
+});
+
+describe("Favorites Button Rendering", () => {
+    test("renders 'Save' when listing is not saved", async () => {
+        mockFetch([makeListing({ isSaved: false })]);
+        await fetchOpportunities();
+        const saveBtn = document.querySelector(".save-listing-btn");
+        expect(saveBtn).not.toBeNull();
+        expect(saveBtn.textContent).toContain("Save");
+        expect(saveBtn.classList.contains("favorited")).toBe(false);
+    });
+
+    test("renders 'Saved' when listing is already saved", async () => {
+        mockFetch([makeListing({ isSaved: true })]);
+        await fetchOpportunities();
+        const saveBtn = document.querySelector(".save-listing-btn");
+        expect(saveBtn.textContent).toContain("Saved");
+        expect(saveBtn.classList.contains("favorited")).toBe(true);
+    });
+});
+
+describe("toggleFavorite()", () => {
+    let mockButton;
+
+    beforeEach(() => {
+        // Clear mocks and set up our fake DOM button and localStorage
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({ message: "Success" }),
+            })
+        );
+
+        // 2. ADD THIS: Mock the Firebase Auth user
+        global.firebase = {
+            auth: jest.fn(() => ({
+                currentUser: {
+                    uid: "fake-test-uid-123",
+                    email: "test@example.com"
+                }
+            }))
+        };
+
+        // Create a fake button to pass into the function
+        mockButton = document.createElement("button");
+        mockButton.className = "save-btn";
+        mockButton.innerHTML = "Saved";
+
+    });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test("sends POST request with userId and listingId", async () => {
+        // 1. Mock a successful fetch response
+        global.fetch = jest.fn().mockResolvedValue({ ok: true });
+
+        // 2. Call the function
+        const listingId = 42;
+        await toggleFavorite(mockButton, 42);
+
+        // 3. Verify fetch was called with the exact right data
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        expect(global.fetch).toHaveBeenCalledWith('/api/savedListings', expect.objectContaining({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: "fake-test-uid-123",
+                listingId: 42
+            })
+        }));
+    });
+
+    test("updates button UI to 'Saved' on successful request", async () => {
+        // 1. Firebase Mock
+        global.firebase = {
+            auth: jest.fn(() => ({
+                currentUser: { uid: "test-uid" }
+            }))
+        };
+
+        // 2. Fetch Mock WITH status: 200 included!
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ message: "Success" })
+        });
+
+        const listingId = 42;
+
+        // 3. Create the button
+        document.body.innerHTML = `
+            <button id="favorite-btn-${listingId}" class="save-btn">Saved</button>
+        `;
+        const mockButton = document.getElementById(`favorite-btn-${listingId}`);
+
+        // 4. Run the function (Make sure this has BOTH arguments!)
+        await toggleFavorite(listingId, mockButton);
+
+        // 5. The checks
+        expect(mockButton.classList.contains("Saved")).toBe(false);
+        expect(mockButton.innerHTML).toContain("Saved");
+    });
+
+    test("does NOT update UI if the server request fails", async () => {
+        // Mock a failed response (e.g., 500 Internal Server Error)
+        global.fetch = jest.fn().mockResolvedValue({ ok: false });
+
+        await toggleFavorite(99, mockButton);
+
+        // UI should remain unchanged
+        expect(mockButton.classList.contains("favorited")).toBe(false);
+        expect(mockButton.innerHTML).toContain("Save");
+    });
+
+    test("does NOT update UI if fetch throws a network error", async () => {
+        global.fetch = jest.fn().mockRejectedValue(new Error("Network Error"));
+
+        await toggleFavorite(99, mockButton);
+
+        // UI should remain unchanged
+        expect(mockButton.classList.contains("favorited")).toBe(false);
+        expect(mockButton.innerHTML).toContain("Save");
+    });
 });

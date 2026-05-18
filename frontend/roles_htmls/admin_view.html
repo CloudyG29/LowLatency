@@ -1,46 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - SkillBridge</title>
   <link rel="stylesheet" href="../roles_css/admin_view.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-   <!-- From Uiverse.io by PriyanshuGupta28 -->
-   <div id="loader" class="loader-overlay hidden">
-    <div class="spinner">
-      <div></div>   
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-      <div></div>    
-    </div>
+  <!-- Loader -->
+  <div id="loader" class="loader-overlay hidden">
+    <div class="spinner"></div>
   </div>
 
   <div class="layout">
-    <nav class="sidebar">
-     <h2>SkillBridge</h2>
-     <hr/>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+          <button class="sidebar-toggle" onclick="toggleSidebar()">
+              <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="text-logo">SkillBridge</h2>
+      </div>
+      <hr />
+  
       <ul class="nav-links">
-        <li><a href="#" onclick="showTab('opportunities')">Opportunities</a></li>
-        <li><a href="#" onclick="showTab('users')">Users</a></li>
-        <li><a href="/login">Logout</a></li>
+          <li>
+              <a href="#" onclick="showTab('opportunities')">
+                  <i class="fa-solid fa-briefcase icon"></i>
+                  <span class="text">Opportunities</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('users')">
+                  <i class="fa-solid fa-users icon"></i>
+                  <span class="text">Users</span>
+              </a>
+          </li>
+          <li>
+              <a href="#" onclick="showTab('reports')">
+                  <i class="fa-solid fa-chart-bar icon"></i>
+                  <span class="text">Reports</span>
+              </a>
+          </li>
+          <li>
+              <a href="/login">
+                  <i class="fa-solid fa-right-from-bracket icon"></i>
+                  <span class="text">Logout</span>
+              </a>
+          </li>
       </ul>
-    </nav>
+  </nav>
 
-    <main class="container">
+    <main class="container" id="main-content">
       <header class="header">
-        <h1>🛡️ Admin Dashboard</h1>
-        <p>Welcome, Admin! Manage opportunities and users below.</p>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, Admin! Manage opportunities, users, and reports below.</p>
       </header>
 
       <div class="stats" id="stats">
@@ -60,14 +75,11 @@
           <h3 id="totalProviders">0</h3>
           <p>Total Providers</p>
         </div>
+        <div class="stat-card">
+          <h3 id="pendingReports">0</h3>
+          <p>Pending Reports</p>
+        </div>
       </div>
-
-      <!-- <div class="tabs">
-        <button class="tab active" onclick="showTab('opportunities')">
-          Opportunities
-        </button>
-        <button class="tab" onclick="showTab('users')">Users</button>
-      </div> -->
 
       <div id="opportunitiesTab" class="tab-content active">
         <div class="section">
@@ -90,13 +102,19 @@
           <div id="providersTable"></div>
         </div>
       </div>
+
+      <div id="reportsTab" class="tab-content">
+        <div class="section">
+          <h2>Reported Opportunities</h2>
+          <div id="reportsTable"></div>
+        </div>
+      </div>
     </main>
   </div>
 
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="../public/firebase.js"></script>
-    <script src="../roles_js/admin_view.js"></script>
-  </body>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="../public/firebase.js"></script>
+  <script src="../roles_js/admin_view.js"></script>
+</body>
 </html>

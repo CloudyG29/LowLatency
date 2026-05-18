@@ -42,23 +42,24 @@ model Provider {
 }
 
 model Listing {
-  listings_id  Int           @id @default(autoincrement())
-  listname     String
-  list_type    String
-  nqf_level    Int?
-  description  String?
-  provider_id  Int
-  status       String        @default("pending")
-  closing_date DateTime?
-  duration     String?
-  location     String?
-  requirements String?
-  stipend      Float?
-  sector       String?
-  cvUploadedAt DateTime?
-  applications Application[]
-  provider     Provider      @relation(fields: [provider_id], references: [provider_id])
-  Report       Report[]
+  listings_id   Int            @id @default(autoincrement())
+  listname      String
+  list_type     String
+  nqf_level     Int?
+  description   String?
+  provider_id   Int
+  status        String         @default("pending")
+  closing_date  DateTime?
+  duration      String?
+  location      String?
+  requirements  String?
+  stipend       Float?
+  sector        String?
+  cvUploadedAt  DateTime?
+  applications  Application[]
+  provider      Provider       @relation(fields: [provider_id], references: [provider_id])
+  reports       Report[]
+  savedListings SavedListing[]
 }
 
 model Application {
@@ -97,11 +98,11 @@ model ApplicantSkill {
 }
 
 model Qualification {
-  qualification_id Int    @id @default(autoincrement())
+  qualification_id Int     @id @default(autoincrement())
   name             String
   nqf_level        Int
   saqa_id          String? @unique
-  sector          String?
+  sector           String?
   originator       String?
 
   applicantQualifications ApplicantQualification[]
@@ -126,4 +127,14 @@ model Report {
   status      String   @default("pending")
   created_at  DateTime @default(now())
   Listing     Listing  @relation(fields: [listing_id], references: [listings_id], onUpdate: NoAction)
+}
+
+model SavedListing {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  listingId Int
+  listing   Listing  @relation(fields: [listingId], references: [listings_id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
 }
