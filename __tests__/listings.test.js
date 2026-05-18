@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('../DB_connect/prisma', () => ({
   user: {
     findUnique: jest.fn(),
@@ -14,6 +18,13 @@ jest.mock('../DB_connect/prisma', () => ({
     findMany: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
+    deleteMany: jest.fn(),
+  },
+  report: {
+    findUnique: jest.fn(),
+    delete: jest.fn(),
+    deleteMany: jest.fn(),
+    update: jest.fn()
   },
 }));
 
@@ -154,18 +165,29 @@ describe('PATCH /api/listings/:id/status', () => {
 
 describe('DELETE /api/listings/:id', () => {
   test('should delete a listing and return 200', async () => {
+    prisma.listing.findUnique.mockResolvedValue({ id: 1, title: 'Fake Job' });
+    prisma.application.deleteMany.mockResolvedValue({}); 
+    
+    prisma.report.update.mockResolvedValue({}); 
+    prisma.report.delete.mockResolvedValue({}); 
+    
     prisma.listing.delete.mockResolvedValue({});
 
-    const res = await request(app).delete('/api/listings/1');
+    const res = await request(app)
+      .delete('/api/listings/1')
+      .send({ report_id: 1 }); 
 
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe('Listing deleted.');
+    expect(res.body.message).toBe('Listing removed.');
   });
 
   test('should return 500 on database error', async () => {
+    prisma.report.update.mockRejectedValue(new Error('DB Error'));
     prisma.listing.delete.mockRejectedValue(new Error('DB Error'));
 
-    const res = await request(app).delete('/api/listings/1');
+    const res = await request(app)
+      .delete('/api/listings/1')
+      .send({ report_id: 1 }); 
 
     expect(res.status).toBe(500);
   });
