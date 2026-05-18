@@ -1,5 +1,4 @@
 module.exports = {
-  testEnvironment: "jsdom",
   testMatch: ["**/__tests__/**/*.test.js"],
   collectCoverage: true,
   coverageDirectory: "coverage",
@@ -8,4 +7,9 @@ module.exports = {
     "backend/**/*.js",
     "frontend/**/*.js"
   ],
+  testEnvironment: 'jsdom',
+  setupFiles: ["./jest.setup.js"],
+  moduleNameMapper: {
+    "^cheerio$": "<rootDir>/node_modules/cheerio/dist/commonjs/index.js"
+  },
 };
