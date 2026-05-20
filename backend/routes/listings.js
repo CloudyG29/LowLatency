@@ -1,6 +1,11 @@
 const prisma = require("../../DB_connect/prisma");
 const express = require("express");
 const router = express.Router();
+
+const { sendStatusEmail } = require('../emailService');
+
+const { db } = require('../firebaseAdmin');
+
 const {
   uploadCV,
   getCVUrl,
@@ -329,29 +334,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-/* =========================
-   UPDATE APPLICATION STATUS
-========================= */
-
-router.put("/applications/:id/status", async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-
-  try {
-    const application = await prisma.application.update({
-      where: {
-        application_id: parseInt(id),
-      },
-      data: { status },
-    });
-
-    res.status(200).json(application);
-  } catch (error) {
-    console.error("Application status update error:", error);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
-
 
 // UPDATE LISTING (Any status -> back to PENDING)
 
@@ -515,4 +497,40 @@ router.get("/:id/cv", async (req, res) => {
   }
 });
 
+
+// Update application status (hire/reject)
+router.put("/applications/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const application = await prisma.application.update({
+      where: { application_id: parseInt(id) },
+      data: { status },
+      include: { user: true, listing: true }
+    });
+    
+      await db.collection("notifications").add({
+        userId: application.user.firebase_uid || "MISSING_UID", 
+        type: "Application Update",
+        message: `Your application for '${application.listing.listname}' has been marked as: ${status}.`,
+        isRead: false,
+        createdAt: new Date() 
+      });
+
+      if (application.user && application.user.email) {
+        await sendStatusEmail(
+          application.user.email, 
+          application.user.name || "Applicant", 
+          application.listing.listname, 
+          status
+        );
+      }
+      
+    res.status(200).json(application);
+  } catch (error) {
+    console.error("BACKEND CRASH:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
+router.post("/post", postListing);
 module.exports = router;
