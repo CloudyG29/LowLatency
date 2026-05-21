@@ -552,7 +552,7 @@ async function fetchOpportunities(type = "") {
       const isSaved = listing.isSaved;
 
       const saveButtonHtml = `
-        <button class="save-listing-btn ${isSaved ? 'favorited' : ''}" onclick="toggleFavorite(this, '${listingId}')">
+        <button class="save-listing-btn ${isSaved ? 'Saved' : ''}" onclick="toggleFavorite(this, '${listingId}')">
         <i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
         ${isSaved ? 'Saved' : 'Save'}
         </button>
@@ -818,22 +818,18 @@ async function markAsRead(notificationId) {
 // 1. Add buttonElement right here as the first parameter!
 async function toggleFavorite(buttonElement, listingId) {
   try {
-    // 1. Grab the currently authenticated user directly from Firebase
     const user = firebase.auth().currentUser;
 
-    // 2. Safety check: Make sure someone is actually logged in
     if (!user) {
-      console.error("User is not logged in");
       alert("You must be logged in to save listings.");
       return;
     }
 
-    // 3. Make the fetch request
+    const isCurrentlySaved = buttonElement.classList.contains("saved");
+
     const response = await fetch('/api/savedListings', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         userId: user.uid,
         listingId: parseInt(listingId, 10)
@@ -844,12 +840,16 @@ async function toggleFavorite(buttonElement, listingId) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    // 4. UI Update: Now the function knows exactly which button to change!
-    buttonElement.classList.add("favorited");
-    buttonElement.innerHTML = "Saved";
-
     const result = await response.json();
-    console.log("Success:", result);
+
+    // Toggle based on what the API says happened
+    if (result.action === 'saved') {
+      buttonElement.classList.add("saved");
+      buttonElement.innerHTML = `<i class="fa-solid fa-bookmark"></i> Saved`;
+    } else {
+      buttonElement.classList.remove("saved");
+      buttonElement.innerHTML = `<i class="fa-regular fa-bookmark"></i> Save`;
+    }
 
   } catch (error) {
     console.error("Error saving listing:", error);
@@ -880,6 +880,12 @@ if (typeof module !== "undefined" && module.exports) {
     renderNotifications,
     startNotificationListener,
     toggleFavorite,
+    renderEducationDisplay,
+    submitApplication,
+    applyForListing, 
+    submitApplicationFromModal, prepPersonalInfoModal, savePersonalInfo,
+    prepBioModal, saveBio, prepEducationInfoModal, saveEducationInfo,
+    loadDataOnStartup, markAsRead, toggleSidebar, updateNotificationBadge
   };
 } else {
   renderEducationDisplay();

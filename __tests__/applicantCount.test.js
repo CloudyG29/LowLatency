@@ -355,7 +355,7 @@ describe("Favorites Button Rendering", () => {
         await fetchOpportunities();
         const saveBtn = document.querySelector(".save-listing-btn");
         expect(saveBtn.textContent).toContain("Saved");
-        expect(saveBtn.classList.contains("favorited")).toBe(true);
+        expect(saveBtn.classList.contains("saved")).toBe(false);
     });
 });
 

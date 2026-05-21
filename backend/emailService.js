@@ -34,4 +34,28 @@ const sendStatusEmail = async (userEmail, userName, listingName, status) => {
   }
 };
 
-module.exports = { sendStatusEmail };
+const sendClosingReminderEmail = async (userEmail, userName, listingName) => {
+  try {
+    const mailOptions = {
+      from: `"Skillbridge Notifications" <${process.env.EMAIL_USER}>`,
+      to: userEmail,
+      subject: `Reminder: ${listingName} Closes in 3 Days!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2>Hello ${userName || 'there'},</h2>
+          <p>This is a quick reminder that the listing <strong>${listingName}</strong> you saved is closing in 3 days.</p>
+          <p>Don't miss out! Log in to your dashboard to view the details.</p>
+          <br>
+          <p>Best regards,<br>The Skillbridge Team</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Closing reminder email sent successfully to ${userEmail}`);
+  } catch (error) {
+    console.error("Error sending closing reminder email:", error);
+  }
+};
+
+module.exports = { sendStatusEmail, sendClosingReminderEmail };

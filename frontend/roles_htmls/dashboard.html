@@ -156,6 +156,47 @@
       sidebar.classList.toggle('collapsed');
       main.classList.toggle('expanded');
     }
+
+  (function () {
+    // Create hamburger button
+    const btn = document.createElement('button');
+    btn.className = 'mobile-hamburger';
+    btn.setAttribute('aria-label', 'Toggle menu');
+    btn.innerHTML = '<span></span><span></span><span></span>';
+    document.body.appendChild(btn);
+
+    // Create backdrop
+    const backdrop = document.createElement('div');
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+
+    const sidebar = document.querySelector('.sidebar');
+
+    function openSidebar() {
+      sidebar.classList.add('mobile-open');
+      backdrop.classList.add('visible');
+      btn.classList.add('open');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('mobile-open');
+      backdrop.classList.remove('visible');
+      btn.classList.remove('open');
+    }
+
+    btn.addEventListener('click', () => {
+      sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar();
+    });
+
+    backdrop.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a nav link is tapped on mobile
+    sidebar.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) closeSidebar();
+      });
+    });
+  })();
   </script>
 </body>
 
