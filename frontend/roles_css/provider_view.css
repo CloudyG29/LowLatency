@@ -752,3 +752,124 @@ textarea {
 
 
 
+
+
+/* =============================================
+   MOBILE SIDEBAR — Hamburger + Slide-in Overlay
+   Works by injecting a .mobile-hamburger button
+   and a .sidebar-backdrop via the small JS snippet
+   that should be added to each page before </body>
+   ============================================= */
+
+/* 1. Hide the hamburger on desktop */
+.mobile-hamburger {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    /* 2. Fully hide sidebar off-screen (overrides any collapsed/expanded state) */
+    .sidebar {
+        transform: translateX(-100%) !important;
+        width: 250px !important;      /* Always full-width on mobile */
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1100;
+    }
+
+    /* 3. Slide it in when .mobile-open is toggled by JS */
+    .sidebar.mobile-open {
+        transform: translateX(0) !important;
+    }
+
+    /* 4. Dark backdrop that appears behind the sidebar */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 1099;
+        backdrop-filter: blur(2px);
+        animation: backdropFadeIn 0.3s ease forwards;
+    }
+
+    .sidebar-backdrop.visible {
+        display: block;
+    }
+
+    @keyframes backdropFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* 5. Hamburger button — fixed top-left */
+    .mobile-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 1200;
+        width: 42px;
+        height: 42px;
+        background: #1f2937;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s ease;
+    }
+
+    .mobile-hamburger:hover {
+        background: #374151;
+    }
+
+    .mobile-hamburger span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: white;
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Animate hamburger → X when open */
+    .mobile-hamburger.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .mobile-hamburger.open span:nth-child(2) {
+        opacity: 0;
+    }
+    .mobile-hamburger.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* 6. Push page content down slightly so it clears the hamburger */
+    .container,
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-top: 70px;
+    }
+
+    /* 7. Make sure the existing desktop sidebar-toggle hides on mobile
+          (the hamburger replaces it) */
+    .sidebar-toggle {
+        display: none;
+    }
+
+    /* 8. Show the text-logo inside the sidebar on mobile even when
+          the sidebar is "collapsed" on desktop (it wont be on mobile) */
+    .sidebar .text-logo {
+        opacity: 1 !important;
+        width: auto !important;
+        pointer-events: auto !important;
+    }
+
+    .sidebar .text {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+}

@@ -566,13 +566,13 @@ Pull Request merged into main
   FAIL       PASS
     │          │
     ▼          ▼
- ❌ Block    ✅ Build & package app
+ Block    Build & package app
  deploy           │
                   ▼
          Deploy to Azure App Service
                   │
                   ▼
-         🚀 Live environment updated
+         Live environment updated
 ```
 
 ### Workflow Files
