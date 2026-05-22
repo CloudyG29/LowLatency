@@ -585,3 +585,23 @@ Pull Request merged into main
 ### Test Environment in CI
 
 The Jest worker environment sets `JEST_WORKER_ID`, which `firebaseAdmin.js` detects to skip real Firebase initialisation and return a mock `db` object instead. This means the CI pipeline does not require Firebase credentials to run tests successfully.
+
+---
+
+# Skillbridge — Test Credentials
+
+### 1. Applicant Role (Student/Job Seeker View)
+* **Email:** `applicant@skillbridge.com`
+* **Password:** `Password@123`
+---
+
+### 2. Provider Role (Employer/Organization View)
+* **Email:** `provider@skillbridge.com`
+* **Password:** `Password@123`
+* For the provider, on the first login, they are redirected to the onborading page. After completing the onboarding process they can login as normal
+
+---
+
+### 3. Admin Role (Platform Governance View)
+* **Email:** `admin@skillbridge.com`
+* **Password:** `Password@123`
